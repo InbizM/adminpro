@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="es" class="">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AdminPro — Sistema de Gestión</title>
+  <meta name="description" content="Sistema profesional de inventario, ventas y créditos." />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body class="bg-background text-on-background antialiased min-h-screen">
+
+  <!-- ======================================================== -->
+  <!-- LOGIN SCREEN                                              -->
+  <!-- ======================================================== -->
+  <div id="login-screen" class="hidden fixed inset-0 z-50 flex items-center justify-center
+       bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 p-4">
+    <div class="w-full max-w-[400px]">
+      <!-- Logo -->
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-red-600 mb-4 shadow-2xl shadow-red-900/50">
+          <span class="material-symbols-outlined text-white text-3xl" style="font-variation-settings:'FILL' 1">shield</span>
+        </div>
+        <h1 class="text-3xl font-black text-white tracking-tighter">ADMIN<span class="text-red-500">PRO</span></h1>
+        <p class="text-slate-400 text-sm mt-1">Sistema de Gestión Empresarial</p>
+      </div>
+
+      <!-- Card -->
+      <div class="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 shadow-2xl">
+
+        <!-- STEP 1: Credentials -->
+        <div id="step-credentials">
+          <h2 class="text-white font-bold text-xl mb-6">Iniciar sesión</h2>
+          <form id="login-form" class="space-y-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">Correo electrónico</label>
+              <div class="relative">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-[18px]">mail</span>
+                <input id="login-email" type="email" required autocomplete="email"
+                  placeholder="tu@correo.com"
+                  class="w-full bg-slate-900/70 border border-slate-700 rounded-lg pl-10 pr-4 py-3
+                         text-white placeholder-slate-500 text-sm
+                         focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/50 transition-all" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">Contraseña</label>
+              <div class="relative">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-[18px]">lock</span>
+                <input id="login-pwd" type="password" required autocomplete="current-password"
+                  placeholder="••••••••"
+                  class="w-full bg-slate-900/70 border border-slate-700 rounded-lg pl-10 pr-4 py-3
+                         text-white placeholder-slate-500 text-sm
+                         focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/50 transition-all" />
+              </div>
+            </div>
+            <button id="login-btn" type="submit"
+              class="w-full py-3 bg-red-600 hover:bg-red-700 active:scale-[.98] text-white font-bold
+                     rounded-lg transition-all duration-150 mt-2 shadow-lg shadow-red-900/40">
+              Ingresar
+            </button>
+          </form>
+        </div>
+
+        <!-- STEP 2: PIN Verification -->
+        <div id="step-pin" class="hidden">
+          <button id="back-to-login" class="flex items-center gap-1.5 text-slate-400 hover:text-white text-sm mb-5 transition-colors">
+            <span class="material-symbols-outlined text-[16px]">arrow_back</span> Volver
+          </button>
+          <div class="flex items-center justify-center w-14 h-14 rounded-full bg-red-600/15 border border-red-600/30 mx-auto mb-4">
+            <span class="material-symbols-outlined text-red-400 text-2xl" style="font-variation-settings:'FILL' 1">mark_email_read</span>
+          </div>
+          <h2 class="text-white font-bold text-xl mb-2 text-center">Verifica tu identidad</h2>
+          <p id="pin-hint" class="text-slate-400 text-sm text-center mb-6">Enviamos un PIN de 6 dígitos a tu correo.</p>
+          <form id="pin-form" class="space-y-4">
+            <input id="login-pin" type="text" inputmode="numeric" pattern="\d{6}" maxlength="6" required
+              placeholder="000000" autocomplete="one-time-code"
+              class="w-full bg-slate-900/70 border border-slate-700 rounded-lg px-4 py-4
+                     text-white text-center text-3xl font-bold tracking-[0.4em] placeholder-slate-600
+                     focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/50 transition-all" />
+            <button id="pin-btn" type="submit"
+              class="w-full py-3 bg-red-600 hover:bg-red-700 active:scale-[.98] text-white font-bold
+                     rounded-lg transition-all duration-150 shadow-lg shadow-red-900/40">
+              Verificar
+            </button>
+          </form>
+        </div>
+
+      </div>
+
+      <p class="text-center text-slate-600 text-xs mt-6">AdminPro &copy; 2026 — Gestión de Inventario</p>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- APP SHELL (hidden until login)                           -->
+  <!-- ======================================================== -->
+  <div id="app-shell" class="hidden min-h-screen">
+
+    <!-- DESKTOP SIDEBAR -->
+    <aside class="bg-slate-900 h-screen w-[260px] fixed left-0 top-0 border-r border-slate-800
+                  shadow-2xl flex-col hidden md:flex z-40">
+      <!-- Logo -->
+      <div class="flex items-center gap-3 px-5 py-6 border-b border-slate-800">
+        <div class="w-9 h-9 rounded-lg bg-red-600 flex items-center justify-center flex-shrink-0">
+          <span class="material-symbols-outlined text-white text-[18px]" style="font-variation-settings:'FILL' 1">widgets</span>
+        </div>
+        <div>
+          <p class="text-red-500 font-black text-lg tracking-tighter leading-none">AdminPro</p>
+          <p class="text-slate-500 text-xs font-medium">Command Center</p>
+        </div>
+      </div>
+      <!-- Nav links injected by JS -->
+      <nav id="desktop-nav" class="flex-1 flex flex-col gap-1 p-3 overflow-y-auto"></nav>
+      <!-- User / logout -->
+      <div class="p-4 border-t border-slate-800">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-full bg-red-600/20 border border-red-600/30 flex items-center justify-center">
+            <span class="material-symbols-outlined text-red-400 text-[16px]">person</span>
+          </div>
+          <span id="user-name" class="text-slate-300 text-sm font-medium flex-1 truncate">Usuario</span>
+          <button id="logout-btn" title="Cerrar sesión"
+            class="p-1.5 text-slate-500 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors">
+            <span class="material-symbols-outlined text-[18px]">logout</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- TOP HEADER -->
+    <header class="fixed top-0 left-0 md:left-[260px] right-0 h-14 bg-white/80 backdrop-blur-md
+                   border-b border-surface-variant shadow-sm flex items-center px-5 gap-4 z-30">
+      <!-- Mobile menu btn -->
+      <button id="mobile-menu-btn" class="md:hidden p-1 text-on-surface-variant">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+      <!-- View title -->
+      <h1 id="header-title" class="font-bold text-on-surface text-[17px] flex-1 tracking-tight">Dashboard</h1>
+      <!-- Actions -->
+      <div class="flex items-center gap-2">
+        <button class="p-2 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-lg transition-colors relative">
+          <span class="material-symbols-outlined text-[20px]">notifications</span>
+          <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span>
+        </button>
+        <button class="hidden md:flex p-2 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-lg transition-colors">
+          <span class="material-symbols-outlined text-[20px]">account_circle</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="pt-14 md:ml-[260px] pb-16 md:pb-0 min-h-screen">
+
+      <!-- DASHBOARD VIEW -->
+      <section data-view="dashboard" class="hidden p-container-padding">
+        <div class="max-w-5xl mx-auto">
+          <h2 class="text-2xl font-bold text-on-surface mb-6">Dashboard</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-card-gap mb-8">
+            <!-- Stat cards — placeholder while other views are built -->
+            <div class="bg-surface-container-lowest border border-surface-variant rounded-xl p-5 shadow-sm">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-10 h-10 rounded-full bg-tertiary-fixed/40 flex items-center justify-center text-tertiary">
+                  <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">inventory_2</span>
+                </div>
+                <p class="text-sm text-on-surface-variant font-medium">Total Productos</p>
+              </div>
+              <p id="dash-total-prod" class="text-3xl font-bold text-on-surface">—</p>
+            </div>
+            <div class="bg-surface-container-lowest border border-error-container rounded-xl p-5 shadow-sm">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-10 h-10 rounded-full bg-error-container/60 flex items-center justify-center text-error">
+                  <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">warning</span>
+                </div>
+                <p class="text-sm text-error font-medium">Stock Bajo</p>
+              </div>
+              <p id="dash-low-stock" class="text-3xl font-bold text-on-surface">—</p>
+            </div>
+            <div class="bg-surface-container-lowest border border-surface-variant rounded-xl p-5 shadow-sm">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-700">
+                  <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">payments</span>
+                </div>
+                <p class="text-sm text-on-surface-variant font-medium">Ventas del mes</p>
+              </div>
+              <p id="dash-ventas" class="text-3xl font-bold text-on-surface">—</p>
+            </div>
+          </div>
+          <p class="text-on-surface-variant text-sm text-center">
+            <span class="material-symbols-outlined align-middle text-[16px] mr-1">construction</span>
+            Más módulos del Dashboard en construcción. Navega a <strong>Inventario</strong> para probar el nuevo diseño.
+          </p>
+        </div>
+      </section>
+
+      <!-- INVENTORY VIEW -->
+      <section data-view="inventory" class="hidden">
+        <div class="p-container-padding max-w-[1400px] mx-auto">
+          <!-- Header -->
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+            <div>
+              <h2 class="text-2xl font-bold text-on-surface">Inventario</h2>
+              <p class="text-sm text-on-surface-variant mt-0.5">Gestiona y monitorea tu catálogo de productos.</p>
+            </div>
+            <!-- Bento Stats -->
+            <div class="flex gap-3 flex-wrap">
+              <div class="bg-surface-container-lowest border border-surface-variant rounded-xl px-4 py-3 flex items-center gap-3 shadow-sm">
+                <div class="w-9 h-9 rounded-full bg-tertiary-fixed/40 flex items-center justify-center text-tertiary flex-shrink-0">
+                  <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'FILL' 1">category</span>
+                </div>
+                <div>
+                  <p class="text-[10px] text-on-surface-variant font-medium uppercase tracking-wider">Total SKUs</p>
+                  <p id="inv-stat-total" class="text-xl font-bold text-on-surface">—</p>
+                </div>
+              </div>
+              <div class="bg-surface-container-lowest border border-error-container rounded-xl px-4 py-3 flex items-center gap-3 shadow-sm">
+                <div class="w-9 h-9 rounded-full bg-error-container/60 flex items-center justify-center text-error flex-shrink-0">
+                  <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'FILL' 1">warning</span>
+                </div>
+                <div>
+                  <p class="text-[10px] text-error font-medium uppercase tracking-wider">Stock Bajo</p>
+                  <p id="inv-stat-alert" class="text-xl font-bold text-on-surface">—</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Search + Filter bar -->
+          <div class="flex gap-3 mb-5 bg-surface-container-lowest border border-surface-variant rounded-xl p-2 shadow-sm sticky top-14 z-20 backdrop-blur-md">
+            <div class="relative flex-1">
+              <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+              <input id="inv-search" type="text" placeholder="Buscar por nombre, marca, SKU..."
+                class="w-full bg-transparent pl-10 pr-4 py-2 text-sm text-on-background placeholder-on-surface-variant
+                       focus:outline-none focus:ring-1 focus:ring-primary/40 rounded-lg transition-all" />
+            </div>
+            <select id="inv-filter-cat"
+              class="bg-surface-container text-sm text-on-background border-none rounded-lg px-3 py-2
+                     focus:outline-none focus:ring-1 focus:ring-primary/40 cursor-pointer">
+              <option value="">Todas las categorías</option>
+            </select>
+          </div>
+
+          <!-- Product grid (populated by JS) -->
+          <div id="inv-grid"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-card-gap">
+          </div>
+        </div>
+
+        <!-- FAB -->
+        <button id="inv-new-btn"
+          class="fixed bottom-20 md:bottom-8 right-6 bg-primary text-on-primary rounded-xl
+                 px-5 py-3.5 flex items-center gap-2 shadow-[0_8px_16px_rgba(189,0,48,0.3)]
+                 hover:bg-on-primary-fixed-variant transition-all hover:-translate-y-1
+                 active:translate-y-0 active:scale-95 z-30 group">
+          <span class="material-symbols-outlined transition-transform group-hover:rotate-90"
+            style="font-variation-settings:'FILL' 1">add</span>
+          <span class="text-xs font-bold tracking-wide">Nuevo Producto</span>
+        </button>
+
+        <!-- MODAL: Crear / Editar Producto -->
+        <div id="inv-modal" class="hidden fixed inset-0 z-50 items-center justify-center p-4">
+          <!-- Backdrop -->
+          <div id="inv-modal-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+          <!-- Panel -->
+          <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto z-10">
+            <!-- Header -->
+            <div class="flex items-center justify-between px-6 py-4 border-b border-surface-variant">
+              <h3 id="inv-modal-title" class="font-bold text-lg text-on-surface">Nuevo Producto</h3>
+              <button id="inv-modal-close" class="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors">
+                <span class="material-symbols-outlined">close</span>
+              </button>
+            </div>
+            <!-- Form -->
+            <form id="inv-form" class="p-6 space-y-4" onsubmit="return false">
+              <!-- Photo picker -->
+              <div>
+                <label class="block text-xs font-semibold text-on-surface-variant mb-2 uppercase tracking-wider">Foto del producto</label>
+                <div class="flex items-center gap-4">
+                  <div id="inv-img-preview"
+                    class="w-20 h-20 rounded-xl bg-surface-container border-2 border-dashed border-surface-variant
+                           flex items-center justify-center overflow-hidden flex-shrink-0 cursor-pointer"
+                    onclick="document.getElementById('inv-img-file').click()">
+                    <span class="material-symbols-outlined text-3xl text-on-surface-variant/40">add_photo_alternate</span>
+                  </div>
+                  <div class="flex-1">
+                    <input id="inv-img-file" type="file" accept="image/*" capture="environment" class="hidden" />
+                    <button type="button" onclick="document.getElementById('inv-img-file').click()"
+                      class="flex items-center gap-2 px-4 py-2.5 border border-surface-variant rounded-lg text-sm
+                             font-medium text-on-surface-variant hover:bg-surface-container transition-colors w-full justify-center">
+                      <span class="material-symbols-outlined text-[18px]">camera_alt</span>
+                      Tomar foto o elegir archivo
+                    </button>
+                    <p class="text-[11px] text-on-surface-variant mt-1.5 text-center">Se sube automáticamente a Google Drive</p>
+                  </div>
+                </div>
+                <input id="inv-existing-img" type="hidden" value="" />
+              </div>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div class="col-span-2">
+                  <label class="field-label">Nombre del Producto *</label>
+                  <input id="inv-nombre" type="text" required class="field-input" placeholder="Ej: iPhone 14 Pro" />
+                </div>
+                <div>
+                  <label class="field-label">ID / Código *</label>
+                  <input id="inv-id" type="text" required class="field-input" placeholder="PROD-001" />
+                </div>
+                <div>
+                  <label class="field-label">SKU / Barcode</label>
+                  <input id="inv-sku" type="text" class="field-input" placeholder="SKU-123" />
+                </div>
+                <div>
+                  <label class="field-label">Marca</label>
+                  <input id="inv-marca" type="text" class="field-input" placeholder="Apple" />
+                </div>
+                <div>
+                  <label class="field-label">Categoría</label>
+                  <input id="inv-categoria" type="text" class="field-input" placeholder="Celular" />
+                </div>
+                <div>
+                  <label class="field-label">Tipo</label>
+                  <input id="inv-tipo" type="text" class="field-input" placeholder="Nuevo" />
+                </div>
+                <div>
+                  <label class="field-label">Ubicación</label>
+                  <input id="inv-ubicacion" type="text" class="field-input" placeholder="Estante A" />
+                </div>
+                <div>
+                  <label class="field-label">Precio Costo</label>
+                  <input id="inv-costo" type="text" class="field-input" placeholder="0" />
+                </div>
+                <div>
+                  <label class="field-label">Precio Venta</label>
+                  <input id="inv-venta" type="text" class="field-input" placeholder="0" />
+                </div>
+                <div>
+                  <label class="field-label">Stock Mínimo</label>
+                  <input id="inv-stock-min" type="number" min="0" class="field-input" placeholder="5" />
+                </div>
+                <div>
+                  <label class="field-label">Stock Actual</label>
+                  <input id="inv-stock-act" type="number" min="0" class="field-input" placeholder="0" />
+                </div>
+              </div>
+            </form>
+            <!-- Footer -->
+            <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-surface-variant bg-surface-container-low rounded-b-2xl">
+              <button onclick="document.getElementById('inv-modal-close').click()"
+                class="px-5 py-2.5 text-sm font-semibold text-on-surface-variant border border-surface-variant rounded-lg hover:bg-surface-container transition-colors">
+                Cancelar
+              </button>
+              <button id="inv-save-btn"
+                class="flex items-center gap-1.5 px-5 py-2.5 bg-primary text-on-primary text-sm font-bold rounded-lg hover:bg-primary-container transition-colors shadow-sm">
+                <span class="material-symbols-outlined text-[18px]">save</span> Guardar
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Placeholder views for other sections -->
+      <section data-view="pos"       class="hidden p-container-padding"><p class="text-on-surface-variant text-center mt-20">Vista POS — En construcción 🚧</p></section>
+      <section data-view="imei"      class="hidden p-container-padding"><p class="text-on-surface-variant text-center mt-20">Equipos IMEI — En construcción 🚧</p></section>
+      <section data-view="clients"   class="hidden p-container-padding"><p class="text-on-surface-variant text-center mt-20">Clientes — En construcción 🚧</p></section>
+      <section data-view="credits"   class="hidden p-container-padding"><p class="text-on-surface-variant text-center mt-20">Créditos — En construcción 🚧</p></section>
+      <section data-view="separe"    class="hidden p-container-padding"><p class="text-on-surface-variant text-center mt-20">Plan Separe — En construcción 🚧</p></section>
+      <section data-view="pedidos"   class="hidden p-container-padding"><p class="text-on-surface-variant text-center mt-20">Pedidos Externos — En construcción 🚧</p></section>
+      <section data-view="technical" class="hidden p-container-padding"><p class="text-on-surface-variant text-center mt-20">Servicio Técnico — En construcción 🚧</p></section>
+      <section data-view="expenses"  class="hidden p-container-padding"><p class="text-on-surface-variant text-center mt-20">Egresos — En construcción 🚧</p></section>
+      <section data-view="settings"  class="hidden p-container-padding"><p class="text-on-surface-variant text-center mt-20">Ajustes — En construcción 🚧</p></section>
+
+    </main><!-- /main -->
+
+    <!-- MOBILE BOTTOM NAV -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-surface-container-lowest border-t border-surface-variant
+                shadow-[0_-2px_10px_rgba(0,0,0,0.05)] flex md:hidden z-30 safe-area-bottom">
+      <div id="mobile-nav" class="flex w-full"></div>
+    </nav>
+
+  </div><!-- /app-shell -->
+
+  <!-- Tailwind custom components -->
+  <style>
+    .field-label { @apply block text-xs font-semibold text-on-surface-variant mb-1 uppercase tracking-wider; }
+    .field-input { @apply w-full bg-surface-container-low border border-surface-variant rounded-lg px-3 py-2.5 text-sm text-on-surface placeholder-on-surface-variant/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all; }
+    .nav-btn-mobile { @apply flex flex-col items-center justify-center gap-0.5 py-2 px-2 w-full h-14; }
+  </style>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
