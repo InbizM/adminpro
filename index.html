@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-  <script type="module" crossorigin src="/adminpro/assets/index-CC66eyth.js"></script>
+  <script type="module" crossorigin src="/adminpro/assets/index-JYA4sRVV.js"></script>
   <link rel="stylesheet" crossorigin href="/adminpro/assets/index-BMtvxdDg.css">
 </head>
 <body class="bg-background text-on-background antialiased min-h-screen">
@@ -788,9 +788,21 @@
                 <label class="block text-xs font-semibold text-on-surface-variant mb-1 uppercase">Producto / Descripción</label>
                 <input id="pos-rev-nombre" type="text" class="w-full border border-surface-variant rounded-xl px-4 py-2 text-sm focus:border-primary outline-none" placeholder="Ej. Funda especial iPhone 15" />
               </div>
-              <div>
-                <label class="block text-xs font-semibold text-on-surface-variant mb-1 uppercase">Proveedor (Opcional)</label>
-                <input id="pos-rev-proveedor" type="text" class="w-full border border-surface-variant rounded-xl px-4 py-2 text-sm focus:border-primary outline-none" placeholder="Local de al lado..." />
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-semibold text-on-surface-variant mb-1 uppercase">Categoría</label>
+                  <select id="pos-rev-categoria" class="w-full border border-surface-variant rounded-xl px-4 py-2 text-sm focus:border-primary outline-none bg-white">
+                    <option value="Celulares">Celulares</option>
+                    <option value="Accesorios">Accesorios</option>
+                    <option value="Repuestos">Repuestos</option>
+                    <option value="Servicios">Servicios</option>
+                    <option value="Otros">Otros</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-on-surface-variant mb-1 uppercase">Proveedor</label>
+                  <input id="pos-rev-proveedor" type="text" class="w-full border border-surface-variant rounded-xl px-4 py-2 text-sm focus:border-primary outline-none" placeholder="Local..." />
+                </div>
               </div>
               <div class="grid grid-cols-2 gap-3">
                 <div>
@@ -1197,11 +1209,11 @@
                 class="w-full bg-surface-container-lowest border border-surface-variant rounded-xl pl-10 pr-4 py-2 text-sm text-on-surface focus:outline-none focus:border-primary shadow-sm" />
             </div>
             <select id="ped-filter-status" class="bg-surface-container text-sm text-on-background border-none rounded-xl px-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary/40 cursor-pointer shadow-sm">
-              <option value="">Todos</option>
-              <option value="Pendiente">⏳ Pendientes</option>
-              <option value="En Tránsito">🚚 En Tránsito</option>
-              <option value="Recibido">📦 Recibidos</option>
-              <option value="Entregado al Cliente">✅ Entregados</option>
+              <option value="">Todas las Categorías</option>
+              <option value="Celulares">📱 Celulares</option>
+              <option value="Accesorios">🎧 Accesorios</option>
+              <option value="Repuestos">🔧 Repuestos</option>
+              <option value="Otros">📦 Otros</option>
             </select>
           </div>
         </div>
@@ -1211,11 +1223,11 @@
           <table class="w-full text-left border-collapse text-sm min-w-[800px]">
             <thead class="bg-surface-container text-on-surface-variant sticky top-0 z-10 text-[11px] uppercase tracking-wider font-bold">
               <tr>
-                <th class="px-4 py-3 border-b border-surface-variant">ID Pedido / Fecha</th>
-                <th class="px-4 py-3 border-b border-surface-variant">Cliente</th>
+                <th class="px-4 py-3 border-b border-surface-variant">ID / Fecha</th>
                 <th class="px-4 py-3 border-b border-surface-variant">Producto</th>
-                <th class="px-4 py-3 border-b border-surface-variant">Costo / Abono</th>
-                <th class="px-4 py-3 border-b border-surface-variant">Estado</th>
+                <th class="px-4 py-3 border-b border-surface-variant">Categoría</th>
+                <th class="px-4 py-3 border-b border-surface-variant">Costo / Venta</th>
+                <th class="px-4 py-3 border-b border-surface-variant">Utilidad</th>
                 <th class="px-4 py-3 border-b border-surface-variant text-right">Acciones</th>
               </tr>
             </thead>
@@ -1246,35 +1258,36 @@
               <input type="hidden" id="ped-id" />
               <div class="grid grid-cols-2 gap-4">
                 <div class="col-span-2">
-                  <label class="field-label">Cliente *</label>
-                  <input id="ped-cliente" type="text" required class="field-input" placeholder="Nombre del cliente" />
-                </div>
-                <div class="col-span-2">
-                  <label class="field-label">Producto Solicitado *</label>
+                  <label class="field-label">Producto *</label>
                   <input id="ped-producto" type="text" required class="field-input" placeholder="Ej: Pantalla iPhone 12" />
                 </div>
                 <div>
-                  <label class="field-label">Costo Aproximado</label>
+                  <label class="field-label">Categoría *</label>
+                  <select id="ped-categoria" class="field-input">
+                    <option value="Celulares">Celulares</option>
+                    <option value="Accesorios">Accesorios</option>
+                    <option value="Repuestos">Repuestos</option>
+                    <option value="Servicios">Servicios</option>
+                    <option value="Otros">Otros</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="field-label">Proveedor</label>
+                  <input id="ped-proveedor" type="text" class="field-input" placeholder="Nombre proveedor" />
+                </div>
+                <div>
+                  <label class="field-label">Costo Proveedor</label>
                   <div class="flex items-center border border-surface-variant rounded-xl bg-surface-container-lowest focus-within:border-primary px-3 gap-1">
                     <span class="text-on-surface-variant font-bold shrink-0">$</span>
                     <input id="ped-costo" type="text" required class="flex-1 py-2.5 bg-transparent outline-none font-medium text-on-surface" placeholder="0" />
                   </div>
                 </div>
                 <div>
-                  <label class="field-label">Abono Inicial</label>
+                  <label class="field-label">Precio Venta</label>
                   <div class="flex items-center border border-surface-variant rounded-xl bg-surface-container-lowest focus-within:border-primary px-3 gap-1">
                     <span class="text-on-surface-variant font-bold shrink-0">$</span>
-                    <input id="ped-abono" type="text" required class="flex-1 py-2.5 bg-transparent outline-none font-medium text-on-surface" placeholder="0" />
+                    <input id="ped-precio" type="text" required class="flex-1 py-2.5 bg-transparent outline-none font-medium text-on-surface" placeholder="0" />
                   </div>
-                </div>
-                <div class="col-span-2">
-                  <label class="field-label">Estado</label>
-                  <select id="ped-estado" class="field-input">
-                    <option value="Pendiente">Pendiente</option>
-                    <option value="En Tránsito">En Tránsito</option>
-                    <option value="Recibido">Recibido (En Tienda)</option>
-                    <option value="Entregado al Cliente">Entregado al Cliente</option>
-                  </select>
                 </div>
               </div>
             </form>
