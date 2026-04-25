@@ -1,5 +1,6 @@
 import { getInventario, crearProducto, actualizarProducto, eliminarProducto, uploadFoto } from "../api.js";
 import { showToast } from "../toast.js";
+import { openScanner } from "../scanner.js";
 
 let productos = [];
 let filteredProductos = [];
@@ -268,6 +269,17 @@ export function initInventory() {
 
   // Save
   document.getElementById("inv-save-btn")?.addEventListener("click", saveProduct);
+
+  // Scanner
+  document.getElementById("inv-scan-sku")?.addEventListener("click", () => {
+    openScanner({
+      title: "Escanear SKU / Barcode",
+      onScan: (code) => {
+        document.getElementById("inv-sku").value = code;
+        showToast(`SKU Detectado: ${code}`, "success");
+      }
+    });
+  });
 
   return loadInventario;
 }

@@ -1,6 +1,16 @@
 import "./style.css";
 import { navigate, registerView, onRouteChange } from "./router.js";
 import { initInventory } from "./views/inventory.js";
+import { initDashboard } from "./views/dashboard.js";
+import { initPOS } from "./views/pos.js";
+import { initIMEI } from "./views/imei.js";
+import { initClients } from "./views/clients.js";
+import { initCredits } from "./views/credits.js";
+import { initSepare } from "./views/separe.js";
+import { initPedidos } from "./views/pedidos.js";
+import { initTechnical } from "./views/technical.js";
+import { initExpenses } from "./views/expenses.js";
+import { initSettings } from "./views/settings.js";
 import { showToast } from "./toast.js";
 import { login, verifyPin, logout, setToken, getToken } from "./api.js";
 
@@ -182,6 +192,36 @@ function showApp(nombre) {
 
   const loadInv = initInventory();
   registerView("inventory", loadInv);
+
+  const loadDash = initDashboard();
+  registerView("dashboard", loadDash);
+
+  const loadPos = initPOS();
+  registerView("pos", loadPos);
+
+  const loadImei = initIMEI();
+  registerView("imei", loadImei);
+
+  const loadClients = initClients();
+  registerView("clients", loadClients);
+
+  const loadCredits = initCredits();
+  registerView("credits", loadCredits);
+
+  const loadSepare = initSepare();
+  registerView("separe", loadSepare);
+
+  const loadPedidos = initPedidos();
+  registerView("pedidos", loadPedidos);
+
+  const loadTechnical = initTechnical();
+  registerView("technical", loadTechnical);
+
+  const loadExpenses = initExpenses();
+  registerView("expenses", loadExpenses);
+
+  const loadSettings = initSettings();
+  registerView("settings", loadSettings);
 
   navigate("dashboard");
 }
