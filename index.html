@@ -10,8 +10,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-  <script type="module" crossorigin src="/adminpro/assets/index-RjZUcU4A.js"></script>
-  <link rel="stylesheet" crossorigin href="/adminpro/assets/index-CQn-IhW8.css">
+  <script type="module" crossorigin src="/adminpro/assets/index-Yj-KaPUZ.js"></script>
+  <link rel="stylesheet" crossorigin href="/adminpro/assets/index-JAiwEsvG.css">
 </head>
 <body class="bg-background text-on-background antialiased min-h-screen">
 
@@ -268,10 +268,6 @@
               <p id="dash-cnt-pedidos" class="text-xl font-black text-on-surface">—</p>
               <p class="text-[10px] text-on-surface-variant font-medium uppercase tracking-wider">Pedidos</p>
             </div>
-            <div data-goto="separe" class="dash-shortcut cursor-pointer bg-surface-container-lowest border border-surface-variant rounded-xl p-3 text-center hover:border-primary/40 transition-colors">
-              <p id="dash-cnt-separe" class="text-xl font-black text-on-surface">—</p>
-              <p class="text-[10px] text-on-surface-variant font-medium uppercase tracking-wider">Separados</p>
-            </div>
           </div>
 
           <!-- Main grid: 2 columns -->
@@ -397,11 +393,32 @@
                      focus:outline-none focus:ring-1 focus:ring-primary/40 cursor-pointer">
               <option value="">Todas las categorías</option>
             </select>
+            <button id="inv-view-toggle" title="Cambiar Vista" class="px-3 py-2 bg-surface-container text-on-surface-variant rounded-lg hover:text-on-surface transition-colors">
+              <span class="material-symbols-outlined text-[20px]">view_list</span>
+            </button>
           </div>
 
-          <!-- Product grid (populated by JS) -->
-          <div id="inv-grid"
-            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-card-gap">
+          <!-- Product views (populated by JS) -->
+          <div id="inv-view-container">
+            <div id="inv-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-card-gap"></div>
+            <div id="inv-table-wrapper" class="hidden overflow-x-auto bg-surface-container-lowest border border-surface-variant rounded-2xl shadow-sm">
+              <table class="w-full text-left border-collapse text-sm min-w-[800px]">
+                <thead class="bg-surface-container text-on-surface-variant text-[11px] uppercase tracking-wider font-bold">
+                  <tr>
+                    <th class="px-4 py-3 border-b border-surface-variant w-12">Img</th>
+                    <th class="px-4 py-3 border-b border-surface-variant">Producto</th>
+                    <th class="px-4 py-3 border-b border-surface-variant">ID/SKU</th>
+                    <th class="px-4 py-3 border-b border-surface-variant">Categoría</th>
+                    <th class="px-4 py-3 border-b border-surface-variant">Stock</th>
+                    <th class="px-4 py-3 border-b border-surface-variant">Costo</th>
+                    <th class="px-4 py-3 border-b border-surface-variant">Precio Venta</th>
+                    <th class="px-4 py-3 border-b border-surface-variant">Ubicación</th>
+                    <th class="px-4 py-3 border-b border-surface-variant w-20"></th>
+                  </tr>
+                </thead>
+                <tbody id="inv-table-body" class="divide-y divide-surface-variant text-on-surface"></tbody>
+              </table>
+            </div>
           </div>
         </div>
 
@@ -462,7 +479,12 @@
                 </div>
                 <div>
                   <label class="field-label">ID / Código *</label>
-                  <input id="inv-id" type="text" required class="field-input" placeholder="PROD-001" />
+                  <div class="flex gap-2">
+                    <input id="inv-id" type="text" required class="field-input flex-1" placeholder="PROD-001" />
+                    <button type="button" id="inv-auto-id-btn" title="Generar ID Automático" class="p-2.5 bg-surface-container text-primary rounded-xl border border-surface-variant hover:bg-primary/10 transition-colors">
+                      <span class="material-symbols-outlined text-[20px]">autorenew</span>
+                    </button>
+                  </div>
                 </div>
                 <div>
                   <label class="field-label">SKU / Barcode</label>
@@ -475,15 +497,31 @@
                 </div>
                 <div>
                   <label class="field-label">Marca</label>
-                  <input id="inv-marca" type="text" class="field-input" placeholder="Apple" />
+                  <div class="flex gap-2">
+                    <input id="inv-marca" type="text" list="datalist-marcas" class="field-input flex-1" placeholder="Ej: Apple" autocomplete="off" />
+                    <datalist id="datalist-marcas"></datalist>
+                    <button type="button" id="inv-add-marca-btn" title="Agregar Marca" class="p-2.5 bg-surface-container text-primary rounded-xl border border-surface-variant hover:bg-primary/10 transition-colors shrink-0">
+                      <span class="material-symbols-outlined text-[20px]">add</span>
+                    </button>
+                  </div>
                 </div>
                 <div>
                   <label class="field-label">Categoría</label>
-                  <input id="inv-categoria" type="text" class="field-input" placeholder="Celular" />
+                  <div class="flex gap-2">
+                    <input id="inv-categoria" type="text" list="datalist-categorias" class="field-input flex-1" placeholder="Ej: Celular" autocomplete="off" />
+                    <datalist id="datalist-categorias"></datalist>
+                    <button type="button" id="inv-add-cat-btn" title="Agregar Categoría" class="p-2.5 bg-surface-container text-primary rounded-xl border border-surface-variant hover:bg-primary/10 transition-colors shrink-0">
+                      <span class="material-symbols-outlined text-[20px]">add</span>
+                    </button>
+                  </div>
                 </div>
                 <div>
                   <label class="field-label">Tipo</label>
-                  <input id="inv-tipo" type="text" class="field-input" placeholder="Nuevo" />
+                  <select id="inv-tipo" class="field-input">
+                    <option value="Físico" selected>Físico</option>
+                    <option value="Digital">Digital</option>
+                    <option value="Servicio">Servicio</option>
+                  </select>
                 </div>
                 <div>
                   <label class="field-label">Ubicación</label>
@@ -491,11 +529,17 @@
                 </div>
                 <div>
                   <label class="field-label">Precio Costo</label>
-                  <input id="inv-costo" type="text" class="field-input" placeholder="0" />
+                  <div class="flex items-center border border-surface-variant rounded-xl bg-surface-container-lowest focus-within:border-primary px-3 gap-1">
+                    <span class="text-on-surface-variant font-bold shrink-0">$</span>
+                    <input id="inv-costo" type="text" class="flex-1 py-2.5 bg-transparent outline-none font-medium text-on-surface" placeholder="0" />
+                  </div>
                 </div>
                 <div>
                   <label class="field-label">Precio Venta</label>
-                  <input id="inv-venta" type="text" class="field-input" placeholder="0" />
+                  <div class="flex items-center border border-surface-variant rounded-xl bg-surface-container-lowest focus-within:border-primary px-3 gap-1">
+                    <span class="text-on-surface-variant font-bold shrink-0">$</span>
+                    <input id="inv-venta" type="text" class="flex-1 py-2.5 bg-transparent outline-none font-medium text-on-surface" placeholder="0" />
+                  </div>
                 </div>
                 <div>
                   <label class="field-label">Stock Mínimo</label>
@@ -522,14 +566,151 @@
         </div>
       </section>
 
+      <!-- MODAL: Detalle de Producto (solo lectura) -->
+      <div id="inv-detail-modal" class="hidden fixed inset-0 z-50 items-center justify-center p-4">
+        <div id="inv-detail-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto z-10">
+          <div class="flex items-center justify-between px-6 py-4 border-b border-surface-variant">
+            <h3 class="font-bold text-lg text-on-surface">Detalle del Producto</h3>
+            <button id="inv-detail-close" class="p-1.5 text-on-surface-variant hover:bg-surface-container rounded-lg">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </div>
+          <div class="p-6">
+            <div id="inv-detail-img-wrap" class="hidden mb-5">
+              <img id="inv-detail-img" src="" alt="" class="w-full h-44 object-contain rounded-xl bg-surface-container" />
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="col-span-2">
+                <p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold mb-0.5">Nombre</p>
+                <p id="inv-d-nombre" class="text-base font-bold text-on-surface"></p>
+              </div>
+              <div>
+                <p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold mb-0.5">Marca</p>
+                <p id="inv-d-marca" class="text-sm font-medium text-on-surface"></p>
+              </div>
+              <div>
+                <p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold mb-0.5">Categoría</p>
+                <p id="inv-d-cat" class="text-sm font-medium text-on-surface"></p>
+              </div>
+              <div>
+                <p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold mb-0.5">Precio Costo</p>
+                <p id="inv-d-costo" class="text-sm font-bold text-on-surface-variant"></p>
+              </div>
+              <div>
+                <p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold mb-0.5">Precio Venta</p>
+                <p id="inv-d-venta" class="text-sm font-bold text-primary"></p>
+              </div>
+              <div>
+                <p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold mb-0.5">Stock Actual</p>
+                <p id="inv-d-stock" class="text-sm font-bold text-on-surface"></p>
+              </div>
+              <div>
+                <p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold mb-0.5">Stock Mínimo</p>
+                <p id="inv-d-stockmin" class="text-sm text-on-surface-variant"></p>
+              </div>
+              <div>
+                <p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold mb-0.5">Tipo</p>
+                <p id="inv-d-tipo" class="text-sm text-on-surface-variant"></p>
+              </div>
+              <div>
+                <p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold mb-0.5">Ubicación</p>
+                <p id="inv-d-ubicacion" class="text-sm text-on-surface-variant"></p>
+              </div>
+              <div>
+                <p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold mb-0.5">SKU / Código</p>
+                <p id="inv-d-sku" class="text-sm font-mono text-on-surface-variant"></p>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-surface-variant bg-surface-container-low rounded-b-2xl">
+            <button id="inv-detail-close2" class="px-4 py-2.5 text-sm font-semibold text-on-surface-variant border border-surface-variant rounded-lg hover:bg-surface-container">
+              Cerrar
+            </button>
+            <button id="inv-detail-edit-btn" class="flex items-center gap-1.5 px-5 py-2.5 bg-primary text-on-primary text-sm font-bold rounded-lg shadow-sm">
+              <span class="material-symbols-outlined text-[18px]">edit</span> Editar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MINI-MODAL: Agregar Marca / Categoría -->
+      <div id="inv-quick-input-modal" class="hidden fixed inset-0 z-[60] items-center justify-center p-4">
+        <div id="inv-qi-backdrop" class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-xs z-10 p-6">
+          <h4 id="inv-qi-title" class="font-bold text-base text-on-surface mb-4">Nueva Marca</h4>
+          <input id="inv-qi-input" type="text" autocomplete="off"
+            class="w-full border border-surface-variant rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary mb-4"
+            placeholder="Escriba el nombre..." />
+          <div class="flex gap-3 justify-end">
+            <button id="inv-qi-cancel" class="px-4 py-2 text-sm text-on-surface-variant border border-surface-variant rounded-lg hover:bg-surface-container">
+              Cancelar
+            </button>
+            <button id="inv-qi-save" class="px-5 py-2 text-sm font-bold bg-primary text-on-primary rounded-lg shadow-sm">
+              Agregar
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Placeholder views for other sections -->
       <!-- POS VIEW -->
       <section data-view="pos" class="hidden h-[calc(100vh-3.5rem)] overflow-hidden">
+
+        <!-- ★ TIPO DE OPERACIÓN — overlay que aparece al entrar al POS -->
+        <div id="pos-type-overlay" class="absolute inset-0 z-40 flex items-center justify-center bg-background/95 backdrop-blur-sm">
+          <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full mx-4 text-center">
+            <div class="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <span class="material-symbols-outlined text-primary text-4xl">point_of_sale</span>
+            </div>
+            <h2 class="text-2xl font-black text-on-surface mb-1">Punto de Venta</h2>
+            <p class="text-sm text-on-surface-variant mb-8">¿Qué tipo de operación vas a registrar?</p>
+            <div class="grid grid-cols-1 gap-3">
+              <button id="pos-type-venta"
+                class="flex items-center gap-4 p-4 rounded-2xl border-2 border-surface-variant hover:border-primary hover:bg-primary/5 transition-all text-left group">
+                <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-primary/10">
+                  <span class="material-symbols-outlined text-green-600 group-hover:text-primary">shopping_cart</span>
+                </div>
+                <div>
+                  <p class="font-bold text-on-surface">Venta</p>
+                  <p class="text-xs text-on-surface-variant">Pago inmediato — Efectivo, Nequi, Daviplata...</p>
+                </div>
+              </button>
+              <button id="pos-type-credito"
+                class="flex items-center gap-4 p-4 rounded-2xl border-2 border-surface-variant hover:border-primary hover:bg-primary/5 transition-all text-left group">
+                <div class="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-primary/10">
+                  <span class="material-symbols-outlined text-pink-600 group-hover:text-primary">credit_score</span>
+                </div>
+                <div>
+                  <p class="font-bold text-on-surface">Crédito / Fiado</p>
+                  <p class="text-xs text-on-surface-variant">El cliente paga en cuotas. Se registra en Créditos.</p>
+                </div>
+              </button>
+              <button id="pos-type-separe"
+                class="flex items-center gap-4 p-4 rounded-2xl border-2 border-surface-variant hover:border-primary hover:bg-primary/5 transition-all text-left group">
+                <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-primary/10">
+                  <span class="material-symbols-outlined text-emerald-600 group-hover:text-primary">bookmark_added</span>
+                </div>
+                <div>
+                  <p class="font-bold text-on-surface">Plan Separe</p>
+                  <p class="text-xs text-on-surface-variant">Se guarda en Créditos como un Separe.</p>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+
         <div class="flex flex-col lg:flex-row h-full">
           <!-- Left: Products & Scanner -->
           <div class="flex-1 flex flex-col p-container-padding h-full overflow-hidden bg-background">
             <div class="flex items-center justify-between mb-4">
-              <h2 class="text-2xl font-bold text-on-surface">Punto de Venta</h2>
+              <div>
+                <h2 class="text-2xl font-bold text-on-surface">Punto de Venta</h2>
+                <div id="pos-tipo-badge" class="hidden mt-1">
+                  <span id="pos-tipo-label" class="px-3 py-0.5 rounded-full text-xs font-bold bg-primary text-on-primary"></span>
+                  <button id="pos-tipo-cambiar" class="ml-2 text-xs text-primary underline">Cambiar</button>
+                </div>
+              </div>
             </div>
             
             <!-- Scanner / Search Bar -->
@@ -565,15 +746,19 @@
           <!-- Right: Cart / Ticket -->
           <div class="w-full lg:w-[380px] xl:w-[420px] bg-surface-container-lowest border-l border-surface-variant flex flex-col h-full shadow-2xl z-20">
             <!-- Customer selector -->
-            <div class="p-4 border-b border-surface-variant bg-surface-container-low">
-              <div class="flex items-center gap-2 text-on-surface-variant mb-2">
-                <span class="material-symbols-outlined text-[18px]">person_add</span>
-                <span class="text-xs font-bold uppercase tracking-wider">Cliente</span>
+            <div class="p-4 border-b border-surface-variant bg-surface-container-low flex items-end gap-2">
+              <div class="flex-1">
+                <div class="flex items-center gap-2 text-on-surface-variant mb-1">
+                  <span class="material-symbols-outlined text-[16px]">person</span>
+                  <span class="text-[11px] font-bold uppercase tracking-wider">Cliente</span>
+                </div>
+                <input id="pos-cliente-nombre" type="text" readonly placeholder="Consumidor Final" class="w-full bg-white border border-surface-variant rounded-lg px-3 py-2 text-sm text-on-surface font-medium cursor-not-allowed shadow-sm" />
+                <input id="pos-cliente-doc" type="hidden" />
               </div>
-              <div class="flex gap-2">
-                <input id="pos-cliente-doc" type="text" placeholder="Cédula/NIT" class="w-1/3 bg-white border border-surface-variant rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary" />
-                <input id="pos-cliente-nombre" type="text" placeholder="Nombre completo o Consumidor Final" class="flex-1 bg-white border border-surface-variant rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary" />
-              </div>
+              <button id="pos-select-client-btn" class="px-4 py-2 bg-surface-container text-primary text-sm font-bold rounded-lg border border-surface-variant hover:bg-primary/10 transition-colors shadow-sm whitespace-nowrap flex items-center gap-1">
+                <span class="material-symbols-outlined text-[18px]">search</span>
+                Buscar
+              </button>
             </div>
 
             <!-- Cart Items -->
@@ -742,24 +927,33 @@
                   </div>
                 </div>
                 <div class="col-span-2">
-                  <label class="field-label">Nombre del Equipo *</label>
-                  <input id="imei-nombre" type="text" required class="field-input" placeholder="iPhone 13 Pro Max" />
+                  <label class="field-label">Producto en Inventario *</label>
+                  <select id="imei-nombre" required class="field-input">
+                    <option value="">Seleccione un equipo...</option>
+                  </select>
+                  <p class="text-[10px] text-on-surface-variant mt-1">Selecciona el equipo del inventario. Los datos se llenan automáticamente.</p>
                 </div>
                 <div>
-                  <label class="field-label">Marca</label>
-                  <input id="imei-marca" type="text" class="field-input" placeholder="Apple" />
+                  <label class="field-label">Marca <span class="text-[10px] text-on-surface-variant normal-case font-normal">(auto)</span></label>
+                  <input id="imei-marca" type="text" readonly class="field-input bg-surface-container cursor-not-allowed text-on-surface-variant" placeholder="Se llena al seleccionar" />
                 </div>
                 <div>
-                  <label class="field-label">Proveedor</label>
-                  <input id="imei-proveedor" type="text" class="field-input" placeholder="Distribuidor X" />
+                  <label class="field-label">Proveedor <span class="text-[10px] text-on-surface-variant normal-case font-normal">(auto)</span></label>
+                  <input id="imei-proveedor" type="text" readonly class="field-input bg-surface-container cursor-not-allowed text-on-surface-variant" placeholder="Se llena al seleccionar" />
                 </div>
                 <div>
-                  <label class="field-label">Costo</label>
-                  <input id="imei-costo" type="number" required class="field-input" placeholder="0" />
+                  <label class="field-label">Costo <span class="text-[10px] text-on-surface-variant normal-case font-normal">(auto)</span></label>
+                  <div class="flex items-center border border-surface-variant rounded-xl bg-surface-container px-3 gap-1 cursor-not-allowed">
+                    <span class="text-on-surface-variant font-bold shrink-0">$</span>
+                    <input id="imei-costo" type="text" readonly class="flex-1 py-2.5 bg-transparent outline-none font-bold text-on-surface-variant cursor-not-allowed" placeholder="0" />
+                  </div>
                 </div>
                 <div>
-                  <label class="field-label">Venta</label>
-                  <input id="imei-venta" type="number" required class="field-input" placeholder="0" />
+                  <label class="field-label">Venta <span class="text-[10px] text-on-surface-variant normal-case font-normal">(auto)</span></label>
+                  <div class="flex items-center border border-surface-variant rounded-xl bg-surface-container px-3 gap-1 cursor-not-allowed">
+                    <span class="text-primary font-bold shrink-0">$</span>
+                    <input id="imei-venta" type="text" readonly class="flex-1 py-2.5 bg-transparent outline-none font-bold text-primary cursor-not-allowed" placeholder="0" />
+                  </div>
                 </div>
                 <div class="col-span-2">
                   <label class="field-label">Estado</label>
@@ -886,10 +1080,17 @@
               <input id="cred-search" type="text" placeholder="Buscar cliente..."
                 class="w-full bg-surface-container-lowest border border-surface-variant rounded-xl pl-10 pr-4 py-2 text-sm text-on-surface focus:outline-none focus:border-primary shadow-sm" />
             </div>
+            <select id="cred-filter-tipo" class="bg-surface-container text-sm text-on-background border-none rounded-xl px-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary/40 cursor-pointer shadow-sm">
+              <option value="">Todos los Tipos</option>
+              <option value="Crédito">💳 Créditos</option>
+              <option value="Plan Separe">📦 Plan Separe</option>
+            </select>
             <select id="cred-filter-status" class="bg-surface-container text-sm text-on-background border-none rounded-xl px-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary/40 cursor-pointer shadow-sm">
-              <option value="">Todos</option>
+              <option value="">Todos los Estados</option>
               <option value="Activo">🟠 Activos</option>
+              <option value="Separado">🟠 Separados</option>
               <option value="Cancelado">🟢 Cancelados</option>
+              <option value="Entregado">🟢 Entregados</option>
               <option value="En Mora">🔴 En Mora</option>
             </select>
           </div>
@@ -915,9 +1116,11 @@
                 <th class="px-4 py-3 border-b border-surface-variant">Cliente</th>
                 <th class="px-4 py-3 border-b border-surface-variant">ID Factura</th>
                 <th class="px-4 py-3 border-b border-surface-variant">Fecha</th>
+                <th class="px-4 py-3 border-b border-surface-variant">Tipo</th>
                 <th class="px-4 py-3 border-b border-surface-variant">Deuda Total</th>
                 <th class="px-4 py-3 border-b border-surface-variant">Abonado</th>
                 <th class="px-4 py-3 border-b border-surface-variant text-error font-black">Saldo Pendiente</th>
+                <th class="px-4 py-3 border-b border-surface-variant text-center">Días</th>
                 <th class="px-4 py-3 border-b border-surface-variant">Estado</th>
                 <th class="px-4 py-3 border-b border-surface-variant text-right">Acciones</th>
               </tr>
@@ -931,94 +1134,49 @@
         <!-- MODAL ABONO -->
         <div id="cred-modal" class="hidden fixed inset-0 z-50 items-center justify-center p-4">
           <div id="cred-modal-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
-          <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden z-10">
+          <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm max-h-[90vh] overflow-y-auto z-10">
             <div class="flex items-center justify-between px-6 py-4 border-b border-surface-variant">
               <h3 class="font-bold text-lg text-on-surface">Registrar Abono</h3>
-              <button id="cred-modal-close" class="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg">
+              <button id="cred-modal-close" class="p-1.5 text-on-surface-variant hover:bg-surface-container rounded-lg">
                 <span class="material-symbols-outlined">close</span>
               </button>
             </div>
             <form id="cred-form" class="p-6 space-y-4" onsubmit="return false">
               <input type="hidden" id="cred-id" />
-              <div class="bg-surface-container-low p-3 rounded-lg border border-surface-variant mb-4">
-                <p class="text-xs text-on-surface-variant mb-1">Cliente: <strong id="cred-cliente-name" class="text-on-surface"></strong></p>
-                <p class="text-xs text-on-surface-variant">Saldo Actual: <strong id="cred-saldo-actual" class="text-error font-bold"></strong></p>
+              <div class="bg-surface-container-low p-3 rounded-xl border border-surface-variant">
+                <p class="text-xs text-on-surface-variant mb-0.5">Cliente: <strong id="cred-cliente-name" class="text-on-surface"></strong></p>
+                <p class="text-xs text-on-surface-variant">Saldo pendiente: <strong id="cred-saldo-actual" class="text-error font-bold text-base"></strong></p>
               </div>
+              <!-- Historial de abonos -->
               <div>
-                <label class="field-label">Monto a abonar *</label>
-                <div class="relative">
-                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold">$</span>
-                  <input id="cred-monto-abono" type="number" required min="1" class="field-input pl-8 text-lg font-bold" placeholder="0" />
+                <p class="text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider mb-2">Historial de pagos</p>
+                <div id="cred-historial" class="max-h-32 overflow-y-auto space-y-0.5 bg-surface-container-lowest border border-surface-variant rounded-xl p-3 text-xs">
+                  <p class="text-xs text-on-surface-variant">Sin abonos anteriores</p>
                 </div>
               </div>
+              <!-- Nuevo abono -->
+              <div>
+                <label class="field-label">Monto a abonar *</label>
+                <div class="flex items-center border border-surface-variant rounded-xl bg-surface-container-lowest focus-within:border-primary px-3 gap-1">
+                  <span class="text-on-surface-variant font-bold text-lg shrink-0">$</span>
+                  <input id="cred-monto-abono" type="text" required class="flex-1 py-3 bg-transparent outline-none text-lg font-bold text-on-surface" placeholder="0" />
+                </div>
+              </div>
+              <div>
+                <label class="field-label">Nota (opcional)</label>
+                <input id="cred-nota-abono" type="text" class="field-input" placeholder="Ej: Transferencia, efectivo..." />
+              </div>
             </form>
-            <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-surface-variant bg-surface-container-low">
+            <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-surface-variant bg-surface-container-low rounded-b-2xl">
               <button onclick="document.getElementById('cred-modal-close').click()" class="px-4 py-2 text-sm font-semibold text-on-surface-variant hover:bg-surface-container rounded-lg">Cancelar</button>
-              <button id="cred-save-btn" class="px-5 py-2 bg-primary text-on-primary text-sm font-bold rounded-lg shadow-md hover:bg-primary-container">Aplicar Abono</button>
-            </div>
-          </div>
-        </div>
-      </section>
-      <!-- SEPARE VIEW -->
-      <section data-view="separe" class="hidden h-full overflow-hidden flex flex-col p-container-padding max-w-[1400px] mx-auto">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6 shrink-0">
-          <div>
-            <h2 class="text-2xl font-bold text-on-surface">Plan Separe</h2>
-            <p class="text-sm text-on-surface-variant mt-0.5">Reservas de productos, abonos y entregas.</p>
-          </div>
-          <!-- Filters -->
-          <div class="flex gap-2 w-full md:w-auto">
-            <div class="relative flex-1 md:w-64">
-              <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
-              <input id="sep-search" type="text" placeholder="Buscar cliente o producto..."
-                class="w-full bg-surface-container-lowest border border-surface-variant rounded-xl pl-10 pr-4 py-2 text-sm text-on-surface focus:outline-none focus:border-primary shadow-sm" />
-            </div>
-            <select id="sep-filter-status" class="bg-surface-container text-sm text-on-background border-none rounded-xl px-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary/40 cursor-pointer shadow-sm">
-              <option value="">Todos</option>
-              <option value="Separado">⏳ Separados</option>
-              <option value="Entregado">📦 Entregados</option>
-              <option value="Vencido">⚠️ Vencidos</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Grid of Separe Cards -->
-        <div id="sep-grid" class="flex-1 overflow-y-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-20 lg:pb-4">
-          <!-- Content injected via JS -->
-        </div>
-
-        <!-- MODAL ABONO SEPARE -->
-        <div id="sep-modal" class="hidden fixed inset-0 z-50 items-center justify-center p-4">
-          <div id="sep-modal-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
-          <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden z-10">
-            <div class="flex items-center justify-between px-6 py-4 border-b border-surface-variant">
-              <h3 class="font-bold text-lg text-on-surface">Abono a Plan Separe</h3>
-              <button id="sep-modal-close" class="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg">
-                <span class="material-symbols-outlined">close</span>
+              <button id="cred-save-btn" class="flex items-center gap-1.5 px-5 py-2 bg-primary text-on-primary text-sm font-bold rounded-lg shadow-md">
+                <span class="material-symbols-outlined text-[18px]">save</span> Aplicar Abono
               </button>
             </div>
-            <form id="sep-form" class="p-6 space-y-4" onsubmit="return false">
-              <input type="hidden" id="sep-id" />
-              <div class="bg-surface-container-low p-3 rounded-lg border border-surface-variant mb-4">
-                <p class="text-xs text-on-surface-variant mb-1">Cliente: <strong id="sep-cliente-name" class="text-on-surface"></strong></p>
-                <p class="text-xs text-on-surface-variant mb-1">Producto: <strong id="sep-producto-name" class="text-on-surface"></strong></p>
-                <p class="text-xs text-on-surface-variant">Saldo Actual: <strong id="sep-saldo-actual" class="text-primary font-bold"></strong></p>
-              </div>
-              <div>
-                <label class="field-label">Monto a abonar *</label>
-                <div class="relative">
-                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold">$</span>
-                  <input id="sep-monto-abono" type="number" required min="1" class="field-input pl-8 text-lg font-bold" placeholder="0" />
-                </div>
-              </div>
-            </form>
-            <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-surface-variant bg-surface-container-low">
-              <button onclick="document.getElementById('sep-modal-close').click()" class="px-4 py-2 text-sm font-semibold text-on-surface-variant hover:bg-surface-container rounded-lg">Cancelar</button>
-              <button id="sep-save-btn" class="px-5 py-2 bg-primary text-on-primary text-sm font-bold rounded-lg shadow-md hover:bg-primary-container">Aplicar Abono</button>
-            </div>
           </div>
         </div>
       </section>
+
       <!-- PEDIDOS VIEW -->
       <section data-view="pedidos" class="hidden h-full overflow-hidden flex flex-col p-container-padding max-w-[1400px] mx-auto">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6 shrink-0">
@@ -1092,11 +1250,17 @@
                 </div>
                 <div>
                   <label class="field-label">Costo Aproximado</label>
-                  <input id="ped-costo" type="number" required class="field-input" placeholder="0" />
+                  <div class="flex items-center border border-surface-variant rounded-xl bg-surface-container-lowest focus-within:border-primary px-3 gap-1">
+                    <span class="text-on-surface-variant font-bold shrink-0">$</span>
+                    <input id="ped-costo" type="text" required class="flex-1 py-2.5 bg-transparent outline-none font-medium text-on-surface" placeholder="0" />
+                  </div>
                 </div>
                 <div>
                   <label class="field-label">Abono Inicial</label>
-                  <input id="ped-abono" type="number" required class="field-input" placeholder="0" />
+                  <div class="flex items-center border border-surface-variant rounded-xl bg-surface-container-lowest focus-within:border-primary px-3 gap-1">
+                    <span class="text-on-surface-variant font-bold shrink-0">$</span>
+                    <input id="ped-abono" type="text" required class="flex-1 py-2.5 bg-transparent outline-none font-medium text-on-surface" placeholder="0" />
+                  </div>
                 </div>
                 <div class="col-span-2">
                   <label class="field-label">Estado</label>
@@ -1173,7 +1337,12 @@
               <div class="grid grid-cols-2 gap-4">
                 <div class="col-span-2">
                   <label class="field-label">Cliente *</label>
-                  <input id="tech-cliente" type="text" required class="field-input" placeholder="Nombre y Apellido" />
+                  <div class="flex gap-2">
+                    <input id="tech-cliente" type="text" readonly required class="field-input flex-1 bg-surface-container-low cursor-not-allowed" placeholder="Seleccione un cliente..." />
+                    <button id="tech-select-client-btn" type="button" class="px-3 bg-surface-container text-primary rounded-xl border border-surface-variant hover:bg-primary/10 transition-colors shadow-sm flex items-center gap-1">
+                      <span class="material-symbols-outlined text-[18px]">search</span>
+                    </button>
+                  </div>
                 </div>
                 <div class="col-span-2">
                   <label class="field-label">Equipo *</label>
@@ -1190,7 +1359,10 @@
                 </div>
                 <div>
                   <label class="field-label">Costo Estimado</label>
-                  <input id="tech-costo" type="number" class="field-input" placeholder="0" />
+                  <div class="flex items-center border border-surface-variant rounded-xl bg-surface-container-lowest focus-within:border-primary px-3 gap-1">
+                    <span class="text-on-surface-variant font-bold shrink-0">$</span>
+                    <input id="tech-costo" type="text" class="flex-1 py-2.5 bg-transparent outline-none font-medium text-on-surface" placeholder="0" />
+                  </div>
                 </div>
                 <div>
                   <label class="field-label">Estado</label>
@@ -1277,9 +1449,9 @@
               <div class="grid grid-cols-2 gap-4">
                 <div class="col-span-2">
                   <label class="field-label">Monto (COP) *</label>
-                  <div class="relative">
-                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-error font-bold">$</span>
-                    <input id="exp-monto" type="number" required min="1" class="field-input pl-8 text-lg font-bold text-error" placeholder="0" />
+                  <div class="flex items-center border border-surface-variant rounded-xl bg-surface-container-lowest focus-within:border-primary px-3 gap-1">
+                    <span class="text-error font-bold text-lg shrink-0">$</span>
+                    <input id="exp-monto" type="text" required class="flex-1 py-3 bg-transparent outline-none text-lg font-bold text-error" placeholder="0" />
                   </div>
                 </div>
                 <div class="col-span-2">
