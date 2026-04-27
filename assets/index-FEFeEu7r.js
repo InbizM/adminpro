@@ -407,16 +407,16 @@ var e=Object.create,t=Object.defineProperty,n=Object.getOwnPropertyDescriptor,r=
               <span class="text-on-surface-variant">${e.fecha}</span>
               <span class="font-bold text-green-600">${hi(e.monto)}</span>
               <span class="text-on-surface-variant">${e.nota||``}</span>
-            </div>`).join(``)),document.getElementById(`cred-monto-abono`).value=``,document.getElementById(`cred-nota-abono`).value=``,a?.classList.remove(`hidden`),a?.classList.add(`flex`),document.getElementById(`cred-monto-abono`)?.focus()},c?.addEventListener(`click`,async()=>{let e=document.getElementById(`cred-id`).value,t=parseInt((document.getElementById(`cred-monto-abono`).value||``).replace(/\D/g,``))||0,n=(document.getElementById(`cred-nota-abono`)?.value||``).trim();if(!t||t<=0){j(`Ingresa un monto válido`,`warning`);return}if(!fi){fi=!0,c.textContent=`Aplicando...`,c.disabled=!0;try{let r=ui.find(t=>t.id==e),i=(r.abonado||0)+t,a=Math.max(0,(r.total||0)-i),o=a<=0,s=_i(r.historialAbonos);s.push({fecha:new Date().toLocaleDateString(`es-CO`),monto:t,nota:n});let c=r.tipo===`Plan Separe`,u=c?`Separado`:`Activo`,d=c?`Entregado`:`Cancelado`,f=await pe(e,{...r,abonado:i,saldo:a,estado:o||r.estado===`Cancelado`||r.estado===`Entregado`?d:u,fechaCancelacion:o?new Date().toLocaleDateString(`es-CO`):r.fechaCancelacion||``,historialAbonos:vi(s)});f?.success?(j(o?`✅ ¡Crédito cancelado!`:`Abono registrado`,`success`),l(),di=!1,await mi(),bi(ui)):j(f?.mensaje||`Error al guardar`,`error`)}catch(e){j(`Error: `+e.message,`error`)}finally{fi=!1,c.innerHTML=`<span class="material-symbols-outlined text-[18px]">save</span> Aplicar Abono`,c.disabled=!1}}});let u=document.getElementById(`cred-new-modal`),d=()=>{u?.classList.add(`hidden`),u?.classList.remove(`flex`)};document.getElementById(`cred-new-btn`)?.addEventListener(`click`,()=>{document.getElementById(`cred-new-form`)?.reset(),document.getElementById(`cred-new-cliente`).value=``,document.getElementById(`cred-new-cliente-doc`).value=``,u?.classList.remove(`hidden`),u?.classList.add(`flex`)}),document.getElementById(`cred-new-close`)?.addEventListener(`click`,d),document.getElementById(`cred-new-backdrop`)?.addEventListener(`click`,d),document.getElementById(`cred-select-client-btn`)?.addEventListener(`click`,()=>{An(e=>{document.getElementById(`cred-new-cliente`).value=e.nombre,document.getElementById(`cred-new-cliente-doc`).value=e.cedula||e.documento||e.telefono||``})}),document.getElementById(`cred-save-new-btn`)?.addEventListener(`click`,async()=>{let e=document.getElementById(`cred-new-cliente`).value.trim(),t=document.getElementById(`cred-new-cliente-doc`).value.trim(),n=parseInt((document.getElementById(`cred-new-total`).value||``).replace(/\D/g,``))||0,r=parseInt((document.getElementById(`cred-new-abono`)?.value||``).replace(/\D/g,``))||0,i=document.getElementById(`cred-new-detalle`).value.trim();if(!e||!n){j(`Cliente y monto son requeridos`,`warning`);return}let a=document.getElementById(`cred-save-new-btn`);a.disabled=!0,a.textContent=`Guardando...`;try{let a=await D({cliente:e,telefono:t,total:n,detalle:i,historialAbonos:r>0?vi([{fecha:new Date().toLocaleDateString(`es-CO`),monto:r,nota:`Abono inicial`}]):``});a?.success?(j(`Crédito creado`,`success`),d(),di=!1,await mi(),bi(ui)):j(a?.mensaje||`Error al crear crédito`,`error`)}catch(e){j(`Error: `+e.message,`error`)}finally{a.disabled=!1,a.innerHTML=`<span class="material-symbols-outlined text-[18px]">save</span> Guardar`}})}var Si=[];function Ci(){return async()=>{document.getElementById(`sale-detail-close`)?.addEventListener(`click`,()=>{document.getElementById(`sale-detail-modal`).classList.add(`hidden`)}),document.getElementById(`sale-detail-backdrop`)?.addEventListener(`click`,()=>{document.getElementById(`sale-detail-modal`).classList.add(`hidden`)}),await wi()}}async function wi(){let e=document.getElementById(`sales-history-list`);if(e)try{if(e.innerHTML=`<tr><td colspan="7" class="p-8 text-center text-on-surface-variant italic text-sm">Cargando todas las ventas...</td></tr>`,Si=await ue(),!Si||Si.length===0){e.innerHTML=`<tr><td colspan="7" class="p-8 text-center text-on-surface-variant italic text-sm">No se encontraron ventas registradas</td></tr>`;return}e.innerHTML=Si.map((e,t)=>{let n=new Date(e.fecha).toLocaleDateString(`es-CO`,{day:`2-digit`,month:`short`}),r=new Intl.NumberFormat(`es-CO`).format(e.total||0);return`
+            </div>`).join(``)),document.getElementById(`cred-monto-abono`).value=``,document.getElementById(`cred-nota-abono`).value=``,a?.classList.remove(`hidden`),a?.classList.add(`flex`),document.getElementById(`cred-monto-abono`)?.focus()},c?.addEventListener(`click`,async()=>{let e=document.getElementById(`cred-id`).value,t=parseInt((document.getElementById(`cred-monto-abono`).value||``).replace(/\D/g,``))||0,n=(document.getElementById(`cred-nota-abono`)?.value||``).trim();if(!t||t<=0){j(`Ingresa un monto válido`,`warning`);return}if(!fi){fi=!0,c.textContent=`Aplicando...`,c.disabled=!0;try{let r=ui.find(t=>t.id==e),i=(r.abonado||0)+t,a=Math.max(0,(r.total||0)-i),o=a<=0,s=_i(r.historialAbonos);s.push({fecha:new Date().toLocaleDateString(`es-CO`),monto:t,nota:n});let c=r.tipo===`Plan Separe`,u=c?`Separado`:`Activo`,d=c?`Entregado`:`Cancelado`,f=await pe(e,{...r,abonado:i,saldo:a,estado:o||r.estado===`Cancelado`||r.estado===`Entregado`?d:u,fechaCancelacion:o?new Date().toLocaleDateString(`es-CO`):r.fechaCancelacion||``,historialAbonos:vi(s)});f?.success?(j(o?`✅ ¡Crédito cancelado!`:`Abono registrado`,`success`),l(),di=!1,await mi(),bi(ui)):j(f?.mensaje||`Error al guardar`,`error`)}catch(e){j(`Error: `+e.message,`error`)}finally{fi=!1,c.innerHTML=`<span class="material-symbols-outlined text-[18px]">save</span> Aplicar Abono`,c.disabled=!1}}});let u=document.getElementById(`cred-new-modal`),d=()=>{u?.classList.add(`hidden`),u?.classList.remove(`flex`)};document.getElementById(`cred-new-btn`)?.addEventListener(`click`,()=>{document.getElementById(`cred-new-form`)?.reset(),document.getElementById(`cred-new-cliente`).value=``,document.getElementById(`cred-new-cliente-doc`).value=``,u?.classList.remove(`hidden`),u?.classList.add(`flex`)}),document.getElementById(`cred-new-close`)?.addEventListener(`click`,d),document.getElementById(`cred-new-backdrop`)?.addEventListener(`click`,d),document.getElementById(`cred-select-client-btn`)?.addEventListener(`click`,()=>{An(e=>{document.getElementById(`cred-new-cliente`).value=e.nombre,document.getElementById(`cred-new-cliente-doc`).value=e.cedula||e.documento||e.telefono||``})}),document.getElementById(`cred-save-new-btn`)?.addEventListener(`click`,async()=>{let e=document.getElementById(`cred-new-cliente`).value.trim(),t=document.getElementById(`cred-new-cliente-doc`).value.trim(),n=parseInt((document.getElementById(`cred-new-total`).value||``).replace(/\D/g,``))||0,r=parseInt((document.getElementById(`cred-new-abono`)?.value||``).replace(/\D/g,``))||0,i=document.getElementById(`cred-new-detalle`).value.trim();if(!e||!n){j(`Cliente y monto son requeridos`,`warning`);return}let a=document.getElementById(`cred-save-new-btn`);a.disabled=!0,a.textContent=`Guardando...`;try{let a=await D({cliente:e,telefono:t,total:n,detalle:i,historialAbonos:r>0?vi([{fecha:new Date().toLocaleDateString(`es-CO`),monto:r,nota:`Abono inicial`}]):``});a?.success?(j(`Crédito creado`,`success`),d(),di=!1,await mi(),bi(ui)):j(a?.mensaje||`Error al crear crédito`,`error`)}catch(e){j(`Error: `+e.message,`error`)}finally{a.disabled=!1,a.innerHTML=`<span class="material-symbols-outlined text-[18px]">save</span> Guardar`}})}var Si=[];function Ci(){return async()=>{let e=()=>document.getElementById(`sale-detail-modal`).classList.add(`hidden`);document.getElementById(`sale-detail-close`)?.addEventListener(`click`,e),document.getElementById(`sale-detail-backdrop`)?.addEventListener(`click`,e),await wi()}}async function wi(){let e=document.getElementById(`sales-history-list`);if(e)try{if(e.innerHTML=`<tr><td colspan="7" class="p-8 text-center text-on-surface-variant italic text-sm">Cargando todas las ventas...</td></tr>`,Si=await ue(),!Si||Si.length===0){e.innerHTML=`<tr><td colspan="7" class="p-8 text-center text-on-surface-variant italic text-sm">No se encontraron ventas registradas</td></tr>`;return}e.innerHTML=Si.map((e,t)=>{let n=new Date(e.fecha).toLocaleDateString(`es-CO`,{day:`2-digit`,month:`short`}),r=new Intl.NumberFormat(`es-CO`).format(e.total||0);return`
         <tr class="hover:bg-surface-container-low transition-colors text-[13px]">
           <td class="px-4 py-4 text-center text-on-surface-variant font-medium">${t+1}</td>
           <td class="px-4 py-4">
             <div class="font-bold text-on-surface text-sm">${e.id_factura}</div>
-            <div class="text-[10px] text-on-surface-variant uppercase">${n} · ${new Date(e.fecha).toLocaleTimeString([],{hour:`2-digit`,minute:`2-digit`})}</div>
+            <div class="text-[10px] text-on-surface-variant uppercase">${n}</div>
           </td>
           <td class="px-4 py-4">
             <div class="font-bold text-on-surface">${e.cliente||`Consumidor Final`}</div>
-            <div class="text-[11px] text-on-surface-variant">${e.cedula||`N/A`}</div>
+            <div class="text-[10px] text-on-surface-variant">CC: ${e.cedula||`N/A`}</div>
           </td>
           <td class="px-4 py-4 font-medium text-on-surface-variant">${e.vendedor||`—`}</td>
           <td class="px-4 py-4">
@@ -427,50 +427,81 @@ var e=Object.create,t=Object.defineProperty,n=Object.getOwnPropertyDescriptor,r=
             <div class="font-black text-on-surface text-sm">$${r}</div>
           </td>
           <td class="px-4 py-4 text-center">
-             <button onclick="window.viewSaleDetail('${e.id_factura}')" class="p-2 text-primary hover:bg-primary/10 rounded-full transition-colors" title="Ver Detalle Completo">
+             <button onclick="window.viewSaleDetail('${e.id_factura}')" class="p-2 text-primary hover:bg-primary/10 rounded-full transition-colors">
                 <span class="material-symbols-outlined text-[20px]">visibility</span>
              </button>
           </td>
         </tr>
       `}).join(``)}catch(t){e.innerHTML=`<tr><td colspan="7" class="p-8 text-center text-error italic text-sm">Error: ${t.message}</td></tr>`}}window.viewSaleDetail=e=>{let t=Si.find(t=>t.id_factura===e);if(!t)return;let n=document.getElementById(`sale-detail-modal`),r=document.getElementById(`sale-detail-content`),i=e=>new Intl.NumberFormat(`es-CO`).format(e||0);r.innerHTML=`
-    <div class="grid grid-cols-2 gap-4">
-      <div class="col-span-2 bg-primary/5 p-4 rounded-xl border border-primary/10">
-        <p class="text-[10px] uppercase font-black text-primary tracking-widest mb-1">ID Factura</p>
-        <p class="text-xl font-black text-on-surface">${t.id_factura}</p>
-        <p class="text-xs text-on-surface-variant">${new Date(t.fecha).toLocaleString()}</p>
-      </div>
-
-      <div>
-        <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Cliente</p>
-        <p class="text-sm font-bold text-on-surface">${t.cliente}</p>
-        <p class="text-[11px] text-on-surface-variant">${t.cedula}</p>
-      </div>
-      <div>
-        <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Vendedor</p>
-        <p class="text-sm font-bold text-on-surface">${t.vendedor}</p>
-        <p class="text-[11px] text-on-surface-variant">${t.metodo}</p>
-      </div>
-
-      <div class="col-span-2 border-t border-surface-variant pt-4">
-        <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider mb-2">Productos Vendidos</p>
-        <div class="bg-surface-container-low p-3 rounded-lg text-sm font-medium text-on-surface">
-          ${t.productos}
-        </div>
-      </div>
-
-      <div class="col-span-2">
-        <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider mb-1">Equipos (IMEI)</p>
-        <p class="text-xs font-mono text-primary font-bold">${t.imeis||`No aplica`}</p>
-      </div>
-
-      <div class="col-span-2 bg-surface-container-high p-4 rounded-xl flex justify-between items-center mt-2">
+    <div class="space-y-6">
+      <!-- HEADER -->
+      <div class="flex justify-between items-start bg-slate-50 p-4 rounded-xl border border-slate-200">
         <div>
-          <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Subtotal: $${i(t.subtotal)}</p>
-          <p class="text-[10px] uppercase font-bold text-error tracking-wider">Descuento: -$${i(t.descuento)}</p>
+          <p class="text-[10px] uppercase font-black text-primary tracking-widest mb-1">Comprobante de Venta</p>
+          <p class="text-2xl font-black text-slate-900">${t.id_factura}</p>
+          <p class="text-xs text-slate-500 font-medium">${new Date(t.fecha).toLocaleString(`es-CO`)}</p>
         </div>
         <div class="text-right">
-          <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Total Pagado</p>
-          <p class="text-2xl font-black text-primary">$${i(t.total)}</p>
+          <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-black uppercase">Pagado</span>
+          <p class="text-[11px] text-slate-500 mt-2 font-bold">${t.metodo}</p>
+        </div>
+      </div>
+
+      <!-- PARTICIPANTES -->
+      <div class="grid grid-cols-2 gap-6">
+        <div>
+          <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-2">Información del Cliente</p>
+          <p class="text-sm font-black text-slate-900">${t.cliente}</p>
+          <p class="text-xs text-slate-600">ID/Cédula: ${t.cedula||`N/A`}</p>
+          <p class="text-xs text-slate-600 mt-1"><span class="font-bold text-slate-400">Dirección:</span> ${t.direccion||`Sin dirección`}</p>
+        </div>
+        <div>
+          <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-2">Atendido por</p>
+          <p class="text-sm font-black text-slate-900">${t.vendedor}</p>
+          <p class="text-xs text-slate-500 italic">Vendedor Autorizado</p>
+        </div>
+      </div>
+
+      <!-- PRODUCTOS -->
+      <div class="border-t border-slate-100 pt-4">
+        <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-3">Detalle de Productos</p>
+        <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+           <div class="flex justify-between text-sm font-bold text-slate-800 mb-1">
+              <span>${t.productos}</span>
+              <span>x${t.cantidad||1}</span>
+           </div>
+           <p class="text-[11px] text-primary font-mono font-bold uppercase tracking-tighter">IMEI/SERIE: ${t.imeis||`N/A`}</p>
+        </div>
+      </div>
+
+      <!-- FINANZAS -->
+      <div class="bg-slate-900 text-white p-5 rounded-2xl shadow-xl relative overflow-hidden">
+        <div class="relative z-10 flex justify-between items-end">
+          <div class="space-y-1">
+            <p class="text-[10px] uppercase font-bold text-slate-400 tracking-widest">Resumen Financiero</p>
+            <p class="text-xs opacity-80">Subtotal: $${i(t.subtotal)}</p>
+            <p class="text-xs text-red-400 font-bold">Descuento: -$${i(t.descuento)}</p>
+          </div>
+          <div class="text-right">
+            <p class="text-[10px] uppercase font-bold text-slate-400 tracking-widest">Total Cobrado</p>
+            <p class="text-3xl font-black text-white leading-none mt-1">$${i(t.total)}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- EVIDENCIAS Y FIRMAS -->
+      <div class="grid grid-cols-3 gap-3 border-t border-slate-100 pt-4">
+        <div class="flex flex-col gap-2">
+           <p class="text-[9px] uppercase font-bold text-slate-400 text-center">Firma Vend.</p>
+           ${t.id_firma_vendedor?`<a href="${t.id_firma_vendedor}" target="_blank" class="h-16 bg-slate-100 rounded-lg flex items-center justify-center border border-dashed border-slate-300 hover:bg-slate-200 transition-colors"><span class="material-symbols-outlined text-slate-400">signature</span></a>`:`<div class="h-16 bg-slate-50 rounded-lg border border-slate-100"></div>`}
+        </div>
+        <div class="flex flex-col gap-2">
+           <p class="text-[9px] uppercase font-bold text-slate-400 text-center">Firma Cli.</p>
+           ${t.id_firma_comprador?`<a href="${t.id_firma_comprador}" target="_blank" class="h-16 bg-slate-100 rounded-lg flex items-center justify-center border border-dashed border-slate-300 hover:bg-slate-200 transition-colors"><span class="material-symbols-outlined text-slate-400">person_check</span></a>`:`<div class="h-16 bg-slate-50 rounded-lg border border-slate-100"></div>`}
+        </div>
+        <div class="flex flex-col gap-2">
+           <p class="text-[9px] uppercase font-bold text-slate-400 text-center">Evidencia</p>
+           ${t.evidencia?`<a href="${t.evidencia}" target="_blank" class="h-16 bg-primary/5 rounded-lg flex items-center justify-center border border-dashed border-primary/20 hover:bg-primary/10 transition-colors"><span class="material-symbols-outlined text-primary/40">image</span></a>`:`<div class="h-16 bg-slate-50 rounded-lg border border-slate-100"></div>`}
         </div>
       </div>
     </div>
