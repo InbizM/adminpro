@@ -10,8 +10,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-  <script type="module" crossorigin src="/adminpro/assets/index-Bhap-6jz.js"></script>
-  <link rel="stylesheet" crossorigin href="/adminpro/assets/index-C_0LZKFG.css">
+  <script type="module" crossorigin src="/adminpro/assets/index-JoastrnJ.js"></script>
+  <link rel="stylesheet" crossorigin href="/adminpro/assets/index-D8CADfMk.css">
 </head>
 <body class="bg-background text-on-background antialiased min-h-screen">
 
@@ -1460,7 +1460,40 @@
           </div>
         </div>
       </section>
+
+      <!-- TASKS VIEW (To-Do List) -->
+      <section data-view="tasks" class="hidden p-container-padding max-w-4xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+          <div>
+            <h2 class="text-2xl font-bold text-on-surface">Lista de Tareas</h2>
+            <p class="text-sm text-on-surface-variant mt-0.5">Organiza tus pendientes diarios.</p>
+          </div>
+          <button id="task-new-btn" class="px-4 py-2 bg-primary text-on-primary rounded-lg font-bold text-sm shadow-md">
+            + Nueva Tarea
+          </button>
+        </div>
+        <div class="bg-surface-container-lowest border border-surface-variant rounded-2xl shadow-sm overflow-hidden">
+          <ul id="task-list" class="divide-y divide-surface-variant">
+            <li class="p-8 text-center text-on-surface-variant italic">Cargando tareas...</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- CALENDAR VIEW (Weekly) -->
+      <section data-view="calendar" class="hidden p-container-padding max-w-6xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+          <div>
+            <h2 class="text-2xl font-bold text-on-surface">Calendario Semanal</h2>
+            <p class="text-sm text-on-surface-variant mt-0.5">Visualiza tus tareas de la semana.</p>
+          </div>
+        </div>
+        <div id="calendar-container" class="bg-surface-container-lowest border border-surface-variant rounded-2xl shadow-sm p-4 min-h-[500px]">
+          <!-- Calendar grid injected by JS -->
+        </div>
+      </section>
+
       <!-- SETTINGS VIEW -->
+
       <section data-view="settings" class="hidden h-full overflow-y-auto p-container-padding max-w-4xl mx-auto">
         <div class="mb-8">
           <h2 class="text-2xl font-bold text-on-surface">Ajustes de Cuenta</h2>
