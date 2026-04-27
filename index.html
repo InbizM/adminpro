@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" class="">
+<html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,342 +8,215 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" />
-  <script type="module" crossorigin src="/adminpro/assets/index-Bby62zQ_.js"></script>
-  <link rel="stylesheet" crossorigin href="/adminpro/assets/index-VULH72-n.css">
+  <script type="module" crossorigin src="/adminpro/assets/index-DKXPef3q.js"></script>
+  <link rel="stylesheet" crossorigin href="/adminpro/assets/index-RuRVAzsU.css">
 </head>
-<body class="bg-background text-on-background antialiased min-h-screen">
+<body class="bg-slate-50 text-slate-900 antialiased min-h-screen">
 
-  <!-- ======================================================== -->
-  <!-- LOGIN SCREEN                                             -->
-  <!-- ======================================================== -->
+  <!-- LOGIN SCREEN -->
   <div id="login-screen" class="min-h-screen bg-slate-950 flex items-center justify-center p-4">
     <div class="w-full max-w-[420px]">
       <div class="text-center mb-8">
-        <div class="w-16 h-16 rounded-2xl bg-red-600 flex items-center justify-center mx-auto mb-4 shadow-xl shadow-red-900/20 rotate-3 group-hover:rotate-0 transition-transform duration-500">
-          <span class="material-symbols-outlined text-white text-3xl" style="font-variation-settings:'FILL' 1">shield_with_heart</span>
+        <div class="w-16 h-16 rounded-2xl bg-red-600 flex items-center justify-center mx-auto mb-4 shadow-xl">
+          <span class="material-symbols-outlined text-white text-3xl">shield</span>
         </div>
-        <h1 class="text-white text-3xl font-black tracking-tighter">AdminPro</h1>
-        <p class="text-slate-500 text-sm font-medium mt-1 uppercase tracking-[0.2em]">Secure Access</p>
+        <h1 class="text-white text-3xl font-black">AdminPro</h1>
       </div>
-
-      <div class="bg-slate-900/40 backdrop-blur-xl border border-slate-800 rounded-3xl p-8 shadow-2xl">
-        
-        <!-- STEP 1: Credentials -->
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl">
         <div id="step-credentials">
-          <h2 class="text-white font-bold text-xl mb-6 flex items-center gap-2">
-            <span class="w-1.5 h-6 bg-red-600 rounded-full"></span>
-            Iniciar Sesión
-          </h2>
           <form id="login-form" class="space-y-5">
             <div>
-              <label class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">Correo Corporativo</label>
-              <div class="relative">
-                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-[18px]">alternate_email</span>
-                <input id="login-email" type="email" required autocomplete="email"
-                  placeholder="usuario@adminpro.com"
-                  class="w-full bg-slate-900/70 border border-slate-700 rounded-lg pl-10 pr-4 py-3
-                         text-white placeholder-slate-500 text-sm
-                         focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/50 transition-all" />
-              </div>
+              <label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase">Correo</label>
+              <input id="login-email" type="email" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white outline-none focus:border-red-500" />
             </div>
             <div>
-              <label class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">Contraseña</label>
-              <div class="relative">
-                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-[18px]">lock</span>
-                <input id="login-pwd" type="password" required autocomplete="current-password"
-                  placeholder="••••••••"
-                  class="w-full bg-slate-900/70 border border-slate-700 rounded-lg pl-10 pr-4 py-3
-                         text-white placeholder-slate-500 text-sm
-                         focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/50 transition-all" />
-              </div>
+              <label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase">Contraseña</label>
+              <input id="login-pwd" type="password" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white outline-none focus:border-red-500" />
             </div>
-            <button id="login-btn" type="submit"
-              class="w-full py-3 bg-red-600 hover:bg-red-700 active:scale-[.98] text-white font-bold
-                     rounded-lg transition-all duration-150 mt-2 shadow-lg shadow-red-900/40">
-              Ingresar
-            </button>
+            <button id="login-btn" type="submit" class="w-full py-3 bg-red-600 text-white font-bold rounded-lg">Ingresar</button>
           </form>
         </div>
-
-        <!-- STEP 2: PIN Verification -->
-        <div id="step-pin" class="hidden">
-          <button id="back-to-login" class="flex items-center gap-1.5 text-slate-400 hover:text-white text-sm mb-5 transition-colors">
-            <span class="material-symbols-outlined text-[16px]">arrow_back</span> Volver
-          </button>
-          <div class="flex items-center justify-center w-14 h-14 rounded-full bg-red-600/15 border border-red-600/30 mx-auto mb-4">
-            <span class="material-symbols-outlined text-red-400 text-2xl" style="font-variation-settings:'FILL' 1">mark_email_read</span>
-          </div>
-          <h2 class="text-white font-bold text-xl mb-2 text-center">Verifica tu identidad</h2>
-          <p id="pin-hint" class="text-slate-400 text-sm text-center mb-6">Enviamos un PIN de 6 dígitos a tu correo.</p>
+        <div id="step-pin" class="hidden text-center">
+          <p id="pin-hint" class="text-slate-400 mb-6 text-sm"></p>
           <form id="pin-form" class="space-y-4">
-            <input id="login-pin" type="text" inputmode="numeric" pattern="\d{6}" maxlength="6" required
-              placeholder="000000" autocomplete="one-time-code"
-              class="w-full bg-slate-900/70 border border-slate-700 rounded-lg px-4 py-4
-                     text-white text-center text-3xl font-bold tracking-[0.4em] placeholder-slate-600
-                     focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/50 transition-all" />
-            <button id="pin-btn" type="submit"
-              class="w-full py-3 bg-red-600 hover:bg-red-700 active:scale-[.98] text-white font-bold
-                     rounded-lg transition-all duration-150 shadow-lg shadow-red-900/40">
-              Verificar
-            </button>
+            <input id="login-pin" type="text" maxlength="6" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-4 text-white text-center text-3xl font-bold tracking-widest" />
+            <button id="pin-btn" type="submit" class="w-full py-3 bg-red-600 text-white font-bold rounded-lg">Verificar</button>
           </form>
+          <button id="back-to-login" class="mt-4 text-xs text-slate-500 hover:text-white">Volver</button>
         </div>
-
       </div>
-
-      <p class="text-center text-slate-600 text-xs mt-6">AdminPro &copy; 2026 — Gestión de Inventario</p>
     </div>
   </div>
 
-  <!-- ======================================================== -->
-  <!-- APP SHELL (hidden until login)                           -->
-  <!-- ======================================================== -->
+  <!-- APP SHELL -->
   <div id="app-shell" class="hidden min-h-screen">
-
-    <!-- DESKTOP SIDEBAR -->
-    <aside class="bg-slate-900 h-screen w-[260px] fixed left-0 top-0 border-r border-slate-800
-                  shadow-2xl flex-col hidden md:flex z-40">
-      <!-- Logo -->
-      <div class="flex items-center gap-3 px-5 py-6 border-b border-slate-800">
-        <div class="w-9 h-9 rounded-lg bg-red-600 flex items-center justify-center flex-shrink-0">
-          <span class="material-symbols-outlined text-white text-[18px]" style="font-variation-settings:'FILL' 1">widgets</span>
-        </div>
-        <div>
-          <p class="text-red-500 font-black text-lg tracking-tighter leading-none">AdminPro</p>
-          <p class="text-slate-500 text-xs font-medium">Command Center</p>
-        </div>
+    <!-- SIDEBAR -->
+    <aside class="bg-slate-900 h-screen w-[260px] fixed left-0 top-0 border-r border-slate-800 hidden md:flex flex-col z-40">
+      <div class="p-6 border-b border-slate-800 flex items-center gap-3">
+        <div class="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center"><span class="material-symbols-outlined text-white text-lg">widgets</span></div>
+        <span class="text-white font-black text-xl tracking-tighter">AdminPro</span>
       </div>
-      <!-- Nav links injected by JS -->
-      <nav id="desktop-nav" class="flex-1 flex flex-col gap-1 p-3 overflow-y-auto"></nav>
-      <!-- User / logout -->
-      <div class="p-4 border-t border-slate-800">
-        <div class="flex items-center gap-3">
-          <div class="w-8 h-8 rounded-full bg-red-600/20 border border-red-600/30 flex items-center justify-center">
-            <span class="material-symbols-outlined text-red-400 text-[16px]">person</span>
-          </div>
-          <span id="user-name" class="text-slate-300 text-sm font-medium flex-1 truncate">Usuario</span>
-          <button id="logout-btn" title="Cerrar sesión"
-            class="p-1.5 text-slate-500 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors">
-            <span class="material-symbols-outlined text-[18px]">logout</span>
-          </button>
-        </div>
+      <nav id="desktop-nav" class="flex-1 p-4 space-y-1 overflow-y-auto"></nav>
+      <div class="p-4 border-t border-slate-800 text-slate-400 flex items-center gap-3">
+        <span id="user-name" class="flex-1 text-sm font-bold truncate">Usuario</span>
+        <button id="logout-btn"><span class="material-symbols-outlined text-lg">logout</span></button>
       </div>
     </aside>
 
-    <!-- TOP HEADER -->
-    <header class="fixed top-0 left-0 md:left-[260px] right-0 h-14 bg-white/80 backdrop-blur-md
-                   border-b border-surface-variant shadow-sm flex items-center px-5 gap-4 z-30">
-      <!-- Mobile menu btn -->
-      <button id="mobile-menu-btn" class="md:hidden p-1 text-on-surface-variant">
-        <span class="material-symbols-outlined">menu</span>
-      </button>
-      <!-- View title -->
-      <h1 id="header-title" class="font-bold text-on-surface text-[17px] flex-1 tracking-tight">Dashboard</h1>
-      <!-- Actions -->
-      <div class="flex items-center gap-2">
-        <button class="p-2 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-lg transition-colors relative">
-          <span class="material-symbols-outlined text-[20px]">notifications</span>
-          <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span>
-        </button>
-        <button class="hidden md:flex p-2 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-lg transition-colors">
-          <span class="material-symbols-outlined text-[20px]">account_circle</span>
-        </button>
-      </div>
+    <!-- HEADER -->
+    <header class="fixed top-0 left-0 md:left-[260px] right-0 h-14 bg-white/80 backdrop-blur-md border-b flex items-center px-5 z-30">
+      <button id="mobile-menu-btn" class="md:hidden mr-4"><span class="material-symbols-outlined">menu</span></button>
+      <h1 id="header-title" class="font-bold text-lg flex-1">Dashboard</h1>
     </header>
 
-    <!-- MAIN CONTENT AREA -->
     <main class="pt-14 md:ml-[260px] pb-16 md:pb-0 min-h-screen">
 
-      <!-- DASHBOARD VIEW -->
-      <section data-view="dashboard" class="hidden p-container-padding">
-        <div class="max-w-7xl mx-auto">
-          <!-- Greeting row -->
-          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-6">
-            <div>
-              <h2 id="dash-greeting" class="text-2xl font-bold text-on-surface">Buenos días 👋</h2>
-              <p class="text-sm text-on-surface-variant mt-0.5">Aquí tienes el resumen de tu negocio.</p>
-            </div>
-            <button id="dash-refresh-btn" class="flex items-center gap-2 px-4 py-2 bg-surface-container-lowest border border-surface-variant rounded-lg text-sm font-medium text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors">
-              <span class="material-symbols-outlined text-[18px]">refresh</span> Actualizar
-            </button>
+      <!-- DASHBOARD -->
+      <section data-view="dashboard" class="hidden p-6 max-w-7xl mx-auto">
+        <div class="flex justify-between items-center mb-8">
+          <h2 id="dash-greeting" class="text-2xl font-bold">Resumen</h2>
+          <button id="dash-refresh-btn" class="p-2 border rounded-lg hover:bg-slate-50"><span class="material-symbols-outlined">refresh</span></button>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div class="bg-white border rounded-2xl p-5 shadow-sm">
+            <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Ventas Hoy</p>
+            <p id="dash-ventas-hoy" class="text-2xl font-black">—</p>
           </div>
-
-          <!-- KPI Cards Row -->
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-            <div class="bg-surface-container-lowest border border-surface-variant rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
-              <div class="flex items-center gap-2 mb-2">
-                <div class="w-9 h-9 rounded-lg bg-green-100 flex items-center justify-center">
-                  <span class="material-symbols-outlined text-green-700 text-[18px]" style="font-variation-settings:'FILL' 1">trending_up</span>
-                </div>
-                <p class="text-[11px] text-on-surface-variant font-medium uppercase tracking-wider">Ventas Hoy</p>
-              </div>
-              <p id="dash-ventas-hoy" class="text-2xl font-black text-on-surface">—</p>
-            </div>
-            <div class="bg-surface-container-lowest border border-surface-variant rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
-              <div class="flex items-center gap-2 mb-2">
-                <div class="w-9 h-9 rounded-lg bg-red-100 flex items-center justify-center">
-                  <span class="material-symbols-outlined text-red-700 text-[18px]" style="font-variation-settings:'FILL' 1">trending_down</span>
-                </div>
-                <p class="text-[11px] text-on-surface-variant font-medium uppercase tracking-wider">Egresos Hoy</p>
-              </div>
-              <p id="dash-egresos-hoy" class="text-2xl font-black text-error">—</p>
-            </div>
-            <div class="bg-surface-container-lowest border border-surface-variant rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
-              <div class="flex items-center gap-2 mb-2">
-                <div class="w-9 h-9 rounded-lg bg-blue-100 flex items-center justify-center">
-                  <span class="material-symbols-outlined text-blue-700 text-[18px]" style="font-variation-settings:'FILL' 1">account_balance</span>
-                </div>
-                <p class="text-[11px] text-on-surface-variant font-medium uppercase tracking-wider">Utilidad Total</p>
-              </div>
-              <p id="dash-utilidad" class="text-2xl font-black text-on-surface">—</p>
-            </div>
-            <div class="bg-surface-container-lowest border border-error-container rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
-              <div class="flex items-center gap-2 mb-2">
-                <div class="w-9 h-9 rounded-lg bg-error-container/60 flex items-center justify-center">
-                  <span class="material-symbols-outlined text-error text-[18px]" style="font-variation-settings:'FILL' 1">warning</span>
-                </div>
-                <p class="text-[11px] text-error font-medium uppercase tracking-wider">Stock Bajo</p>
-              </div>
-              <p id="dash-stock-critico" class="text-2xl font-black text-error">—</p>
-            </div>
+          <div class="bg-white border rounded-2xl p-5 shadow-sm">
+            <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Egresos Hoy</p>
+            <p id="dash-egresos-hoy" class="text-2xl font-black text-red-600">—</p>
           </div>
-
-          <!-- Counters row -->
-          <div class="grid grid-cols-3 md:grid-cols-5 gap-2 mb-6">
-            <div data-goto="inventory" class="dash-shortcut cursor-pointer bg-surface-container-lowest border border-surface-variant rounded-xl p-3 text-center hover:border-primary/40 transition-colors">
-              <p id="dash-cnt-productos" class="text-xl font-black text-on-surface">—</p>
-              <p class="text-[10px] text-on-surface-variant font-medium uppercase tracking-wider">Productos</p>
-            </div>
-            <div data-goto="clients" class="dash-shortcut cursor-pointer bg-surface-container-lowest border border-surface-variant rounded-xl p-3 text-center hover:border-primary/40 transition-colors">
-              <p id="dash-cnt-clientes" class="text-xl font-black text-on-surface">—</p>
-              <p class="text-[10px] text-on-surface-variant font-medium uppercase tracking-wider">Clientes</p>
-            </div>
-            <div data-goto="imei" class="dash-shortcut cursor-pointer bg-surface-container-lowest border border-surface-variant rounded-xl p-3 text-center hover:border-primary/40 transition-colors">
-              <p id="dash-cnt-equipos" class="text-xl font-black text-on-surface">—</p>
-              <p class="text-[10px] text-on-surface-variant font-medium uppercase tracking-wider">Equipos</p>
-            </div>
-            <div data-goto="credits" class="dash-shortcut cursor-pointer bg-surface-container-lowest border border-surface-variant rounded-xl p-3 text-center hover:border-primary/40 transition-colors">
-              <p id="dash-cnt-creditos" class="text-xl font-black text-on-surface">—</p>
-              <p class="text-[10px] text-on-surface-variant font-medium uppercase tracking-wider">Créditos</p>
-            </div>
-            <div data-goto="reventas" class="dash-shortcut cursor-pointer bg-surface-container-lowest border border-surface-variant rounded-xl p-3 text-center hover:border-primary/40 transition-colors">
-              <p id="dash-cnt-reventas" class="text-xl font-black text-on-surface">—</p>
-              <p class="text-[10px] text-on-surface-variant font-medium uppercase tracking-wider">Reventas</p>
-            </div>
+          <div class="bg-white border rounded-2xl p-5 shadow-sm">
+            <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Utilidad Hoy</p>
+            <p id="dash-utilidad" class="text-2xl font-black text-green-600">—</p>
           </div>
-
-          <!-- Main grid: 2 columns -->
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
-            <div class="lg:col-span-2 bg-surface-container-lowest border border-surface-variant rounded-xl shadow-sm overflow-hidden">
-              <div class="flex items-center justify-between px-5 py-4 border-b border-surface-variant">
-                <div class="flex items-center gap-2">
-                  <span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings:'FILL' 1">receipt_long</span>
-                  <h3 class="font-bold text-on-surface text-sm">Últimas Ventas</h3>
-                </div>
-                <button data-goto="sales" class="dash-shortcut text-xs font-semibold text-primary hover:underline">Ver todas →</button>
-              </div>
-              <div id="dash-ventas-list" class="divide-y divide-surface-variant">
-                <p class="p-5 text-sm text-on-surface-variant text-center">Cargando...</p>
-              </div>
-            </div>
-            <div class="space-y-5">
-              <div class="bg-surface-container-lowest border border-surface-variant rounded-xl shadow-sm overflow-hidden">
-                <div class="px-5 py-4 border-b border-surface-variant">
-                  <div class="flex items-center gap-2">
-                    <span class="material-symbols-outlined text-amber-600 text-[20px]" style="font-variation-settings:'FILL' 1">trophy</span>
-                    <h3 class="font-bold text-on-surface text-sm">Top Productos</h3>
-                  </div>
-                </div>
-                <ul id="dash-top-productos" class="p-4 space-y-2.5">
-                  <li class="text-sm text-on-surface-variant text-center">Cargando...</li>
-                </ul>
-              </div>
-              <div class="bg-surface-container-lowest border border-error-container rounded-xl shadow-sm overflow-hidden">
-                <div class="px-5 py-4 border-b border-error-container/50">
-                  <div class="flex items-center gap-2">
-                    <span class="material-symbols-outlined text-error text-[20px]" style="font-variation-settings:'FILL' 1">inventory</span>
-                    <h3 class="font-bold text-error text-sm">Alertas de Stock</h3>
-                  </div>
-                </div>
-                <ul id="dash-stock-list" class="p-4 space-y-2">
-                  <li class="text-sm text-on-surface-variant text-center">Cargando...</li>
-                </ul>
-              </div>
-            </div>
+          <div class="bg-white border rounded-2xl p-5 shadow-sm">
+            <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Stock Bajo</p>
+            <p id="dash-stock-critico" class="text-2xl font-black text-orange-600">—</p>
           </div>
-
-          <!-- Bottom Row: Chart + Service Queue -->
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-            <div class="bg-surface-container-lowest border border-surface-variant rounded-xl shadow-sm overflow-hidden">
-              <div class="px-5 py-4 border-b border-surface-variant">
-                <div class="flex items-center gap-2">
-                  <span class="material-symbols-outlined text-blue-600 text-[20px]" style="font-variation-settings:'FILL' 1">bar_chart</span>
-                  <h3 class="font-bold text-on-surface text-sm">Ventas últimos 7 días</h3>
-                </div>
-              </div>
-              <div class="p-5 flex h-44 items-end gap-2" id="dash-chart"></div>
-            </div>
-            <div class="bg-surface-container-lowest border border-surface-variant rounded-xl shadow-sm overflow-hidden">
-              <div class="flex items-center justify-between px-5 py-4 border-b border-surface-variant">
-                <div class="flex items-center gap-2">
-                  <span class="material-symbols-outlined text-purple-600 text-[20px]" style="font-variation-settings:'FILL' 1">build</span>
-                  <h3 class="font-bold text-on-surface text-sm">Servicio Técnico</h3>
-                </div>
-                <button data-goto="technical" class="dash-shortcut text-xs font-semibold text-primary hover:underline">Ver todo →</button>
-              </div>
-              <ul id="dash-tec-list" class="divide-y divide-surface-variant">
-                <li class="p-5 text-sm text-on-surface-variant text-center">Cargando...</li>
-              </ul>
-            </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white border rounded-2xl shadow-sm overflow-hidden">
+            <div class="px-5 py-4 border-b font-bold text-sm">Últimas Ventas</div>
+            <div id="dash-ventas-list" class="divide-y"></div>
+          </div>
+          <div class="bg-white border rounded-2xl shadow-sm overflow-hidden text-sm">
+            <div class="px-5 py-4 border-b font-bold text-sm">Alertas de Stock</div>
+            <div id="dash-stock-list" class="p-4 space-y-2"></div>
           </div>
         </div>
       </section>
 
-      <!-- POS VIEW -->
-      <section data-view="pos" class="hidden h-[calc(100vh-3.5rem)] overflow-hidden">
-        <div class="flex flex-col lg:flex-row h-full">
-          <!-- POS Content (already implemented) -->
-          <div class="flex-1 flex flex-col p-container-padding h-full overflow-hidden bg-background">
-            <h2 class="text-2xl font-bold text-on-surface mb-4">Punto de Venta</h2>
-            <!-- ... -->
+      <!-- INVENTORY -->
+      <section data-view="inventory" class="hidden p-6 max-w-7xl mx-auto">
+        <div class="flex justify-between items-end mb-6">
+          <h2 class="text-2xl font-bold">Inventario</h2>
+          <div class="flex gap-2">
+            <div class="bg-white border rounded-xl px-4 py-2 text-center">
+              <p class="text-[9px] font-bold text-slate-400 uppercase">Productos</p>
+              <p id="inv-stat-total" class="text-lg font-black">—</p>
+            </div>
+          </div>
+        </div>
+        <div class="flex gap-2 mb-6 sticky top-14 z-20 bg-slate-50 py-2">
+          <div class="relative flex-1">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+            <input id="inv-search" type="text" placeholder="Buscar..." class="w-full pl-10 pr-4 py-2.5 border rounded-xl outline-none focus:border-red-500" />
+          </div>
+          <select id="inv-filter-cat" class="border rounded-xl px-3 py-2.5 text-sm bg-white outline-none"></select>
+          <button id="inv-new-btn" class="px-5 py-2.5 bg-red-600 text-white font-bold rounded-xl shadow-lg shadow-red-200">+ Nuevo</button>
+        </div>
+        <div id="inv-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+      </section>
+
+      <!-- POS -->
+      <section data-view="pos" class="hidden h-[calc(100vh-3.5rem)] overflow-hidden flex flex-col md:flex-row">
+        <div class="flex-1 bg-white p-6 overflow-y-auto">
+          <h2 class="text-2xl font-bold mb-4">POS</h2>
+          <input id="pos-search" type="text" placeholder="Escanear o buscar..." class="w-full p-4 border rounded-2xl mb-4 outline-none focus:border-red-500 text-lg" />
+          <div id="pos-products-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+        </div>
+        <div class="w-full md:w-96 border-l bg-slate-50 flex flex-col h-full">
+          <div class="p-6 border-b bg-white">
+            <p class="text-xs font-bold text-slate-400 uppercase mb-2">Cliente</p>
+            <div class="flex gap-2">
+              <input id="pos-cliente-nombre" readonly class="flex-1 p-2 border rounded-lg text-sm bg-slate-50" value="Consumidor Final" />
+              <button id="pos-select-client-btn" class="px-4 py-2 border rounded-lg bg-white font-bold text-sm">Buscar</button>
+            </div>
+          </div>
+          <div id="pos-cart-items" class="flex-1 overflow-y-auto p-6 space-y-3"></div>
+          <div class="p-6 border-t bg-white space-y-4">
+            <div class="flex justify-between text-xl font-black"><span>Total</span> <span id="pos-total" class="text-red-600">$0</span></div>
+            <button id="pos-pay-btn-venta" class="w-full py-4 bg-red-600 text-white font-bold rounded-2xl shadow-xl shadow-red-100">FINALIZAR VENTA</button>
           </div>
         </div>
       </section>
 
-      <!-- SALES HISTORY VIEW -->
-      <section data-view="sales" class="hidden p-container-padding max-w-[1400px] mx-auto h-full overflow-y-auto">
-        <div class="mb-6 flex justify-between items-center">
-          <div>
-            <h2 class="text-2xl font-bold text-on-surface">Historial de Ventas</h2>
-            <p class="text-sm text-on-surface-variant mt-0.5">Consulta todas las facturas emitidas.</p>
-          </div>
-          <div class="relative w-64">
-            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
-            <input type="text" id="sales-search" placeholder="Buscar factura..." class="w-full bg-surface-container-lowest border border-surface-variant rounded-xl pl-10 pr-4 py-2 text-sm focus:outline-none focus:border-primary shadow-sm">
-          </div>
-        </div>
-        <div class="bg-surface-container-lowest border border-surface-variant rounded-2xl shadow-sm overflow-hidden">
-          <table class="w-full text-left border-collapse text-sm">
-            <thead class="bg-surface-container text-[11px] font-black uppercase tracking-wider text-on-surface-variant border-b border-surface-variant">
+      <!-- SALES -->
+      <section data-view="sales" class="hidden p-6 max-w-7xl mx-auto">
+        <h2 class="text-2xl font-bold mb-6">Historial de Ventas</h2>
+        <input type="text" id="sales-search" placeholder="Filtrar facturas..." class="w-full p-3 border rounded-xl mb-4 outline-none" />
+        <div class="bg-white border rounded-2xl shadow-sm overflow-hidden">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-50 border-b font-bold text-xs uppercase text-slate-500">
               <tr>
-                <th class="px-6 py-4">Factura / Fecha</th>
-                <th class="px-6 py-4">Cliente</th>
-                <th class="px-6 py-4">Productos</th>
-                <th class="px-6 py-4">Total</th>
-                <th class="px-6 py-4">Método</th>
-                <th class="px-6 py-4 text-right">Acciones</th>
+                <th class="p-4">Factura</th><th class="p-4">Cliente</th><th class="p-4">Total</th><th class="p-4">Método</th>
               </tr>
             </thead>
-            <tbody id="sales-tbody" class="divide-y divide-surface-variant text-on-surface"></tbody>
+            <tbody id="sales-tbody" class="divide-y"></tbody>
           </table>
         </div>
       </section>
 
-      <!-- INVENTORY VIEW (and rest of sections...) -->
-      <!-- ... -->
+      <!-- TASKS -->
+      <section data-view="tasks" class="hidden p-6 max-w-3xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold">Tareas</h2>
+          <button id="task-new-btn" class="px-4 py-2 bg-slate-900 text-white font-bold rounded-xl">+ Nueva</button>
+        </div>
+        <ul id="task-list" class="bg-white border rounded-2xl divide-y overflow-hidden shadow-sm"></ul>
+      </section>
+
+      <!-- CALENDAR -->
+      <section data-view="calendar" class="hidden p-6 max-w-6xl mx-auto">
+        <h2 class="text-2xl font-bold mb-6">Calendario</h2>
+        <div id="calendar-container" class="bg-white border rounded-2xl p-4 shadow-sm min-h-[500px]"></div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section data-view="settings" class="hidden p-6 max-w-2xl mx-auto">
+        <h2 class="text-2xl font-bold mb-8">Ajustes</h2>
+        <div class="bg-white border rounded-2xl p-8 space-y-6 shadow-sm text-center">
+          <div id="set-avatar" class="w-20 h-20 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto text-3xl font-black">U</div>
+          <div>
+            <p id="set-name" class="text-xl font-bold">Nombre</p>
+            <p id="set-role" class="text-slate-400 text-sm">Rol</p>
+            <p id="set-email" class="text-slate-400 text-xs">Email</p>
+          </div>
+          <button id="set-logout-btn" class="w-full py-3 border border-red-200 text-red-600 font-bold rounded-xl hover:bg-red-50">Cerrar Sesión</button>
+        </div>
+      </section>
 
     </main>
-    <!-- ... -->
+
+    <!-- MOBILE NAV -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex md:hidden h-16 z-30">
+      <div id="mobile-nav" class="flex w-full"></div>
+    </nav>
   </div>
+
+  <!-- MODALS -->
+  <div id="inv-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+    <div class="bg-white rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl">
+      <div class="p-6 border-b flex justify-between items-center"><h3 id="inv-modal-title" class="font-bold">Producto</h3><button id="inv-modal-close">×</button></div>
+      <form id="inv-form" class="p-6 grid grid-cols-2 gap-4">
+        <input id="inv-id" type="hidden" /><div class="col-span-2"><label class="text-xs font-bold text-slate-400">Nombre</label><input id="inv-nombre" class="w-full p-2 border rounded-lg text-sm" /></div>
+        <div><label class="text-xs font-bold text-slate-400">Costo</label><input id="inv-costo" class="w-full p-2 border rounded-lg text-sm" /></div>
+        <div><label class="text-xs font-bold text-slate-400">Venta</label><input id="inv-venta" class="w-full p-2 border rounded-lg text-sm" /></div>
+        <button id="inv-save-btn" class="col-span-2 py-3 bg-red-600 text-white font-bold rounded-xl">Guardar</button>
+      </form>
+    </div>
+  </div>
+
 </body>
 </html>
