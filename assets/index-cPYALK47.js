@@ -73,7 +73,7 @@ var e=Object.create,t=Object.defineProperty,n=Object.getOwnPropertyDescriptor,r=
       <!-- Image -->
       <div class="h-36 bg-surface-container flex items-center justify-center p-4 relative overflow-hidden">
         <div class="absolute inset-0 bg-gradient-to-tr from-surface-container-high to-surface-container-lowest opacity-50"></div>
-        ${e.imagen?`<img src="${e.imagen}" alt="${e.nombre}" class="h-full w-full object-contain relative z-10 drop-shadow-md">`:`<span class="material-symbols-outlined text-5xl text-on-surface-variant/30 relative z-10">inventory_2</span>`}
+        ${e.imagen?`<img src="${e.imagen}" alt="${e.nombre}" referrerpolicy="no-referrer" class="h-full w-full object-contain relative z-10 drop-shadow-md">`:`<span class="material-symbols-outlined text-5xl text-on-surface-variant/30 relative z-10">inventory_2</span>`}
       </div>
       <!-- Content -->
       <div class="p-3 flex flex-col flex-1">
