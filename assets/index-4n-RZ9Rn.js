@@ -407,7 +407,7 @@ var e=Object.create,t=Object.defineProperty,n=Object.getOwnPropertyDescriptor,r=
               <span class="text-on-surface-variant">${e.fecha}</span>
               <span class="font-bold text-green-600">${hi(e.monto)}</span>
               <span class="text-on-surface-variant">${e.nota||``}</span>
-            </div>`).join(``)),document.getElementById(`cred-monto-abono`).value=``,document.getElementById(`cred-nota-abono`).value=``,a?.classList.remove(`hidden`),a?.classList.add(`flex`),document.getElementById(`cred-monto-abono`)?.focus()},c?.addEventListener(`click`,async()=>{let e=document.getElementById(`cred-id`).value,t=parseInt((document.getElementById(`cred-monto-abono`).value||``).replace(/\D/g,``))||0,n=(document.getElementById(`cred-nota-abono`)?.value||``).trim();if(!t||t<=0){j(`Ingresa un monto válido`,`warning`);return}if(!fi){fi=!0,c.textContent=`Aplicando...`,c.disabled=!0;try{let r=ui.find(t=>t.id==e),i=(r.abonado||0)+t,a=Math.max(0,(r.total||0)-i),o=a<=0,s=_i(r.historialAbonos);s.push({fecha:new Date().toLocaleDateString(`es-CO`),monto:t,nota:n});let c=r.tipo===`Plan Separe`,u=c?`Separado`:`Activo`,d=c?`Entregado`:`Cancelado`,f=await pe(e,{...r,abonado:i,saldo:a,estado:o||r.estado===`Cancelado`||r.estado===`Entregado`?d:u,fechaCancelacion:o?new Date().toLocaleDateString(`es-CO`):r.fechaCancelacion||``,historialAbonos:vi(s)});f?.success?(j(o?`✅ ¡Crédito cancelado!`:`Abono registrado`,`success`),l(),di=!1,await mi(),bi(ui)):j(f?.mensaje||`Error al guardar`,`error`)}catch(e){j(`Error: `+e.message,`error`)}finally{fi=!1,c.innerHTML=`<span class="material-symbols-outlined text-[18px]">save</span> Aplicar Abono`,c.disabled=!1}}});let u=document.getElementById(`cred-new-modal`),d=()=>{u?.classList.add(`hidden`),u?.classList.remove(`flex`)};document.getElementById(`cred-new-btn`)?.addEventListener(`click`,()=>{document.getElementById(`cred-new-form`)?.reset(),document.getElementById(`cred-new-cliente`).value=``,document.getElementById(`cred-new-cliente-doc`).value=``,u?.classList.remove(`hidden`),u?.classList.add(`flex`)}),document.getElementById(`cred-new-close`)?.addEventListener(`click`,d),document.getElementById(`cred-new-backdrop`)?.addEventListener(`click`,d),document.getElementById(`cred-select-client-btn`)?.addEventListener(`click`,()=>{An(e=>{document.getElementById(`cred-new-cliente`).value=e.nombre,document.getElementById(`cred-new-cliente-doc`).value=e.cedula||e.documento||e.telefono||``})}),document.getElementById(`cred-save-new-btn`)?.addEventListener(`click`,async()=>{let e=document.getElementById(`cred-new-cliente`).value.trim(),t=document.getElementById(`cred-new-cliente-doc`).value.trim(),n=parseInt((document.getElementById(`cred-new-total`).value||``).replace(/\D/g,``))||0,r=parseInt((document.getElementById(`cred-new-abono`)?.value||``).replace(/\D/g,``))||0,i=document.getElementById(`cred-new-detalle`).value.trim();if(!e||!n){j(`Cliente y monto son requeridos`,`warning`);return}let a=document.getElementById(`cred-save-new-btn`);a.disabled=!0,a.textContent=`Guardando...`;try{let a=await D({cliente:e,telefono:t,total:n,detalle:i,historialAbonos:r>0?vi([{fecha:new Date().toLocaleDateString(`es-CO`),monto:r,nota:`Abono inicial`}]):``});a?.success?(j(`Crédito creado`,`success`),d(),di=!1,await mi(),bi(ui)):j(a?.mensaje||`Error al crear crédito`,`error`)}catch(e){j(`Error: `+e.message,`error`)}finally{a.disabled=!1,a.innerHTML=`<span class="material-symbols-outlined text-[18px]">save</span> Guardar`}})}var Si=[];function Ci(){return async()=>{await wi()}}async function wi(){let e=document.getElementById(`sales-history-list`);if(e)try{if(e.innerHTML=`<tr><td colspan="7" class="p-8 text-center text-on-surface-variant italic text-sm">Cargando todas las ventas...</td></tr>`,Si=await ue(),!Si||Si.length===0){e.innerHTML=`<tr><td colspan="7" class="p-8 text-center text-on-surface-variant italic text-sm">No se encontraron ventas registradas</td></tr>`;return}e.innerHTML=Si.map((e,t)=>{let n=new Date(e.fecha).toLocaleDateString(`es-CO`,{day:`2-digit`,month:`short`}),r=new Intl.NumberFormat(`es-CO`).format(e.total||0);return new Intl.NumberFormat(`es-CO`).format(e.subtotal||0),`
+            </div>`).join(``)),document.getElementById(`cred-monto-abono`).value=``,document.getElementById(`cred-nota-abono`).value=``,a?.classList.remove(`hidden`),a?.classList.add(`flex`),document.getElementById(`cred-monto-abono`)?.focus()},c?.addEventListener(`click`,async()=>{let e=document.getElementById(`cred-id`).value,t=parseInt((document.getElementById(`cred-monto-abono`).value||``).replace(/\D/g,``))||0,n=(document.getElementById(`cred-nota-abono`)?.value||``).trim();if(!t||t<=0){j(`Ingresa un monto válido`,`warning`);return}if(!fi){fi=!0,c.textContent=`Aplicando...`,c.disabled=!0;try{let r=ui.find(t=>t.id==e),i=(r.abonado||0)+t,a=Math.max(0,(r.total||0)-i),o=a<=0,s=_i(r.historialAbonos);s.push({fecha:new Date().toLocaleDateString(`es-CO`),monto:t,nota:n});let c=r.tipo===`Plan Separe`,u=c?`Separado`:`Activo`,d=c?`Entregado`:`Cancelado`,f=await pe(e,{...r,abonado:i,saldo:a,estado:o||r.estado===`Cancelado`||r.estado===`Entregado`?d:u,fechaCancelacion:o?new Date().toLocaleDateString(`es-CO`):r.fechaCancelacion||``,historialAbonos:vi(s)});f?.success?(j(o?`✅ ¡Crédito cancelado!`:`Abono registrado`,`success`),l(),di=!1,await mi(),bi(ui)):j(f?.mensaje||`Error al guardar`,`error`)}catch(e){j(`Error: `+e.message,`error`)}finally{fi=!1,c.innerHTML=`<span class="material-symbols-outlined text-[18px]">save</span> Aplicar Abono`,c.disabled=!1}}});let u=document.getElementById(`cred-new-modal`),d=()=>{u?.classList.add(`hidden`),u?.classList.remove(`flex`)};document.getElementById(`cred-new-btn`)?.addEventListener(`click`,()=>{document.getElementById(`cred-new-form`)?.reset(),document.getElementById(`cred-new-cliente`).value=``,document.getElementById(`cred-new-cliente-doc`).value=``,u?.classList.remove(`hidden`),u?.classList.add(`flex`)}),document.getElementById(`cred-new-close`)?.addEventListener(`click`,d),document.getElementById(`cred-new-backdrop`)?.addEventListener(`click`,d),document.getElementById(`cred-select-client-btn`)?.addEventListener(`click`,()=>{An(e=>{document.getElementById(`cred-new-cliente`).value=e.nombre,document.getElementById(`cred-new-cliente-doc`).value=e.cedula||e.documento||e.telefono||``})}),document.getElementById(`cred-save-new-btn`)?.addEventListener(`click`,async()=>{let e=document.getElementById(`cred-new-cliente`).value.trim(),t=document.getElementById(`cred-new-cliente-doc`).value.trim(),n=parseInt((document.getElementById(`cred-new-total`).value||``).replace(/\D/g,``))||0,r=parseInt((document.getElementById(`cred-new-abono`)?.value||``).replace(/\D/g,``))||0,i=document.getElementById(`cred-new-detalle`).value.trim();if(!e||!n){j(`Cliente y monto son requeridos`,`warning`);return}let a=document.getElementById(`cred-save-new-btn`);a.disabled=!0,a.textContent=`Guardando...`;try{let a=await D({cliente:e,telefono:t,total:n,detalle:i,historialAbonos:r>0?vi([{fecha:new Date().toLocaleDateString(`es-CO`),monto:r,nota:`Abono inicial`}]):``});a?.success?(j(`Crédito creado`,`success`),d(),di=!1,await mi(),bi(ui)):j(a?.mensaje||`Error al crear crédito`,`error`)}catch(e){j(`Error: `+e.message,`error`)}finally{a.disabled=!1,a.innerHTML=`<span class="material-symbols-outlined text-[18px]">save</span> Guardar`}})}var Si=[];function Ci(){return async()=>{document.getElementById(`sale-detail-close`)?.addEventListener(`click`,()=>{document.getElementById(`sale-detail-modal`).classList.add(`hidden`)}),document.getElementById(`sale-detail-backdrop`)?.addEventListener(`click`,()=>{document.getElementById(`sale-detail-modal`).classList.add(`hidden`)}),await wi()}}async function wi(){let e=document.getElementById(`sales-history-list`);if(e)try{if(e.innerHTML=`<tr><td colspan="7" class="p-8 text-center text-on-surface-variant italic text-sm">Cargando todas las ventas...</td></tr>`,Si=await ue(),!Si||Si.length===0){e.innerHTML=`<tr><td colspan="7" class="p-8 text-center text-on-surface-variant italic text-sm">No se encontraron ventas registradas</td></tr>`;return}e.innerHTML=Si.map((e,t)=>{let n=new Date(e.fecha).toLocaleDateString(`es-CO`,{day:`2-digit`,month:`short`}),r=new Intl.NumberFormat(`es-CO`).format(e.total||0);return`
         <tr class="hover:bg-surface-container-low transition-colors text-[13px]">
           <td class="px-4 py-4 text-center text-on-surface-variant font-medium">${t+1}</td>
           <td class="px-4 py-4">
@@ -425,7 +425,6 @@ var e=Object.create,t=Object.defineProperty,n=Object.getOwnPropertyDescriptor,r=
           </td>
           <td class="px-4 py-4 text-right">
             <div class="font-black text-on-surface text-sm">$${r}</div>
-            ${e.descuento>0?`<div class="text-[9px] text-error font-bold">Desc: -$${new Intl.NumberFormat(`es-CO`).format(e.descuento)}</div>`:``}
           </td>
           <td class="px-4 py-4 text-center">
              <button onclick="window.viewSaleDetail('${e.id_factura}')" class="p-2 text-primary hover:bg-primary/10 rounded-full transition-colors" title="Ver Detalle Completo">
@@ -433,25 +432,49 @@ var e=Object.create,t=Object.defineProperty,n=Object.getOwnPropertyDescriptor,r=
              </button>
           </td>
         </tr>
-      `}).join(``)}catch(t){e.innerHTML=`<tr><td colspan="7" class="p-8 text-center text-error italic text-sm">Error: ${t.message}</td></tr>`}}window.viewSaleDetail=e=>{let t=Si.find(t=>t.id_factura===e);if(!t)return;let n=`
-    ID Factura: ${t.id_factura}
-    Fecha: ${new Date(t.fecha).toLocaleString()}
-    Cliente: ${t.cliente} (${t.cedula})
-    Dirección: ${t.direccion||`No registrada`}
-    Vendedor: ${t.vendedor}
-    Método Pago: ${t.metodo}
-    
-    PRODUCTOS:
-    ${t.productos}
-    
-    RESUMEN:
-    Subtotal: $${new Intl.NumberFormat(`es-CO`).format(t.subtotal)}
-    Descuento: $${new Intl.NumberFormat(`es-CO`).format(t.descuento)}
-    TOTAL: $${new Intl.NumberFormat(`es-CO`).format(t.total)}
-    
-    IMEIs: ${t.imeis||`N/A`}
-  `;alert(`--- DETALLE DE VENTA ---
-`+n)};var Ti=[];function Ei(){return async()=>{document.getElementById(`task-new-btn`)?.addEventListener(`click`,ji),await Di()}}async function Di(){let e=document.getElementById(`task-list`);try{Ti=await k(),Oi()}catch(t){e.innerHTML=`<li class="p-8 text-center text-error">Error al cargar tareas: ${t.message}</li>`}}function Oi(){let e=document.getElementById(`task-list`);if(!Ti||Ti.length===0){e.innerHTML=`<li class="p-12 text-center text-on-surface-variant italic">No tienes tareas pendientes. ¡Buen trabajo!</li>`;return}e.innerHTML=Ti.map(e=>`
+      `}).join(``)}catch(t){e.innerHTML=`<tr><td colspan="7" class="p-8 text-center text-error italic text-sm">Error: ${t.message}</td></tr>`}}window.viewSaleDetail=e=>{let t=Si.find(t=>t.id_factura===e);if(!t)return;let n=document.getElementById(`sale-detail-modal`),r=document.getElementById(`sale-detail-content`),i=e=>new Intl.NumberFormat(`es-CO`).format(e||0);r.innerHTML=`
+    <div class="grid grid-cols-2 gap-4">
+      <div class="col-span-2 bg-primary/5 p-4 rounded-xl border border-primary/10">
+        <p class="text-[10px] uppercase font-black text-primary tracking-widest mb-1">ID Factura</p>
+        <p class="text-xl font-black text-on-surface">${t.id_factura}</p>
+        <p class="text-xs text-on-surface-variant">${new Date(t.fecha).toLocaleString()}</p>
+      </div>
+
+      <div>
+        <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Cliente</p>
+        <p class="text-sm font-bold text-on-surface">${t.cliente}</p>
+        <p class="text-[11px] text-on-surface-variant">${t.cedula}</p>
+      </div>
+      <div>
+        <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Vendedor</p>
+        <p class="text-sm font-bold text-on-surface">${t.vendedor}</p>
+        <p class="text-[11px] text-on-surface-variant">${t.metodo}</p>
+      </div>
+
+      <div class="col-span-2 border-t border-surface-variant pt-4">
+        <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider mb-2">Productos Vendidos</p>
+        <div class="bg-surface-container-low p-3 rounded-lg text-sm font-medium text-on-surface">
+          ${t.productos}
+        </div>
+      </div>
+
+      <div class="col-span-2">
+        <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider mb-1">Equipos (IMEI)</p>
+        <p class="text-xs font-mono text-primary font-bold">${t.imeis||`No aplica`}</p>
+      </div>
+
+      <div class="col-span-2 bg-surface-container-high p-4 rounded-xl flex justify-between items-center mt-2">
+        <div>
+          <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Subtotal: $${i(t.subtotal)}</p>
+          <p class="text-[10px] uppercase font-bold text-error tracking-wider">Descuento: -$${i(t.descuento)}</p>
+        </div>
+        <div class="text-right">
+          <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Total Pagado</p>
+          <p class="text-2xl font-black text-primary">$${i(t.total)}</p>
+        </div>
+      </div>
+    </div>
+  `,n.classList.remove(`hidden`),n.classList.add(`flex`)};var Ti=[];function Ei(){return async()=>{document.getElementById(`task-new-btn`)?.addEventListener(`click`,ji),await Di()}}async function Di(){let e=document.getElementById(`task-list`);try{Ti=await k(),Oi()}catch(t){e.innerHTML=`<li class="p-8 text-center text-error">Error al cargar tareas: ${t.message}</li>`}}function Oi(){let e=document.getElementById(`task-list`);if(!Ti||Ti.length===0){e.innerHTML=`<li class="p-12 text-center text-on-surface-variant italic">No tienes tareas pendientes. ¡Buen trabajo!</li>`;return}e.innerHTML=Ti.map(e=>`
     <li class="flex items-center gap-4 p-4 hover:bg-surface-container-low transition-colors group">
       <button onclick="window.toggleTaskStatus('${e.id}', '${e.estado}')" class="w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${e.estado===`Completada`?`bg-green-500 border-green-500`:`border-surface-variant hover:border-primary`}">
         ${e.estado===`Completada`?`<span class="material-symbols-outlined text-white text-[18px]">done</span>`:``}
