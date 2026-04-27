@@ -441,21 +441,30 @@ var e=Object.create,t=Object.defineProperty,n=Object.getOwnPropertyDescriptor,r=
         <span class="material-symbols-outlined text-[18px]">delete</span>
       </button>
     </li>
-  `).join(``)}function Di(e){let t={Alta:`bg-red-100 text-red-700`,Media:`bg-blue-100 text-blue-700`,Baja:`bg-slate-100 text-slate-700`};return t[e]||t.Baja}function Oi(e){return e?new Date(e).toLocaleDateString(`es-CO`,{day:`numeric`,month:`short`}):`—`}window.toggleTaskStatus=async(e,t)=>{let n=t===`Completada`?`Pendiente`:`Completada`;try{await A(e,n),await Ti()}catch{j(`Error al actualizar tarea`,`error`)}},window.deleteTask=async e=>{if(confirm(`¿Eliminar esta tarea?`))try{await Te(e),await Ti()}catch{j(`Error al eliminar`,`error`)}};async function ki(){let e=prompt(`Nueva Tarea:`);if(e)try{await we({tarea:e,fecha_inicio:new Date().toISOString(),fecha_vencimiento:new Date().toISOString(),prioridad:`Media`,estado:`Pendiente`,responsable:`Admin`,notas:``}),await Ti()}catch{j(`Error al crear tarea`,`error`)}}function Ai(){return async()=>{await ji()}}async function ji(){let e=document.getElementById(`calendar-container`),t=await k(),n=new Date,r=new Date(n);r.setDate(n.getDate()-n.getDay()+1),r.setHours(0,0,0,0);let i=`<div class="grid grid-cols-7 gap-2 h-full">`;[`Lun`,`Mar`,`Mié`,`Jue`,`Vie`,`Sáb`,`Dom`].forEach(e=>{i+=`<div class="text-center text-[10px] font-bold uppercase tracking-wider text-on-surface-variant pb-2 border-b border-surface-variant">${e}</div>`});for(let e=0;e<7;e++){let a=new Date(r);a.setDate(r.getDate()+e);let o=a.toDateString()===n.toDateString(),s=a.toISOString().slice(0,10),c=(t||[]).filter(e=>e.fecha_vencimiento&&e.fecha_vencimiento.startsWith(s));i+=`
-      <div class="min-h-[400px] bg-surface-container-low/30 rounded-lg p-2 flex flex-col gap-2 border ${o?`border-primary/30 bg-primary/5`:`border-transparent`}">
-        <div class="flex items-center justify-between mb-1">
-          <span class="text-xs font-black ${o?`text-primary`:`text-on-surface-variant`}">${a.getDate()}</span>
-          ${o?`<span class="w-1.5 h-1.5 bg-primary rounded-full"></span>`:``}
+  `).join(``)}function Di(e){let t={Alta:`bg-red-100 text-red-700`,Media:`bg-blue-100 text-blue-700`,Baja:`bg-slate-100 text-slate-700`};return t[e]||t.Baja}function Oi(e){return e?new Date(e).toLocaleDateString(`es-CO`,{day:`numeric`,month:`short`}):`—`}window.toggleTaskStatus=async(e,t)=>{let n=t===`Completada`?`Pendiente`:`Completada`;try{await A(e,n),await Ti()}catch{j(`Error al actualizar tarea`,`error`)}},window.deleteTask=async e=>{if(confirm(`¿Eliminar esta tarea?`))try{await Te(e),await Ti()}catch{j(`Error al eliminar`,`error`)}};async function ki(){let e=prompt(`Nueva Tarea:`);if(e)try{await we({tarea:e,fecha_inicio:new Date().toISOString(),fecha_vencimiento:new Date().toISOString(),prioridad:`Media`,estado:`Pendiente`,responsable:`Admin`,notas:``}),await Ti()}catch{j(`Error al crear tarea`,`error`)}}function Ai(){return async()=>{await ji()}}async function ji(){let e=document.getElementById(`calendar-container`);if(e)try{let t=await k(),n=new Date,r=n.getDay(),i=n.getDate()-r+(r===0?-6:1),a=new Date(n.setDate(i));a.setHours(0,0,0,0);let o=`<div class="grid grid-cols-7 gap-2 h-full">`;[`Lun`,`Mar`,`Mié`,`Jue`,`Vie`,`Sáb`,`Dom`].forEach(e=>{o+=`<div class="text-center text-[11px] font-black uppercase tracking-widest text-on-surface-variant pb-3 border-b-2 border-surface-variant/50">${e}</div>`});for(let e=0;e<7;e++){let n=new Date(a);n.setDate(a.getDate()+e);let r=n.toDateString()===new Date().toDateString(),i=`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,`0`)}-${String(n.getDate()).padStart(2,`0`)}`,s=(t||[]).filter(e=>e.fecha_vencimiento&&e.fecha_vencimiento.startsWith(i));o+=`
+        <div class="min-h-[450px] rounded-xl p-3 flex flex-col gap-2 transition-all border-2 
+             ${r?`border-primary bg-primary/5 shadow-inner`:`border-transparent bg-surface-container-lowest/50`}">
+          
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-black ${r?`text-primary`:`text-on-surface-variant/70`}">${n.getDate()}</span>
+            ${r?`<span class="px-1.5 py-0.5 bg-primary text-[9px] text-white rounded font-bold uppercase">Hoy</span>`:``}
+          </div>
+
+          <div class="flex flex-col gap-2">
+            ${s.length>0?s.map(e=>`
+              <div class="p-2.5 rounded-lg text-[10px] font-bold leading-tight shadow-sm border-l-[4px] bg-white group hover:scale-[1.02] transition-transform cursor-pointer" 
+                   style="border-color: ${e.color||`#4f46e5`}; color: #1e293b">
+                <div class="flex justify-between items-start mb-0.5">
+                   <span class="uppercase tracking-tighter text-[8px] opacity-70">${e.prioridad||`Media`}</span>
+                </div>
+                ${e.tarea}
+              </div>
+            `).join(``):`<div class="flex-1 flex items-center justify-center pt-10 opacity-10">
+                 <span class="material-symbols-outlined text-4xl">event_busy</span>
+              </div>`}
+          </div>
         </div>
-        <div class="flex flex-col gap-1.5">
-          ${c.map(e=>`
-            <div class="p-1.5 rounded text-[10px] font-bold leading-tight shadow-sm border-l-4" style="background-color: ${e.color||`#4f46e5`}20; border-color: ${e.color||`#4f46e5`}; color: ${e.color||`#4f46e5`}">
-              ${e.tarea}
-            </div>
-          `).join(``)}
-        </div>
-      </div>
-    `}i+=`</div>`,e.innerHTML=i}var Mi=[],Ni=!1,Pi=!1,Fi,Ii,Li,Ri,zi,Bi,Vi,Hi,Ui,Wi,Gi,Ki,qi,Ji,Yi;function Xi(){return async()=>{Zi(),Ni||=(await Qi(),ea(),!0),$i(Mi)}}function Zi(){Fi=document.getElementById(`ped-table-body`),Ii=document.getElementById(`ped-search`),Li=document.getElementById(`ped-filter-status`),Ri=document.getElementById(`ped-new-btn`),zi=document.getElementById(`ped-modal`),Bi=document.getElementById(`ped-modal-close`),Vi=document.getElementById(`ped-modal-backdrop`),Hi=document.getElementById(`ped-form`),Ui=document.getElementById(`ped-save-btn`),Wi=document.getElementById(`ped-id`),Gi=document.getElementById(`ped-producto`),Ki=document.getElementById(`ped-categoria`),qi=document.getElementById(`ped-proveedor`),Ji=document.getElementById(`ped-costo`),Yi=document.getElementById(`ped-precio`)}async function Qi(){try{Fi&&(Fi.innerHTML=`<tr><td colspan="6" class="p-4 text-center text-on-surface-variant">Cargando reventas...</td></tr>`),Mi=await me()}catch(e){j(`Error cargando reventas: `+e.message,`error`),Mi=[]}}function $i(e){if(Fi){if(e.length===0){Fi.innerHTML=`<tr><td colspan="6" class="p-4 text-center text-on-surface-variant">No se encontraron reventas</td></tr>`;return}Fi.innerHTML=e.map(e=>{let t=Number(e.costo||0),n=Number(e.precio||0),r=Number(e.utilidad||n-t),i=e=>new Intl.NumberFormat(`es-CO`).format(e);return`
+      `}o+=`</div>`,e.innerHTML=o}catch(t){e.innerHTML=`<div class="p-10 text-center text-error font-bold">Error cargando calendario: ${t.message}</div>`}}var Mi=[],Ni=!1,Pi=!1,Fi,Ii,Li,Ri,zi,Bi,Vi,Hi,Ui,Wi,Gi,Ki,qi,Ji,Yi;function Xi(){return async()=>{Zi(),Ni||=(await Qi(),ea(),!0),$i(Mi)}}function Zi(){Fi=document.getElementById(`ped-table-body`),Ii=document.getElementById(`ped-search`),Li=document.getElementById(`ped-filter-status`),Ri=document.getElementById(`ped-new-btn`),zi=document.getElementById(`ped-modal`),Bi=document.getElementById(`ped-modal-close`),Vi=document.getElementById(`ped-modal-backdrop`),Hi=document.getElementById(`ped-form`),Ui=document.getElementById(`ped-save-btn`),Wi=document.getElementById(`ped-id`),Gi=document.getElementById(`ped-producto`),Ki=document.getElementById(`ped-categoria`),qi=document.getElementById(`ped-proveedor`),Ji=document.getElementById(`ped-costo`),Yi=document.getElementById(`ped-precio`)}async function Qi(){try{Fi&&(Fi.innerHTML=`<tr><td colspan="6" class="p-4 text-center text-on-surface-variant">Cargando reventas...</td></tr>`),Mi=await me()}catch(e){j(`Error cargando reventas: `+e.message,`error`),Mi=[]}}function $i(e){if(Fi){if(e.length===0){Fi.innerHTML=`<tr><td colspan="6" class="p-4 text-center text-on-surface-variant">No se encontraron reventas</td></tr>`;return}Fi.innerHTML=e.map(e=>{let t=Number(e.costo||0),n=Number(e.precio||0),r=Number(e.utilidad||n-t),i=e=>new Intl.NumberFormat(`es-CO`).format(e);return`
       <tr class="hover:bg-surface-container-low transition-colors text-sm">
         <td class="px-4 py-3 font-mono font-bold">${e.id||`-`}</td>
         <td class="px-4 py-3 font-bold">${e.producto||`-`}</td>
