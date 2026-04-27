@@ -171,13 +171,13 @@ var e=Object.create,t=Object.defineProperty,n=Object.getOwnPropertyDescriptor,r=
         </div>
       </div>
     </div>
-  `).join(``)}}function mn(e){let t=document.getElementById(`dash-stock-list`);if(t){if(!e||e.length===0){t.innerHTML=`<p class="p-4 text-center text-xs text-on-surface-variant italic">Todo el stock está correcto</p>`;return}t.innerHTML=e.map(e=>`
+  `).join(``)}}function mn(e){let t=document.getElementById(`dash-stock-alertas`);if(t){if(!e||e.length===0){t.innerHTML=`<p class="p-4 text-center text-xs text-on-surface-variant italic">Todo el stock está correcto</p>`;return}t.innerHTML=e.map(e=>`
     <div class="flex items-center justify-between p-2.5 bg-error/5 border border-error/10 rounded-lg">
       <div class="min-w-0">
         <p class="text-xs font-bold text-on-surface truncate">${e.nombre}</p>
         <p class="text-[10px] text-error font-medium">Stock actual: ${e.stock_actual} (Mín: ${e.stock_minimo})</p>
       </div>
-      <span class="material-symbols-outlined text-error text-[18px] animate-pulse">warning</span>
+      <span class="material-symbols-outlined text-error text-[18px] ${Number(e.stock_actual)===0?`animate-bounce`:`animate-pulse`}">warning</span>
     </div>
   `).join(``)}}function hn(e){let t=document.getElementById(`dash-tec-list`);if(!t)return;if(!e||e.length===0){t.innerHTML=`<p class="p-4 text-center text-xs text-on-surface-variant italic">No hay servicios recientes</p>`;return}let n={Entregado:`bg-green-100 text-green-700`,Reparado:`bg-blue-100 text-blue-700`,"En Reparación":`bg-amber-100 text-amber-700`};t.innerHTML=e.map(e=>`
     <li class="flex items-center justify-between p-2 hover:bg-surface-container-low rounded-lg transition-colors">
