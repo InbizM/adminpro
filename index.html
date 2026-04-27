@@ -10,8 +10,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-  <script type="module" crossorigin src="/adminpro/assets/index-cPYALK47.js"></script>
-  <link rel="stylesheet" crossorigin href="/adminpro/assets/index-MqGGEfSX.css">
+  <script type="module" crossorigin src="/adminpro/assets/index-CgBFq8Nd.js"></script>
+  <link rel="stylesheet" crossorigin href="/adminpro/assets/index-DB08TtHs.css">
 </head>
 <body class="bg-background text-on-background antialiased min-h-screen">
 
@@ -1456,10 +1456,16 @@
 
       <!-- SALES HISTORY VIEW -->
       <section data-view="sales-history" class="hidden p-container-padding max-w-6xl mx-auto">
-        <div class="flex justify-between items-center mb-6">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
           <div>
             <h2 class="text-2xl font-bold text-on-surface">Historial de Ventas</h2>
             <p class="text-sm text-on-surface-variant mt-0.5">Consulta y gestiona todos los recibos emitidos.</p>
+          </div>
+          <!-- BUSCADOR -->
+          <div class="relative w-full md:w-80">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+            <input type="text" id="sales-search" placeholder="Buscar factura, cliente o CC..." 
+              class="w-full md:w-80 pl-10 pr-4 py-2.5 bg-surface-container-lowest border border-surface-variant rounded-xl text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm" />
           </div>
         </div>
         <div class="bg-surface-container-lowest border border-surface-variant rounded-2xl shadow-sm overflow-hidden">
