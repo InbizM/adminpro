@@ -10,8 +10,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-  <script type="module" crossorigin src="/adminpro/assets/index-DArJ1EJL.js"></script>
-  <link rel="stylesheet" crossorigin href="/adminpro/assets/index-C2KXPzOi.css">
+  <script type="module" crossorigin src="/adminpro/assets/index-Bd6zYtjQ.js"></script>
+  <link rel="stylesheet" crossorigin href="/adminpro/assets/index-BOOF5TTF.css">
 </head>
 <body class="bg-background text-on-background antialiased min-h-screen">
 
@@ -1545,12 +1545,19 @@
         </div>
       </section>
 
-      <!-- USERS VIEW (Admin only) -->
+      <!-- USERS VIEW -->
       <section data-view="users" class="hidden h-full overflow-hidden flex flex-col p-container-padding max-w-[1400px] mx-auto">
-        <div class="flex justify-between items-end mb-6 shrink-0">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6 shrink-0">
           <div>
             <h2 class="text-2xl font-bold text-on-surface">Gestión de Usuarios</h2>
-            <p class="text-sm text-on-surface-variant mt-0.5">Control de accesos, roles y estados del personal.</p>
+            <p class="text-sm text-on-surface-variant mt-0.5">Administra el acceso y permisos de tu equipo.</p>
+          </div>
+          <div class="flex gap-2 w-full md:w-auto">
+            <div class="relative flex-1 md:w-80">
+              <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+              <input id="user-search" type="text" placeholder="Buscar por nombre o email..."
+                class="w-full bg-surface-container-lowest border border-surface-variant rounded-xl pl-10 pr-4 py-2 text-sm text-on-surface focus:outline-none focus:border-primary shadow-sm" />
+            </div>
           </div>
         </div>
 
@@ -1558,51 +1565,64 @@
           <table class="w-full text-left border-collapse text-sm min-w-[800px]">
             <thead class="bg-surface-container text-on-surface-variant sticky top-0 z-10 text-[11px] uppercase tracking-wider font-bold">
               <tr>
-                <th class="px-4 py-3 border-b border-surface-variant">Nombre / Email</th>
-                <th class="px-4 py-3 border-b border-surface-variant">Rol</th>
-                <th class="px-4 py-3 border-b border-surface-variant">Estado</th>
+                <th class="px-4 py-3 border-b border-surface-variant">Nombre</th>
+                <th class="px-4 py-3 border-b border-surface-variant">Email</th>
+                <th class="px-4 py-3 border-b border-surface-variant text-center">Rol</th>
+                <th class="px-4 py-3 border-b border-surface-variant text-center">Estado</th>
                 <th class="px-4 py-3 border-b border-surface-variant text-right">Acciones</th>
               </tr>
             </thead>
-            <tbody id="users-table-body" class="divide-y divide-surface-variant text-on-surface">
+            <tbody id="user-table-body" class="divide-y divide-surface-variant text-on-surface">
             </tbody>
           </table>
         </div>
 
-        <button id="users-new-btn" class="fixed bottom-20 md:bottom-8 right-6 bg-primary text-on-primary rounded-xl px-5 py-3.5 flex items-center gap-2 shadow-lg z-30">
+        <button id="user-new-btn" class="fixed bottom-20 md:bottom-8 right-6 bg-primary text-on-primary rounded-xl px-5 py-3.5 flex items-center gap-2 shadow-lg z-30">
           <span class="material-symbols-outlined">person_add</span> <span>Nuevo Usuario</span>
         </button>
 
-        <!-- MODAL USUARIO -->
-        <div id="users-modal" class="hidden fixed inset-0 z-50 items-center justify-center p-4">
-          <div id="users-modal-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
-          <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden z-10">
+        <!-- MODAL USUARIOS -->
+        <div id="user-modal" class="hidden fixed inset-0 z-50 items-center justify-center p-4">
+          <div id="user-modal-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+          <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto z-10">
             <div class="flex items-center justify-between px-6 py-4 border-b border-surface-variant">
-              <h3 id="users-modal-title" class="font-bold text-lg text-on-surface">Usuario</h3>
-              <button id="users-modal-close" class="p-1.5 text-on-surface-variant hover:bg-surface-container rounded-lg"><span class="material-symbols-outlined">close</span></button>
+              <h3 id="user-modal-title" class="font-bold text-lg text-on-surface">Usuario</h3>
+              <button id="user-modal-close" class="p-1.5 text-on-surface-variant hover:bg-surface-container rounded-lg"><span class="material-symbols-outlined">close</span></button>
             </div>
-            <form id="users-form" class="p-6 space-y-4">
-              <input type="hidden" id="user-original-email" />
-              <div><label class="field-label">Nombre Completo *</label><input id="user-nombre" type="text" required class="field-input" /></div>
-              <div><label class="field-label">Correo Electrónico *</label><input id="user-email" type="email" required class="field-input" /></div>
-              <div><label class="field-label">Contraseña *</label><input id="user-password" type="text" required class="field-input" /></div>
-              <div class="grid grid-cols-2 gap-4">
+            <form id="user-form" class="p-6 space-y-4">
+              <div class="space-y-4">
                 <div>
-                  <label class="field-label">Rol</label>
-                  <select id="user-rol" class="field-input">
-                    <option value="Vendedor">Vendedor</option>
-                    <option value="Administrador">Administrador</option>
-                  </select>
+                  <label class="field-label">Nombre Completo *</label>
+                  <input id="user-input-name" type="text" required class="field-input" placeholder="Ej: Juan Pérez" />
                 </div>
                 <div>
-                  <label class="field-label">Estado</label>
-                  <select id="user-estado" class="field-input">
-                    <option value="Activo">Activo</option>
-                    <option value="Inactivo">Inactivo</option>
-                  </select>
+                  <label class="field-label">Correo Electrónico *</label>
+                  <input id="user-input-email" type="email" required class="field-input" placeholder="tu@correo.com" />
+                </div>
+                <div>
+                  <label class="field-label">Contraseña *</label>
+                  <input id="user-input-password" type="text" required class="field-input" placeholder="••••••••" />
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label class="field-label">Rol</label>
+                    <select id="user-input-rol" class="field-input">
+                      <option value="Vendedor">Vendedor</option>
+                      <option value="Administrador">Administrador</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="field-label">Estado</label>
+                    <select id="user-input-estado" class="field-input">
+                      <option value="Activo">Activo</option>
+                      <option value="Inactivo">Inactivo</option>
+                    </select>
+                  </div>
                 </div>
               </div>
-              <div class="pt-4"><button type="submit" id="user-save-btn" class="w-full py-3 bg-primary text-on-primary font-bold rounded-xl shadow-md">Guardar Usuario</button></div>
+              <div class="pt-4 flex justify-end">
+                <button type="submit" id="user-save-btn" class="w-full py-3 bg-primary text-on-primary font-bold rounded-lg shadow-md">Guardar Usuario</button>
+              </div>
             </form>
           </div>
         </div>
