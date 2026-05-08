@@ -37,7 +37,11 @@ function playBeep() {
 }
 
 function ensureDOM() {
-  if (document.getElementById("scanner-modal")) return;
+  const oldModal = document.getElementById("scanner-modal");
+  if (oldModal) {
+    if (document.getElementById("scanner-guide-box")) return; // Ya es la nueva versión
+    oldModal.remove(); // Eliminar versión vieja
+  }
 
   const html = `
     <div id="scanner-modal" class="hidden fixed inset-0 z-[60] items-center justify-center p-4">
