@@ -9,7 +9,7 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-import { navigate, registerView, onRouteChange } from "./router.js";
+import { navigate, registerView, onRouteChange, onBeforeRoute } from "./router.js";
 import { initInventory } from "./views/inventory.js";
 import { initDashboard } from "./views/dashboard.js";
 import { initPOS } from "./views/pos.js";
@@ -97,41 +97,41 @@ function clearSession() {
 // Navigation Groups
 // ============================================================
 const NAV_GROUPS = [
-  { label: "Inicio", items: [{ id: "dashboard", label: "Dashboard", icon: "dashboard" }] },
+  { label: "Inicio", items: [{ id: "dashboard", label: "Dashboard", icon: "dashboard", roles: ["Administrador", "Vendedor", "Técnico"] }] },
   {
     label: "Operaciones",
     items: [
-      { id: "pos",           label: "Ventas (POS)",        icon: "point_of_sale" },
-      { id: "sales-history", label: "Historial de Ventas", icon: "history" },
-      { id: "credits",       label: "Créditos",            icon: "credit_score" },
-      { id: "expenses",      label: "Egresos",             icon: "payments" },
-      { id: "nominas",       label: "Nóminas",             icon: "request_quote" }
+      { id: "pos",           label: "Ventas (POS)",        icon: "point_of_sale", roles: ["Administrador", "Vendedor"] },
+      { id: "sales-history", label: "Historial de Ventas", icon: "history",       roles: ["Administrador", "Vendedor"] },
+      { id: "credits",       label: "Créditos",            icon: "credit_score",  roles: ["Administrador", "Vendedor"] },
+      { id: "expenses",      label: "Egresos",             icon: "payments",      roles: ["Administrador"] },
+      { id: "nominas",       label: "Nóminas",             icon: "request_quote", roles: ["Administrador"] }
     ]
   },
   {
     label: "Inventario",
     items: [
-      { id: "inventory",     label: "Catálogo General",    icon: "inventory_2" },
-      { id: "imei",          label: "Equipos IMEI",        icon: "phone_android" },
-      { id: "reventas",      label: "Reventas",            icon: "storefront" }
+      { id: "inventory",     label: "Catálogo General",    icon: "inventory_2",   roles: ["Administrador", "Vendedor", "Técnico"] },
+      { id: "imei",          label: "Equipos IMEI",        icon: "phone_android", roles: ["Administrador", "Vendedor"] },
+      { id: "reventas",      label: "Reventas",            icon: "storefront",    roles: ["Administrador", "Vendedor"] }
     ]
   },
-  { label: "Servicios", items: [{ id: "technical", label: "Servicio Técnico", icon: "build" }] },
+  { label: "Servicios", items: [{ id: "technical", label: "Servicio Técnico", icon: "build", roles: ["Administrador", "Técnico"] }] },
   {
     label: "Organización",
     items: [
-      { id: "tasks",         label: "Lista de Tareas",     icon: "check_circle" },
-      { id: "calendar",      label: "Calendario",          icon: "calendar_month" }
+      { id: "tasks",         label: "Lista de Tareas",     icon: "check_circle",   roles: ["Administrador", "Vendedor", "Técnico"] },
+      { id: "calendar",      label: "Calendario",          icon: "calendar_month", roles: ["Administrador", "Vendedor", "Técnico"] }
     ]
   },
   {
     label: "Personas",
     items: [
-      { id: "clients",       label: "Clientes",            icon: "people" },
-      { id: "users",         label: "Equipo / Usuarios",   icon: "manage_accounts", adminOnly: true }
+      { id: "clients",       label: "Clientes",            icon: "people",          roles: ["Administrador", "Vendedor", "Técnico"] },
+      { id: "users",         label: "Equipo / Usuarios",   icon: "manage_accounts", roles: ["Administrador"] }
     ]
   },
-  { label: "Otros", items: [{ id: "settings", label: "Ajustes", icon: "settings" }] }
+  { label: "Otros", items: [{ id: "settings", label: "Ajustes", icon: "settings", roles: ["Administrador", "Vendedor", "Técnico"] }] }
 ];
 
 // ============================================================
@@ -159,17 +159,27 @@ function buildNavLinks(containerId, rol, mobile = false) {
   const container = document.getElementById(containerId);
   if (!container) return;
 
-  const isAdmin = rol === 'Administrador';
+  const userRol = rol || 'Vendedor';
   let html = "";
 
   if (mobile) {
     // Barra Inferior (Solo 5 iconos: 4 fijos + 1 de Menú)
-    const primaryItems = [
-      { id: "dashboard", label: "Home",     icon: "dashboard" },
-      { id: "pos",       label: "Venta",    icon: "point_of_sale" },
-      { id: "inventory", label: "Stock",    icon: "inventory_2" },
-      { id: "tasks",     label: "Tareas",   icon: "check_circle" }
-    ];
+    let primaryItems = [];
+    if (userRol === 'Técnico') {
+      primaryItems = [
+        { id: "dashboard", label: "Home",     icon: "dashboard" },
+        { id: "technical", label: "Reparar",  icon: "build" },
+        { id: "inventory", label: "Stock",    icon: "inventory_2" },
+        { id: "tasks",     label: "Tareas",   icon: "check_circle" }
+      ];
+    } else {
+      primaryItems = [
+        { id: "dashboard", label: "Home",     icon: "dashboard" },
+        { id: "pos",       label: "Venta",    icon: "point_of_sale" },
+        { id: "inventory", label: "Stock",    icon: "inventory_2" },
+        { id: "tasks",     label: "Tareas",   icon: "check_circle" }
+      ];
+    }
 
     html = primaryItems.map(item => `
       <button data-nav="${item.id}" class="nav-btn flex flex-col items-center justify-center gap-0.5 py-2 w-full text-on-surface-variant hover:text-primary transition-colors">
@@ -189,7 +199,7 @@ function buildNavLinks(containerId, rol, mobile = false) {
     // Llenar el Drawer Grid con TODOS los elementos
     const drawerGrid = document.getElementById("mobile-drawer-grid");
     if (drawerGrid) {
-      drawerGrid.innerHTML = NAV_GROUPS.flatMap(g => g.items).filter(i => !i.adminOnly || isAdmin).map(item => `
+      drawerGrid.innerHTML = NAV_GROUPS.flatMap(g => g.items).filter(i => !i.roles || i.roles.includes(userRol)).map(item => `
         <button data-nav="${item.id}" class="flex flex-col items-center gap-2 p-4 bg-surface-container rounded-2xl active:scale-95 transition-all">
           <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm">
             <span class="material-symbols-outlined text-primary text-[24px]">${item.icon}</span>
@@ -201,7 +211,7 @@ function buildNavLinks(containerId, rol, mobile = false) {
   } else {
     // Menú Desktop Grouped
     NAV_GROUPS.forEach(group => {
-      const visibleItems = group.items.filter(item => !item.adminOnly || isAdmin);
+      const visibleItems = group.items.filter(item => !item.roles || item.roles.includes(userRol));
       if (visibleItems.length === 0) return;
       html += `<p class="text-[10px] font-black uppercase tracking-[0.15em] text-slate-500 mt-6 mb-2 px-4 italic">${group.label}</p>`;
       visibleItems.forEach(item => {
@@ -275,6 +285,42 @@ function showApp(nombre, rol) {
 
   buildNavLinks("desktop-nav", rol, false);
   buildNavLinks("mobile-nav",  rol, true);
+  
+  const userRol = rol || 'Vendedor';
+  
+  onBeforeRoute((viewId) => {
+    let allowed = false;
+    let found = false;
+    NAV_GROUPS.forEach(g => {
+      const it = g.items.find(i => i.id === viewId);
+      if (it) {
+        found = true;
+        if (!it.roles || it.roles.includes(userRol)) allowed = true;
+      }
+    });
+    // If it's a known restricted route and not allowed, block it.
+    if (found && !allowed) {
+      showToast("No tienes permiso para acceder a este módulo", "warning");
+      return "dashboard"; // Redirect
+    }
+  });
+
+  // Hide unauthorized dashboard shortcuts
+  document.querySelectorAll("[data-goto]").forEach(btn => {
+    const targetView = btn.dataset.goto;
+    let allowed = false;
+    NAV_GROUPS.forEach(g => {
+      const it = g.items.find(i => i.id === targetView);
+      if (it && (!it.roles || it.roles.includes(userRol))) allowed = true;
+    });
+    if (!allowed) {
+      btn.classList.add("hidden");
+      // Si es un div padre contenedor flex, también lo ocultamos si queremos, pero con hidden basta para el shortcut.
+    } else {
+      btn.classList.remove("hidden");
+    }
+  });
+
   onRouteChange(setActiveNav);
 
   registerView("inventory", initInventory());

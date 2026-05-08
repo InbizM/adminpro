@@ -4,6 +4,7 @@
 const views = {};
 let activeViewId = null;
 let onChangeCallback = null;
+let beforeNavigateCallback = null;
 
 export function registerView(id, loadFn) {
   views[id] = loadFn;
@@ -13,7 +14,16 @@ export function onRouteChange(cb) {
   onChangeCallback = cb;
 }
 
+export function onBeforeRoute(cb) {
+  beforeNavigateCallback = cb;
+}
+
 export async function navigate(viewId) {
+  if (beforeNavigateCallback) {
+    const overrideView = beforeNavigateCallback(viewId);
+    if (overrideView === false) return; // cancelled
+    if (typeof overrideView === 'string') viewId = overrideView; // redirect
+  }
   // Hide all views
   document.querySelectorAll("[data-view]").forEach((el) => {
     el.classList.add("hidden");
