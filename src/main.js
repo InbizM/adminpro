@@ -1,4 +1,14 @@
 import "./style.css";
+
+// Register Service Worker for PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/adminpro/sw.js', { scope: '/adminpro/' }).catch(err => {
+      console.log('ServiceWorker registration failed: ', err);
+    });
+  });
+}
+
 import { navigate, registerView, onRouteChange } from "./router.js";
 import { initInventory } from "./views/inventory.js";
 import { initDashboard } from "./views/dashboard.js";
@@ -6,16 +16,60 @@ import { initPOS } from "./views/pos.js";
 import { initIMEI } from "./views/imei.js";
 import { initClients } from "./views/clients.js";
 import { initCredits } from "./views/credits.js";
-import { initSepare } from "./views/separe.js";
-import { initPedidos } from "./views/pedidos.js";
+import { initSalesHistory } from "./views/sales-history.js";
+import { initTasks } from "./views/tasks.js";
+import { initCalendar } from "./views/calendar.js";
+import { initUsers } from "./views/users.js";
+import { initReventas } from "./views/reventas.js";
 import { initTechnical } from "./views/technical.js";
 import { initExpenses } from "./views/expenses.js";
+import { initNominas } from "./views/nominas.js";
 import { initSettings } from "./views/settings.js";
 import { showToast } from "./toast.js";
 import { login, verifyPin, logout, setToken, getToken } from "./api.js";
 
+let _pendingEmail = "";
+
 // ============================================================
-// Session helpers (localStorage for persistence across tabs)
+// Physical Barcode Scanner Support
+// ============================================================
+let _barcodeBuffer = "";
+let _barcodeTimer = null;
+
+document.addEventListener("keydown", (e) => {
+  // Ignorar atajos de teclado
+  if (e.ctrlKey || e.altKey || e.metaKey) return;
+
+  if (e.key === "Enter") {
+    if (_barcodeBuffer.length >= 3) {
+      const code = _barcodeBuffer;
+      _barcodeBuffer = "";
+      clearTimeout(_barcodeTimer);
+      
+      // Emitir evento global que las vistas pueden atrapar
+      document.dispatchEvent(new CustomEvent('barcodeScanned', { detail: code }));
+      
+      // Evitar que el 'Enter' dispare envíos de formularios no deseados
+      const activeTag = document.activeElement ? document.activeElement.tagName : "";
+      if (activeTag !== "TEXTAREA") {
+        e.preventDefault();
+      }
+      return;
+    }
+    _barcodeBuffer = ""; // Resetear en un Enter normal
+  } else if (e.key.length === 1) {
+    _barcodeBuffer += e.key;
+    clearTimeout(_barcodeTimer);
+    // Un lector físico lee muy rápido (ej. 10-30ms por carácter). 
+    // Si pasan más de 50ms, asumimos que es una persona tipeando y reseteamos el buffer.
+    _barcodeTimer = setTimeout(() => {
+      _barcodeBuffer = "";
+    }, 50);
+  }
+});
+
+// ============================================================
+// Session helpers
 // ============================================================
 function getSession() {
   try {
@@ -36,122 +90,146 @@ function saveSession(data, token) {
 function clearSession() {
   setToken(null);
   localStorage.removeItem("adminproSession");
+  localStorage.removeItem("adminpro_user");
 }
 
 // ============================================================
-// Login UI helpers
+// Navigation Groups
 // ============================================================
-const stepLogin = () => document.getElementById("step-credentials");
-const stepPin   = () => document.getElementById("step-pin");
-
-function showStep(step) {
-  stepLogin().classList.toggle("hidden", step !== "credentials");
-  stepPin().classList.toggle("hidden",   step !== "pin");
-}
-
-let _pendingEmail = "";
-
-async function handleLoginStep1(e) {
-  e.preventDefault();
-  const btn   = document.getElementById("login-btn");
-  const email = document.getElementById("login-email").value.trim();
-  const pwd   = document.getElementById("login-pwd").value.trim();
-
-  btn.disabled = true;
-  btn.textContent = "Verificando...";
-
-  try {
-    const res = await login(email, pwd);
-    if (res.success && res.step === "pin") {
-      _pendingEmail = email;
-      document.getElementById("pin-hint").textContent =
-        `Enviamos un PIN de 6 dígitos a ${email}`;
-      showStep("pin");
-      document.getElementById("login-pin").focus();
-    } else {
-      showToast(res.mensaje || "Credenciales incorrectas", "error");
-    }
-  } catch (err) {
-    showToast("Error de conexión: " + err.message, "error");
-  } finally {
-    btn.disabled = false;
-    btn.textContent = "Ingresar";
-  }
-}
-
-async function handlePinStep(e) {
-  e.preventDefault();
-  const btn = document.getElementById("pin-btn");
-  const pin = document.getElementById("login-pin").value.trim();
-
-  btn.disabled = true;
-  btn.textContent = "Verificando PIN...";
-
-  try {
-    const res = await verifyPin(_pendingEmail, pin);
-    if (res.success && res.token) {
-      saveSession({ email: res.email, nombre: res.nombre, rol: res.rol }, res.token);
-      showApp(res.nombre);
-    } else {
-      showToast(res.mensaje || "PIN incorrecto", "error");
-      document.getElementById("login-pin").value = "";
-      document.getElementById("login-pin").focus();
-    }
-  } catch (err) {
-    showToast("Error: " + err.message, "error");
-  } finally {
-    btn.disabled = false;
-    btn.textContent = "Verificar";
-  }
-}
-
-// ============================================================
-// Navigation
-// ============================================================
-const NAV_ITEMS = [
-  { id: "dashboard",  label: "Dashboard",    icon: "dashboard" },
-  { id: "pos",        label: "Ventas (POS)", icon: "point_of_sale" },
-  { id: "inventory",  label: "Inventario",   icon: "inventory_2" },
-  { id: "imei",       label: "Equipos IMEI", icon: "phone_android" },
-  { id: "clients",    label: "Clientes",     icon: "people" },
-  { id: "credits",    label: "Créditos",     icon: "credit_score" },
-  { id: "separe",     label: "Plan Separe",  icon: "savings" },
-  { id: "pedidos",    label: "Pedidos",      icon: "local_shipping" },
-  { id: "technical",  label: "Técnico",      icon: "build" },
-  { id: "expenses",   label: "Egresos",      icon: "payments" },
-  { id: "settings",   label: "Ajustes",      icon: "settings" },
+const NAV_GROUPS = [
+  { label: "Inicio", items: [{ id: "dashboard", label: "Dashboard", icon: "dashboard" }] },
+  {
+    label: "Operaciones",
+    items: [
+      { id: "pos",           label: "Ventas (POS)",        icon: "point_of_sale" },
+      { id: "sales-history", label: "Historial de Ventas", icon: "history" },
+      { id: "credits",       label: "Créditos",            icon: "credit_score" },
+      { id: "expenses",      label: "Egresos",             icon: "payments" },
+      { id: "nominas",       label: "Nóminas",             icon: "request_quote" }
+    ]
+  },
+  {
+    label: "Inventario",
+    items: [
+      { id: "inventory",     label: "Catálogo General",    icon: "inventory_2" },
+      { id: "imei",          label: "Equipos IMEI",        icon: "phone_android" },
+      { id: "reventas",      label: "Reventas",            icon: "storefront" }
+    ]
+  },
+  { label: "Servicios", items: [{ id: "technical", label: "Servicio Técnico", icon: "build" }] },
+  {
+    label: "Organización",
+    items: [
+      { id: "tasks",         label: "Lista de Tareas",     icon: "check_circle" },
+      { id: "calendar",      label: "Calendario",          icon: "calendar_month" }
+    ]
+  },
+  {
+    label: "Personas",
+    items: [
+      { id: "clients",       label: "Clientes",            icon: "people" },
+      { id: "users",         label: "Equipo / Usuarios",   icon: "manage_accounts", adminOnly: true }
+    ]
+  },
+  { label: "Otros", items: [{ id: "settings", label: "Ajustes", icon: "settings" }] }
 ];
 
-function buildNavLinks(containerId, mobile = false) {
+// ============================================================
+// Mobile Menu Logic
+// ============================================================
+function toggleMobileMenu(open) {
+  const drawer = document.getElementById("mobile-drawer");
+  const backdrop = document.getElementById("mobile-drawer-backdrop");
+  const content = document.getElementById("mobile-drawer-content");
+
+  if (open) {
+    drawer.classList.remove("hidden");
+    setTimeout(() => {
+      backdrop.classList.replace("opacity-0", "opacity-100");
+      content.classList.replace("translate-y-full", "translate-y-0");
+    }, 10);
+  } else {
+    backdrop.classList.replace("opacity-100", "opacity-0");
+    content.classList.replace("translate-y-0", "translate-y-full");
+    setTimeout(() => drawer.classList.add("hidden"), 300);
+  }
+}
+
+function buildNavLinks(containerId, rol, mobile = false) {
   const container = document.getElementById(containerId);
   if (!container) return;
 
+  const isAdmin = rol === 'Administrador';
+  let html = "";
+
   if (mobile) {
-    const mobileItems = [
-      { id: "dashboard", label: "Dashboard",  icon: "dashboard" },
-      { id: "pos",       label: "Ventas",      icon: "point_of_sale" },
-      { id: "inventory", label: "Inventario",  icon: "inventory_2" },
-      { id: "credits",   label: "Créditos",    icon: "credit_score" },
-      { id: "settings",  label: "Más",         icon: "menu" },
+    // Barra Inferior (Solo 5 iconos: 4 fijos + 1 de Menú)
+    const primaryItems = [
+      { id: "dashboard", label: "Home",     icon: "dashboard" },
+      { id: "pos",       label: "Venta",    icon: "point_of_sale" },
+      { id: "inventory", label: "Stock",    icon: "inventory_2" },
+      { id: "tasks",     label: "Tareas",   icon: "check_circle" }
     ];
-    container.innerHTML = mobileItems.map(item => `
-      <button data-nav="${item.id}"
-        class="nav-btn flex flex-col items-center justify-center gap-0.5 py-2 w-full
-               text-on-surface-variant hover:text-primary transition-colors">
-        <span class="material-symbols-outlined text-[22px]">${item.icon}</span>
-        <span class="text-[9px] font-semibold tracking-tight">${item.label}</span>
+
+    html = primaryItems.map(item => `
+      <button data-nav="${item.id}" class="nav-btn flex flex-col items-center justify-center gap-0.5 py-2 w-full text-on-surface-variant hover:text-primary transition-colors">
+        <span class="material-symbols-outlined text-[24px]">${item.icon}</span>
+        <span class="text-[10px] font-bold tracking-tight">${item.label}</span>
       </button>
     `).join("");
+
+    // Botón "MÁS" para abrir el Drawer
+    html += `
+      <button id="mobile-more-btn" class="flex flex-col items-center justify-center gap-0.5 py-2 w-full text-on-surface-variant hover:text-primary transition-colors">
+        <span class="material-symbols-outlined text-[24px]">apps</span>
+        <span class="text-[10px] font-bold tracking-tight">Más</span>
+      </button>
+    `;
+
+    // Llenar el Drawer Grid con TODOS los elementos
+    const drawerGrid = document.getElementById("mobile-drawer-grid");
+    if (drawerGrid) {
+      drawerGrid.innerHTML = NAV_GROUPS.flatMap(g => g.items).filter(i => !i.adminOnly || isAdmin).map(item => `
+        <button data-nav="${item.id}" class="flex flex-col items-center gap-2 p-4 bg-surface-container rounded-2xl active:scale-95 transition-all">
+          <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm">
+            <span class="material-symbols-outlined text-primary text-[24px]">${item.icon}</span>
+          </div>
+          <span class="text-[11px] font-bold text-on-surface text-center leading-tight">${item.label}</span>
+        </button>
+      `).join("");
+    }
   } else {
-    container.innerHTML = NAV_ITEMS.map(item => `
-      <button data-nav="${item.id}"
-        class="nav-btn flex items-center gap-3 px-4 py-2.5 rounded-lg w-full text-left
-               text-slate-400 hover:text-white hover:bg-slate-800/50
-               transition-all duration-150 text-sm font-medium">
-        <span class="material-symbols-outlined text-[20px]">${item.icon}</span>
-        <span>${item.label}</span>
-      </button>
-    `).join("");
+    // Menú Desktop Grouped
+    NAV_GROUPS.forEach(group => {
+      const visibleItems = group.items.filter(item => !item.adminOnly || isAdmin);
+      if (visibleItems.length === 0) return;
+      html += `<p class="text-[10px] font-black uppercase tracking-[0.15em] text-slate-500 mt-6 mb-2 px-4 italic">${group.label}</p>`;
+      visibleItems.forEach(item => {
+        html += `
+          <button data-nav="${item.id}" class="nav-btn flex items-center gap-3 px-4 py-2.5 rounded-xl w-full text-left text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all duration-150 text-sm font-medium mb-0.5 group">
+            <span class="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">${item.icon}</span>
+            <span>${item.label}</span>
+          </button>
+        `;
+      });
+    });
+  }
+
+  container.innerHTML = html;
+
+  // Event Listeners
+  if (mobile) {
+    document.getElementById("mobile-more-btn")?.addEventListener("click", () => toggleMobileMenu(true));
+    document.getElementById("mobile-drawer-close")?.addEventListener("click", () => toggleMobileMenu(false));
+    document.getElementById("mobile-drawer-backdrop")?.addEventListener("click", () => toggleMobileMenu(false));
+    
+    // Al elegir una opción del drawer, cerrar menú
+    document.querySelectorAll("#mobile-drawer-grid [data-nav]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        toggleMobileMenu(false);
+        navigate(btn.dataset.nav);
+      });
+    });
   }
 
   container.querySelectorAll("[data-nav]").forEach(btn => {
@@ -160,113 +238,133 @@ function buildNavLinks(containerId, mobile = false) {
 }
 
 function setActiveNav(viewId) {
+  // Desktop highligh
   document.querySelectorAll("#desktop-nav [data-nav]").forEach(btn => {
     const active = btn.dataset.nav === viewId;
-    btn.classList.toggle("bg-red-600",    active);
-    btn.classList.toggle("text-white",    active);
-    btn.classList.toggle("text-slate-400",!active);
+    btn.classList.toggle("bg-primary", active);
+    btn.classList.toggle("text-white", active);
+    btn.classList.toggle("shadow-lg", active);
+    btn.classList.toggle("text-slate-400", !active);
   });
+  
+  // Mobile bar highlight
   document.querySelectorAll("#mobile-nav [data-nav]").forEach(btn => {
     const active = btn.dataset.nav === viewId;
-    btn.classList.toggle("text-primary",           active);
-    btn.classList.toggle("text-on-surface-variant",!active);
+    btn.classList.toggle("text-primary", active);
+    btn.classList.toggle("text-on-surface-variant", !active);
   });
-  const item  = NAV_ITEMS.find(i => i.id === viewId);
-  const title = document.getElementById("header-title");
-  if (title && item) title.textContent = item.label;
+  
+  // Header title update
+  let label = "AdminPro";
+  NAV_GROUPS.forEach(g => {
+    const it = g.items.find(i => i.id === viewId);
+    if (it) label = it.label;
+  });
+  const t = document.getElementById("header-title");
+  if (t) t.textContent = label;
 }
 
 // ============================================================
-// Show/hide screens
+// App Lifecycle
 // ============================================================
-function showApp(nombre) {
+function showApp(nombre, rol) {
   document.getElementById("login-screen").classList.add("hidden");
   document.getElementById("app-shell").classList.remove("hidden");
-
   const userEl = document.getElementById("user-name");
   if (userEl) userEl.textContent = nombre || "Usuario";
 
-  buildNavLinks("desktop-nav", false);
-  buildNavLinks("mobile-nav",  true);
+  buildNavLinks("desktop-nav", rol, false);
+  buildNavLinks("mobile-nav",  rol, true);
   onRouteChange(setActiveNav);
 
-  const loadInv = initInventory();
-  registerView("inventory", loadInv);
-
-  const loadDash = initDashboard();
-  registerView("dashboard", loadDash);
-
-  const loadPos = initPOS();
-  registerView("pos", loadPos);
-
-  const loadImei = initIMEI();
-  registerView("imei", loadImei);
-
-  const loadClients = initClients();
-  registerView("clients", loadClients);
-
-  const loadCredits = initCredits();
-  registerView("credits", loadCredits);
-
-  const loadSepare = initSepare();
-  registerView("separe", loadSepare);
-
-  const loadPedidos = initPedidos();
-  registerView("pedidos", loadPedidos);
-
-  const loadTechnical = initTechnical();
-  registerView("technical", loadTechnical);
-
-  const loadExpenses = initExpenses();
-  registerView("expenses", loadExpenses);
-
-  const loadSettings = initSettings();
-  registerView("settings", loadSettings);
+  registerView("inventory", initInventory());
+  registerView("dashboard", initDashboard());
+  registerView("pos", initPOS());
+  registerView("imei", initIMEI());
+  registerView("clients", initClients());
+  registerView("credits", initCredits());
+  registerView("sales-history", initSalesHistory());
+  registerView("tasks", initTasks());
+  registerView("calendar", initCalendar());
+  registerView("users", initUsers());
+  registerView("reventas", initReventas());
+  registerView("technical", initTechnical());
+  registerView("expenses", initExpenses());
+  registerView("nominas", initNominas());
+  registerView("settings", initSettings());
 
   navigate("dashboard");
+}
+
+function showStep(step) {
+  const stepCredentials = document.getElementById("step-credentials");
+  const stepPin = document.getElementById("step-pin");
+  if (stepCredentials) stepCredentials.classList.toggle("hidden", step !== "credentials");
+  if (stepPin) stepPin.classList.toggle("hidden", step !== "pin");
 }
 
 function showLoginScreen() {
   document.getElementById("app-shell").classList.add("hidden");
   document.getElementById("login-screen").classList.remove("hidden");
   showStep("credentials");
-  _pendingEmail = "";
 }
 
-// ============================================================
-// Logout
-// ============================================================
 async function handleLogout() {
-  try { await logout(); } catch { /* ignore */ }
+  await logout();
   clearSession();
   showLoginScreen();
-  showToast("Sesión cerrada", "info");
 }
 
 // ============================================================
-// Session expired (token invalid on any API call)
+// Events & Bootstrap
 // ============================================================
 window.addEventListener("session-expired", () => {
   clearSession();
   showLoginScreen();
-  showToast("Tu sesión expiró. Inicia sesión de nuevo.", "warning");
 });
 
-// ============================================================
-// Event bindings
-// ============================================================
 document.getElementById("login-form")?.addEventListener("submit", handleLoginStep1);
 document.getElementById("pin-form")?.addEventListener("submit", handlePinStep);
 document.getElementById("back-to-login")?.addEventListener("click", () => showStep("credentials"));
 document.getElementById("logout-btn")?.addEventListener("click", handleLogout);
 
-// ============================================================
-// Bootstrap — restore session on page load
-// ============================================================
+async function handleLoginStep1(e) {
+  e.preventDefault();
+  const btn = document.getElementById("login-btn");
+  const email = document.getElementById("login-email").value.trim();
+  const pwd = document.getElementById("login-pwd").value.trim();
+  btn.disabled = true; btn.textContent = "Verificando...";
+  try {
+    const res = await login(email, pwd);
+    if (res.success && res.step === "pin") {
+      _pendingEmail = email;
+      document.getElementById("pin-hint").textContent = `Enviamos un PIN a ${email}`;
+      showStep("pin");
+      document.getElementById("login-pin").focus();
+    } else { showToast(res.mensaje || "Credenciales incorrectas", "error"); }
+  } catch (err) { showToast("Error de conexión", "error"); }
+  finally { btn.disabled = false; btn.textContent = "Ingresar"; }
+}
+
+async function handlePinStep(e) {
+  e.preventDefault();
+  const btn = document.getElementById("pin-btn");
+  const pin = document.getElementById("login-pin").value.trim();
+  btn.disabled = true; btn.textContent = "Verificando...";
+  try {
+    const res = await verifyPin(_pendingEmail, pin);
+    if (res.success && res.token) {
+      saveSession({ email: res.email, nombre: res.nombre, rol: res.rol }, res.token);
+      showApp(res.nombre, res.rol);
+    } else { showToast(res.mensaje || "PIN incorrecto", "error"); }
+  } catch (err) { showToast("Error", "error"); }
+  finally { btn.disabled = false; btn.textContent = "Verificar"; }
+}
+
 const session = getSession();
 if (session && session.token && getToken()) {
   setToken(session.token);
-  showApp(session.nombre);
+  showApp(session.nombre, session.rol);
 } else {
   clearSession();
   showLoginScreen();

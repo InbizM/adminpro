@@ -1,4 +1,4 @@
-import { getEquipos, crearEquipo, actualizarEquipo, eliminarEquipo } from "../api.js";
+import { getEquipos, crearEquipo, actualizarEquipo, eliminarEquipo, getInventario } from "../api.js";
 import { showToast } from "../toast.js";
 import { openScanner } from "../scanner.js";
 
@@ -52,6 +52,13 @@ async function loadData() {
   try {
     elTable.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-on-surface-variant">Cargando equipos...</td></tr>`;
     _equipos = await getEquipos();
+    
+    // Load ALL inventory products for selection
+    const inv = await getInventario();
+    
+    elNombre.innerHTML = '<option value="">Seleccione un equipo...</option>' + 
+      inv.map(c => `<option value="${c.nombre}" data-marca="${c.marca}" data-costo="${c.costo}" data-precio="${c.precioVenta}" data-prov="${c.proveedor || ''}" data-id="${c.id}">${c.nombre}${c.marca ? ' (' + c.marca + ')' : ''}</option>`).join('');
+
   } catch (err) {
     showToast("Error cargando equipos: " + err.message, "error");
     _equipos = [];
@@ -87,8 +94,8 @@ function renderTable(lista) {
         </td>
         <td class="px-4 py-3 text-sm text-on-surface-variant">${e.proveedor || '-'}</td>
         <td class="px-4 py-3">
-          <p class="text-xs font-medium text-on-surface-variant line-through">$${new Intl.NumberFormat("es-CO").format(e.costo || 0)}</p>
-          <p class="text-sm font-bold text-primary">$${new Intl.NumberFormat("es-CO").format(e.venta || 0)}</p>
+          <p class="text-xs font-medium text-on-surface-variant line-through">$${new Intl.NumberFormat("es-CO").format(parseInt(String(e.costo || 0).replace(/\D/g, "")) || 0)}</p>
+          <p class="text-sm font-bold text-primary">$${new Intl.NumberFormat("es-CO").format(parseInt(String(e.venta || 0).replace(/\D/g, "")) || 0)}</p>
         </td>
         <td class="px-4 py-3 text-right">
           <button onclick="window.imeiEdit('${e.imei1}')" class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-primary/10 rounded-lg transition-colors" title="Editar">
@@ -117,6 +124,37 @@ function setupEvents() {
     });
     renderTable(filtered);
   };
+
+  // Helper to format numbers
+  const formatNumberInput = (e) => {
+    let val = e.target.value.replace(/\D/g, "");
+    if (!val) {
+      e.target.value = "";
+      return;
+    }
+    e.target.value = new Intl.NumberFormat("es-CO").format(parseInt(val, 10));
+  };
+
+  elCosto.addEventListener("input", formatNumberInput);
+  elVenta.addEventListener("input", formatNumberInput);
+
+  // Auto-fill fields when selecting a product
+  elNombre.addEventListener("change", (e) => {
+    const opt = e.target.selectedOptions[0];
+    if (opt && opt.value) {
+      elMarca.value = opt.dataset.marca || "";
+      elProv.value = opt.dataset.prov || "";
+      const costoRaw = parseInt(String(opt.dataset.costo || "0").replace(/\D/g, "")) || 0;
+      const ventaRaw = parseInt(String(opt.dataset.precio || "0").replace(/\D/g, "")) || 0;
+      elCosto.value = new Intl.NumberFormat("es-CO").format(costoRaw);
+      elVenta.value = new Intl.NumberFormat("es-CO").format(ventaRaw);
+    } else {
+      elMarca.value = "";
+      elProv.value = "";
+      elCosto.value = "";
+      elVenta.value = "";
+    }
+  });
 
   elSearch.addEventListener("input", filterData);
   elFilter.addEventListener("change", filterData);
@@ -184,18 +222,18 @@ function setupEvents() {
   };
 }
 
-function openModal(eq) {
+function openModal(obj) {
   elForm.reset();
-  if (eq) {
-    elOriginal.value = eq.imei1;
-    elImei1.value = eq.imei1;
-    elImei2.value = eq.imei2 || "";
-    elNombre.value = eq.nombre || "";
-    elMarca.value = eq.marca || "";
-    elProv.value = eq.proveedor || "";
-    elCosto.value = eq.costo || "";
-    elVenta.value = eq.venta || "";
-    elEstado.value = eq.estado || "Disponible";
+  if (obj) {
+    elOriginal.value = obj ? obj.imei1 : "";
+    elImei1.value = obj ? obj.imei1 : "";
+    elImei2.value = obj ? obj.imei2 : "";
+    elNombre.value = obj ? obj.nombre : "";
+    elMarca.value = obj ? obj.marca : "";
+    elProv.value = obj ? obj.proveedor : "";
+    elCosto.value = obj && obj.costo ? new Intl.NumberFormat("es-CO").format(parseInt(String(obj.costo).replace(/\D/g, "")) || 0) : "";
+    elVenta.value = obj && obj.venta ? new Intl.NumberFormat("es-CO").format(parseInt(String(obj.venta).replace(/\D/g, "")) || 0) : "";
+    elEstado.value = obj ? obj.estado : "Disponible";
     document.getElementById("imei-modal-title").textContent = "Editar Equipo";
   } else {
     elOriginal.value = "";
@@ -213,8 +251,15 @@ function closeModal() {
 }
 
 async function saveEquipo() {
-  if (!elForm.checkValidity()) {
-    elForm.reportValidity();
+  // Custom validation (readonly fields can't use checkValidity with required)
+  if (!elImei1.value.trim()) {
+    showToast("El IMEI Principal es obligatorio", "warning");
+    elImei1.focus();
+    return;
+  }
+  if (!elNombre.value) {
+    showToast("Debe seleccionar un equipo del inventario", "warning");
+    elNombre.focus();
     return;
   }
   
@@ -231,8 +276,8 @@ async function saveEquipo() {
       nombre: elNombre.value.trim(),
       marca: elMarca.value.trim(),
       proveedor: elProv.value.trim(),
-      costo: parseInt(elCosto.value) || 0,
-      venta: parseInt(elVenta.value) || 0,
+      costo: parseInt(elCosto.value.replace(/\D/g, "")) || 0,
+      venta: parseInt(elVenta.value.replace(/\D/g, "")) || 0,
       estado: elEstado.value
     };
 

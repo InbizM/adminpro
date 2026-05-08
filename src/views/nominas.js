@@ -1,0 +1,213 @@
+import { getNominas, crearNomina, eliminarNomina, getUsers } from "../api.js";
+import { showToast } from "../toast.js";
+
+let _nominas = [];
+let _usuarios = [];
+
+export function initNominas() {
+  return async () => {
+    await loadData();
+    setupEvents();
+  };
+}
+
+async function loadData() {
+  try {
+    const listEl = document.getElementById("nom-list");
+    if (listEl) listEl.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-sm text-on-surface-variant">Cargando nóminas...</td></tr>`;
+
+    [_nominas, _usuarios] = await Promise.all([
+      getNominas(),
+      getUsers()
+    ]);
+    renderList(_nominas);
+    updateStats(_nominas);
+  } catch (err) {
+    showToast("Error al cargar nóminas", "error");
+  }
+}
+
+function renderList(data) {
+  const listEl = document.getElementById("nom-list");
+  if (!listEl) return;
+
+  if (!data || data.length === 0) {
+    listEl.innerHTML = `
+      <tr>
+        <td colspan="6" class="p-8 text-center text-on-surface-variant">
+          <span class="material-symbols-outlined text-4xl mb-2 opacity-50" style="font-variation-settings:'FILL' 1">request_quote</span>
+          <p class="text-sm font-medium">No hay nóminas registradas</p>
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  listEl.innerHTML = data.map(n => {
+    const d = new Date(n.fecha).toLocaleDateString("es-CO", { year: "numeric", month: "short", day: "numeric" });
+    const total = parseFloat(n.total_pagar) || 0;
+    
+    let estadoClass = "bg-amber-100 text-amber-800";
+    if (n.estado === "Pagado") estadoClass = "bg-green-100 text-green-800";
+    else if (n.estado === "Anulado") estadoClass = "bg-red-100 text-red-800";
+
+    return `
+      <tr class="hover:bg-surface-container-lowest transition-colors group">
+        <td class="px-4 py-3 border-b border-surface-variant whitespace-nowrap">
+          <p class="text-sm font-medium text-on-surface">${d}</p>
+          <p class="text-[11px] text-on-surface-variant font-mono mt-0.5">${n.id_nomina}</p>
+        </td>
+        <td class="px-4 py-3 border-b border-surface-variant">
+          <p class="text-sm font-bold text-on-surface">${n.empleado}</p>
+          <p class="text-[11px] text-on-surface-variant">${n.periodo}</p>
+        </td>
+        <td class="px-4 py-3 border-b border-surface-variant text-right">
+          <p class="text-sm font-medium text-on-surface">$${parseFloat(n.salario_base).toLocaleString("es-CO")}</p>
+          ${parseFloat(n.bonificaciones) > 0 ? `<p class="text-[11px] text-green-600">+ $${parseFloat(n.bonificaciones).toLocaleString()}</p>` : ""}
+          ${parseFloat(n.deducciones) > 0 ? `<p class="text-[11px] text-red-600">- $${parseFloat(n.deducciones).toLocaleString()}</p>` : ""}
+        </td>
+        <td class="px-4 py-3 border-b border-surface-variant text-right">
+          <span class="text-sm font-black text-primary">$${total.toLocaleString("es-CO")}</span>
+        </td>
+        <td class="px-4 py-3 border-b border-surface-variant text-center">
+          <span class="px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${estadoClass}">${n.estado}</span>
+        </td>
+        <td class="px-4 py-3 border-b border-surface-variant text-right">
+          <button class="nom-del-btn p-1.5 text-on-surface-variant hover:text-error hover:bg-error-container rounded-lg transition-colors opacity-0 group-hover:opacity-100" data-id="${n.id_nomina}" title="Eliminar">
+            <span class="material-symbols-outlined text-[18px]">delete</span>
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join("");
+
+  document.querySelectorAll(".nom-del-btn").forEach(btn => {
+    btn.addEventListener("click", async (e) => {
+      const id = e.currentTarget.dataset.id;
+      if (confirm("¿Estás seguro de eliminar este registro de nómina?")) {
+        try {
+          await eliminarNomina(id);
+          showToast("Nómina eliminada", "success");
+          loadData();
+        } catch (err) {
+          showToast("Error al eliminar", "error");
+        }
+      }
+    });
+  });
+}
+
+function updateStats(data) {
+  const d = new Date();
+  const currentMonth = d.getMonth();
+  const currentYear = d.getFullYear();
+
+  let totalMes = 0;
+  let totalPendiente = 0;
+
+  data.forEach(n => {
+    const nd = new Date(n.fecha);
+    if (nd.getMonth() === currentMonth && nd.getFullYear() === currentYear) {
+      if (n.estado !== "Anulado") {
+        totalMes += parseFloat(n.total_pagar) || 0;
+      }
+    }
+    if (n.estado === "Pendiente") {
+      totalPendiente += parseFloat(n.total_pagar) || 0;
+    }
+  });
+
+  const elMes = document.getElementById("nom-stat-mes");
+  const elPendiente = document.getElementById("nom-stat-pendiente");
+
+  if (elMes) elMes.textContent = "$" + totalMes.toLocaleString("es-CO");
+  if (elPendiente) elPendiente.textContent = "$" + totalPendiente.toLocaleString("es-CO");
+}
+
+function updateFormTotals() {
+  const base = parseFloat(document.getElementById("nom-base").value) || 0;
+  const bonos = parseFloat(document.getElementById("nom-bonos").value) || 0;
+  const deduc = parseFloat(document.getElementById("nom-deduc").value) || 0;
+  const total = base + bonos - deduc;
+  
+  document.getElementById("nom-total-calc").textContent = "$" + total.toLocaleString("es-CO");
+}
+
+let _eventsBound = false;
+function setupEvents() {
+  if (_eventsBound) return;
+  _eventsBound = true;
+
+  const modal = document.getElementById("nom-modal");
+  const form = document.getElementById("nom-form");
+
+  document.getElementById("nom-new-btn")?.addEventListener("click", () => {
+    form.reset();
+    
+    // Poblar dropdown de empleados
+    const empSelect = document.getElementById("nom-empleado");
+    if (empSelect) {
+      empSelect.innerHTML = `<option value="">Seleccione empleado...</option>` + 
+        _usuarios.map(u => `<option value="${u.nombre}">${u.nombre} (${u.rol})</option>`).join("");
+    }
+    
+    updateFormTotals();
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+  });
+
+  document.getElementById("nom-modal-close")?.addEventListener("click", () => {
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+  });
+
+  document.getElementById("nom-modal-cancel")?.addEventListener("click", () => {
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+  });
+
+  // Eventos para recalcular el total al escribir
+  document.getElementById("nom-base")?.addEventListener("input", updateFormTotals);
+  document.getElementById("nom-bonos")?.addEventListener("input", updateFormTotals);
+  document.getElementById("nom-deduc")?.addEventListener("input", updateFormTotals);
+
+  document.getElementById("nom-save-btn")?.addEventListener("click", async () => {
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    const base = parseFloat(document.getElementById("nom-base").value) || 0;
+    const bonos = parseFloat(document.getElementById("nom-bonos").value) || 0;
+    const deduc = parseFloat(document.getElementById("nom-deduc").value) || 0;
+    const total = base + bonos - deduc;
+
+    const data = {
+      empleado: document.getElementById("nom-empleado").value,
+      periodo: document.getElementById("nom-periodo").value,
+      salario_base: base,
+      bonificaciones: bonos,
+      deducciones: deduc,
+      total_pagar: total,
+      estado: document.getElementById("nom-estado").value,
+      notas: document.getElementById("nom-notas").value
+    };
+
+    const btn = document.getElementById("nom-save-btn");
+    btn.disabled = true;
+    btn.innerHTML = `<span class="material-symbols-outlined text-[18px] animate-spin">refresh</span> Guardando...`;
+
+    try {
+      await crearNomina(data);
+      showToast("Nómina registrada exitosamente", "success");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+      loadData();
+    } catch (err) {
+      showToast("Error al guardar: " + err.message, "error");
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = `<span class="material-symbols-outlined text-[18px]">save</span> Guardar`;
+    }
+  });
+}

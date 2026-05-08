@@ -1,4 +1,4 @@
-import { getDashboard } from "../api.js";
+import { getDashboard, getTareas } from "../api.js";
 import { navigate } from "../router.js";
 
 let _isLoaded = false;
@@ -8,7 +8,13 @@ export function initDashboard() {
   return async () => {
     setGreeting();
     if (!_eventsReady) {
-      setupDashEvents();
+      document.getElementById("dash-refresh-btn")?.addEventListener("click", loadDashboard);
+      document.querySelectorAll("[data-goto]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const dest = btn.dataset.goto;
+          if (dest) navigate(dest);
+        });
+      });
       _eventsReady = true;
     }
     await loadDashboard();
@@ -16,238 +22,159 @@ export function initDashboard() {
 }
 
 function setGreeting() {
-  const h = new Date().getHours();
-  let saludo = "Buenas noches 🌙";
-  if (h >= 5 && h < 12) saludo = "Buenos días ☀️";
-  else if (h >= 12 && h < 18) saludo = "Buenas tardes 🌤️";
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? "¡Buenos días! 👋" : hour < 18 ? "¡Buenas tardes! ☕" : "¡Buenas noches! 🌙";
   const el = document.getElementById("dash-greeting");
-  if (el) {
-    try {
-      const session = JSON.parse(localStorage.getItem("adminproSession") || "{}");
-      const nombre = session.nombre ? session.nombre.split(" ")[0] : "";
-      el.textContent = `${saludo}${nombre ? ", " + nombre : ""} 👋`;
-    } catch { el.textContent = saludo + " 👋"; }
-  }
+  if (el) el.textContent = greeting;
 }
-
-function setupDashEvents() {
-  // Refresh
-  document.getElementById("dash-refresh-btn")?.addEventListener("click", () => {
-    _isLoaded = false;
-    loadDashboard();
-  });
-
-  // Quick-access navigation
-  document.querySelectorAll(".dash-shortcut[data-goto]").forEach(btn => {
-    btn.addEventListener("click", () => navigate(btn.dataset.goto));
-  });
-}
-
-const CUR = (n) => new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 }).format(n);
 
 async function loadDashboard() {
   try {
-    const d = await getDashboard();
+    const [data, tareas] = await Promise.all([getDashboard(), getTareas()]);
+    
+    updateStat("dash-ventas-hoy", data.ingresosHoy, true);
+    updateStat("dash-egresos-hoy", data.egresosHoy, true);
+    updateStat("dash-utilidad", data.utilidad, true);
+    updateStat("dash-stock-critico", data.stockCritico);
 
-    // KPI cards
-    setText("dash-ventas-hoy", CUR(d.ingresosHoy || 0));
-    setText("dash-egresos-hoy", CUR(d.egresosHoy || 0));
-    setText("dash-utilidad", CUR(d.utilidad || 0));
-    setText("dash-stock-critico", `${d.stockCritico || 0} productos`);
+    renderVentasRecientes(data.ventasRecientes);
+    renderTopProductos(data.topProductos);
+    renderStockBajo(data.productosBajoStock);
+    renderTecRecientes(data.tecRecientes);
+    renderChart(data.labels7d, data.ventas7d);
 
-    // Counters
-    setText("dash-cnt-productos", d.totalProductos || 0);
-    setText("dash-cnt-clientes", d.totalClientes || 0);
-    setText("dash-cnt-equipos", d.totalEquipos || 0);
-    setText("dash-cnt-creditos", d.creditosActivos || 0);
-    setText("dash-cnt-pedidos", d.pedidosPendientes || 0);
-    setText("dash-cnt-separe", d.separeActivos || 0);
-
-    // Ventas Recientes
-    renderVentasRecientes(d.ventasRecientes || []);
-
-    // Top Productos
-    renderTopProductos(d.topProductos || []);
-
-    // Stock Alertas
-    renderStockAlertas(d.productosBajoStock || []);
-
-    // Bar Chart
-    renderBarChart(d.labels7d || [], d.ventas7d || []);
-
-    // Servicio Técnico
-    renderTecnico(d.tecRecientes || []);
+    // Renderizado de Tareas Pendientes
+    renderMiniTasks(tareas);
 
     _isLoaded = true;
   } catch (err) {
-    console.error("Error loading dashboard", err);
+    console.error("Dashboard error:", err);
   }
 }
 
-function setText(id, value) {
+function updateStat(id, val, isMoney = false) {
   const el = document.getElementById(id);
-  if (el) el.textContent = value;
+  if (!el) return;
+  el.textContent = isMoney ? "$" + new Intl.NumberFormat("es-CO").format(val || 0) : (val || 0).toLocaleString();
 }
 
 function renderVentasRecientes(ventas) {
   const container = document.getElementById("dash-ventas-list");
   if (!container) return;
-
-  if (!ventas.length) {
-    container.innerHTML = `<div class="flex flex-col items-center py-10 text-on-surface-variant">
-      <span class="material-symbols-outlined text-4xl mb-2">receipt_long</span>
-      <p class="text-sm font-medium">No hay ventas registradas aún</p>
-    </div>`;
+  if (!ventas || ventas.length === 0) {
+    container.innerHTML = `<p class="p-5 text-sm text-on-surface-variant text-center">No hay ventas hoy</p>`;
     return;
   }
-
-  container.innerHTML = ventas.map(v => {
-    const metodoBadge = {
-      Efectivo: "bg-green-100 text-green-800",
-      Nequi: "bg-purple-100 text-purple-800",
-      Daviplata: "bg-red-100 text-red-800",
-      Transferencia: "bg-blue-100 text-blue-800",
-    }[v.metodo] || "bg-surface-container text-on-surface-variant";
-
-    return `
-      <div class="flex items-center gap-3 px-5 py-3 hover:bg-surface-container-low transition-colors">
-        <div class="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-          <span class="material-symbols-outlined text-primary text-[18px]">receipt</span>
-        </div>
-        <div class="flex-1 min-w-0">
-          <p class="text-sm font-semibold text-on-surface truncate">${v.cliente || "Cliente"}</p>
-          <p class="text-[11px] text-on-surface-variant">${v.id} · ${v.fecha || ""}</p>
-        </div>
-        <div class="text-right flex-shrink-0">
-          <p class="text-sm font-bold text-on-surface">${CUR(v.total)}</p>
-          <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${metodoBadge}">${v.metodo || "—"}</span>
-        </div>
-      </div>`;
-  }).join("");
+  container.innerHTML = ventas.map(v => `
+    <div class="flex items-center gap-3 px-5 py-3 hover:bg-surface-container-low transition-colors">
+      <div class="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 text-primary">
+        <span class="material-symbols-outlined text-[18px]">receipt</span>
+      </div>
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-semibold text-on-surface truncate">${v.cliente || "Consumidor Final"}</p>
+        <p class="text-[11px] text-on-surface-variant">${v.id_factura} · ${new Date(v.fecha).toLocaleDateString()}</p>
+      </div>
+      <div class="text-right font-bold text-on-surface text-sm">$${new Intl.NumberFormat("es-CO").format(v.total)}</div>
+    </div>
+  `).join("");
 }
 
 function renderTopProductos(productos) {
-  const ul = document.getElementById("dash-top-productos");
-  if (!ul) return;
-
-  if (!productos.length) {
-    ul.innerHTML = `<li class="text-sm text-on-surface-variant text-center py-4">Sin datos</li>`;
+  const container = document.getElementById("dash-top-productos");
+  if (!container) return;
+  if (!productos || productos.length === 0) {
+    container.innerHTML = `<p class="p-4 text-center text-xs text-on-surface-variant italic">Sin ventas aún</p>`;
     return;
   }
-
-  const maxCant = Math.max(...productos.map(p => p.cantidad), 1);
-
-  ul.innerHTML = productos.map((p, i) => {
-    const pct = Math.round((p.cantidad / maxCant) * 100);
-    const medals = ["🥇", "🥈", "🥉"];
-    const medal = i < 3 ? medals[i] : `${i + 1}.`;
-
-    return `
-      <li>
-        <div class="flex items-center justify-between mb-1">
-          <div class="flex items-center gap-2">
-            <span class="text-sm">${medal}</span>
-            <span class="text-xs font-semibold text-on-surface truncate max-w-[140px]">${p.nombre}</span>
-          </div>
-          <span class="text-xs font-bold text-primary">${p.cantidad} unds</span>
-        </div>
-        <div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
-          <div class="h-full bg-primary/70 rounded-full transition-all" style="width: ${pct}%"></div>
-        </div>
-      </li>`;
-  }).join("");
-}
-
-function renderStockAlertas(items) {
-  const ul = document.getElementById("dash-stock-alertas");
-  if (!ul) return;
-
-  if (!items.length) {
-    ul.innerHTML = `<li class="flex flex-col items-center py-4 text-on-surface-variant">
-      <span class="material-symbols-outlined text-2xl text-green-600 mb-1">check_circle</span>
-      <p class="text-xs font-medium">Todo el stock está en orden</p>
-    </li>`;
-    return;
-  }
-
-  ul.innerHTML = items.map(p => `
-    <li class="flex items-center gap-3 p-2 rounded-lg bg-error-container/10">
-      <span class="material-symbols-outlined text-error text-[18px]">warning</span>
+  container.innerHTML = productos.map((p, i) => `
+    <div class="flex items-center gap-3">
+      <span class="text-lg font-black text-outline-variant/20 w-5">0${i+1}</span>
       <div class="flex-1 min-w-0">
         <p class="text-xs font-bold text-on-surface truncate">${p.nombre}</p>
-        <p class="text-[10px] text-on-surface-variant">${p.marca}</p>
+        <div class="flex items-center gap-2 mt-0.5">
+          <div class="flex-1 h-1 bg-surface-container rounded-full overflow-hidden">
+            <div class="h-full bg-primary" style="width: ${Math.min(p.cantidad * 10, 100)}%"></div>
+          </div>
+          <span class="text-[10px] font-black text-primary">${p.cantidad}</span>
+        </div>
       </div>
-      <div class="text-right flex-shrink-0">
-        <p class="text-xs font-black text-error">${p.stock} / ${p.minimo}</p>
-        <p class="text-[9px] text-on-surface-variant">actual / mín</p>
-      </div>
-    </li>`).join("");
+    </div>
+  `).join("");
 }
 
-function renderBarChart(labels = [], data = []) {
+function renderStockBajo(productos) {
+  const container = document.getElementById("dash-stock-alertas");
+  if (!container) return;
+  if (!productos || productos.length === 0) {
+    container.innerHTML = `<p class="p-4 text-center text-xs text-on-surface-variant italic">Stock ok</p>`;
+    return;
+  }
+  container.innerHTML = productos.map(p => `
+    <div class="flex items-center justify-between p-2.5 bg-error/5 border border-error/10 rounded-lg">
+      <div class="min-w-0">
+        <p class="text-xs font-bold text-on-surface truncate">${p.nombre}</p>
+        <p class="text-[10px] text-error">Quedan: ${p.stock_actual}</p>
+      </div>
+      <span class="material-symbols-outlined text-error text-[18px] ${Number(p.stock_actual) === 0 ? 'animate-bounce' : 'animate-pulse'}">warning</span>
+    </div>
+  `).join("");
+}
+
+function renderTecRecientes(servicios) {
+  const container = document.getElementById("dash-tec-list");
+  if (!container) return;
+  if (!servicios || servicios.length === 0) {
+    container.innerHTML = `<p class="p-5 text-sm text-on-surface-variant text-center">Sin servicios</p>`;
+    return;
+  }
+  container.innerHTML = servicios.map(s => `
+    <li class="flex items-center justify-between p-3 hover:bg-surface-container-low transition-colors">
+      <div class="min-w-0">
+        <p class="text-xs font-bold text-on-surface truncate">${s.equipo}</p>
+        <p class="text-[10px] text-on-surface-variant">${s.cliente}</p>
+      </div>
+      <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant">${s.estado}</span>
+    </li>
+  `).join("");
+}
+
+function renderMiniTasks(tareas) {
+  const container = document.getElementById("dash-tasks-list");
+  if (!container) return;
+  const pend = (tareas || []).filter(t => t.estado !== 'Completada').slice(0, 5);
+  if (pend.length === 0) {
+    container.innerHTML = `<p class="p-8 text-center text-xs text-on-surface-variant italic">No hay pendientes</p>`;
+    return;
+  }
+  container.innerHTML = pend.map(t => `
+    <li class="flex items-center gap-3 px-5 py-3 hover:bg-surface-container-low transition-colors">
+      <span class="w-1.5 h-1.5 rounded-full" style="background-color: ${t.color || '#4f46e5'}"></span>
+      <div class="flex-1 min-w-0">
+        <p class="text-xs font-bold text-on-surface truncate">${t.tarea}</p>
+        <p class="text-[9px] text-on-surface-variant uppercase tracking-tight">${new Date(t.fecha_vencimiento).toLocaleDateString('es-CO', { day:'numeric', month:'short' })}</p>
+      </div>
+    </li>
+  `).join("");
+}
+
+function renderChart(labels, values) {
   const container = document.getElementById("dash-chart");
   if (!container) return;
-
-  if (!data.length || data.every(v => v === 0)) {
-    container.innerHTML = `<div class="flex-1 flex items-center justify-center text-on-surface-variant">
-      <div class="text-center">
-        <span class="material-symbols-outlined text-3xl mb-1">bar_chart</span>
-        <p class="text-xs font-medium">Sin ventas esta semana</p>
-      </div>
-    </div>`;
+  if (!values || values.length === 0 || values.every(v => v === 0)) {
+    container.innerHTML = `<div class="flex-1 flex items-center justify-center text-on-surface-variant text-xs italic opacity-50">Sin ventas</div>`;
     return;
   }
-
-  const max = Math.max(...data, 1);
-  const maxH = 140; // px
-
-  container.innerHTML = data.map((val, i) => {
-    const barH = Math.max(Math.round((val / max) * maxH), 4);
-    const isZero = val === 0;
+  const max = Math.max(...values, 1);
+  container.innerHTML = values.map((v, i) => {
+    const h = Math.max((v / max) * 100, 5);
     return `
-      <div class="flex-1 flex flex-col items-center group" style="height:${maxH + 28}px;">
+      <div class="flex-1 flex flex-col items-center group h-full">
         <div class="flex-1 w-full flex items-end justify-center">
-          <div class="w-full max-w-[40px] rounded-t-md transition-all duration-300 relative ${isZero ? 'bg-surface-container' : 'bg-blue-500 group-hover:bg-blue-700'}"
-               style="height: ${barH}px;">
-            <div class="absolute -top-7 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[10px] px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap font-bold z-10">
-              ${CUR(val)}
-            </div>
-          </div>
+          <div class="w-full max-w-[28px] rounded-t-md transition-all duration-500 relative ${v === 0 ? 'bg-surface-container/30' : 'bg-primary'}"
+               style="height: ${h}%;"></div>
         </div>
-        <span class="text-[10px] text-on-surface-variant font-bold uppercase mt-2">${labels[i] || ""}</span>
-      </div>`;
+        <span class="text-[9px] text-on-surface-variant font-bold mt-2 uppercase tracking-tighter">${labels[i] || ""}</span>
+      </div>
+    `;
   }).join("");
-}
-
-function renderTecnico(items) {
-  const ul = document.getElementById("dash-tec-list");
-  if (!ul) return;
-
-  if (!items.length) {
-    ul.innerHTML = `<li class="flex flex-col items-center py-10 text-on-surface-variant">
-      <span class="material-symbols-outlined text-3xl mb-2">build</span>
-      <p class="text-xs font-medium">No hay equipos en servicio</p>
-    </li>`;
-    return;
-  }
-
-  const estadoColor = {
-    Ingresado: "bg-blue-100 text-blue-800",
-    "En Revisión": "bg-amber-100 text-amber-800",
-    Reparado: "bg-green-100 text-green-800",
-    "Sin Arreglo": "bg-red-100 text-red-800",
-    Entregado: "bg-surface-container text-on-surface-variant",
-  };
-
-  ul.innerHTML = items.map(t => `
-    <li class="flex items-center gap-3 px-5 py-3 hover:bg-surface-container-low transition-colors">
-      <div class="w-9 h-9 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0">
-        <span class="material-symbols-outlined text-purple-700 text-[18px]">phone_android</span>
-      </div>
-      <div class="flex-1 min-w-0">
-        <p class="text-sm font-semibold text-on-surface truncate">${t.equipo || "Equipo"}</p>
-        <p class="text-[11px] text-on-surface-variant">${t.cliente || ""} · ${t.id}</p>
-      </div>
-      <span class="text-[10px] font-bold px-2 py-0.5 rounded ${estadoColor[t.estado] || "bg-surface-container text-on-surface-variant"}">${t.estado || "—"}</span>
-    </li>`).join("");
 }

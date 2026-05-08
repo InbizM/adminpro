@@ -1,14 +1,9 @@
 import { logout } from "../api.js";
 
-let _isLoaded = false;
-
 export function initSettings() {
   return () => {
-    if (!_isLoaded) {
-      loadProfile();
-      setupEvents();
-      _isLoaded = true;
-    }
+    loadProfile();
+    setupEvents();
   };
 }
 
@@ -19,33 +14,44 @@ function loadProfile() {
   const elEmail = document.getElementById("set-email");
 
   try {
+    // Usamos la sesión principal que guarda main.js
+    const sessionJson = localStorage.getItem("adminproSession");
     const userJson = localStorage.getItem("adminpro_user");
-    if (userJson) {
-      const user = JSON.parse(userJson);
-      elName.textContent = user.nombre || "Usuario";
-      elRole.textContent = user.rol || "Administrador";
-      elEmail.textContent = user.email || "No disponible";
-      elAvatar.textContent = (user.nombre ? user.nombre.charAt(0) : "U").toUpperCase();
+    
+    // Intentamos obtener datos de cualquiera de las dos fuentes
+    const user = sessionJson ? JSON.parse(sessionJson) : (userJson ? JSON.parse(userJson) : null);
+
+    if (user) {
+      if (elName) elName.textContent = user.nombre || "Usuario";
+      if (elRole) elRole.textContent = user.rol || "Administrador";
+      if (elEmail) elEmail.textContent = user.email || "No disponible";
+      if (elAvatar) elAvatar.textContent = (user.nombre ? user.nombre.charAt(0) : "U").toUpperCase();
+    } else {
+      console.warn("No se encontró sesión activa para cargar el perfil.");
     }
   } catch (e) {
     console.error("Error loading profile", e);
   }
 
-  // Load theme preference
+  // Cargar preferencia de tema
   const toggle = document.getElementById("set-theme-toggle");
-  toggle.checked = document.documentElement.classList.contains("dark");
+  if (toggle) {
+    toggle.checked = document.documentElement.classList.contains("dark");
+  }
 }
 
 function setupEvents() {
   const btnLogout = document.getElementById("set-logout-btn");
-  btnLogout.addEventListener("click", () => {
+  btnLogout?.replaceWith(btnLogout.cloneNode(true)); // Limpiar eventos previos
+  document.getElementById("set-logout-btn")?.addEventListener("click", () => {
     if (confirm("¿Estás seguro de que deseas cerrar sesión?")) {
       logout();
     }
   });
 
   const toggle = document.getElementById("set-theme-toggle");
-  toggle.addEventListener("change", (e) => {
+  toggle?.replaceWith(toggle.cloneNode(true)); // Limpiar eventos previos
+  document.getElementById("set-theme-toggle")?.addEventListener("change", (e) => {
     if (e.target.checked) {
       document.documentElement.classList.add("dark");
       localStorage.setItem("adminpro_theme", "dark");

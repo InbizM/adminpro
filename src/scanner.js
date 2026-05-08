@@ -9,7 +9,7 @@
  *     onScan: (code) => { console.log("Scanned:", code); }
  *   });
  */
-import { Html5Qrcode } from "html5-qrcode";
+import { Html5Qrcode, Html5QrcodeSupportedFormats } from "html5-qrcode";
 
 let _scanner = null;
 let _isRunning = false;
@@ -121,8 +121,18 @@ export async function openScanner({ title = "Escanear Código", onScan } = {}) {
       camId,
       {
         fps: 10,
-        qrbox: { width: 250, height: 200 },
+        qrbox: { width: 300, height: 250 }, // Wider box for PDF417
         aspectRatio: 1.0,
+        formatsToSupport: [
+          Html5QrcodeSupportedFormats.QR_CODE,
+          Html5QrcodeSupportedFormats.UPC_A,
+          Html5QrcodeSupportedFormats.UPC_E,
+          Html5QrcodeSupportedFormats.EAN_8,
+          Html5QrcodeSupportedFormats.EAN_13,
+          Html5QrcodeSupportedFormats.CODE_39,
+          Html5QrcodeSupportedFormats.CODE_128,
+          Html5QrcodeSupportedFormats.PDF_417 // Support for Colombian IDs
+        ]
       },
       (decodedText) => {
         // Success!

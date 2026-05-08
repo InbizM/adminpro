@@ -103,6 +103,18 @@ function setupEvents() {
   elSearch.addEventListener("input", filterData);
   elFilter.addEventListener("change", filterData);
 
+  // Helper to format numbers
+  const formatNumberInput = (e) => {
+    let val = e.target.value.replace(/\D/g, "");
+    if (!val) {
+      e.target.value = "";
+      return;
+    }
+    e.target.value = new Intl.NumberFormat("es-CO").format(parseInt(val, 10));
+  };
+
+  elMonto.addEventListener("input", formatNumberInput);
+
   elBtnNew.addEventListener("click", () => openModal());
   elModalClose.addEventListener("click", closeModal);
   elModalBackdrop.addEventListener("click", closeModal);
@@ -146,7 +158,7 @@ async function saveEgreso() {
 
   try {
     const datos = {
-      monto: parseInt(elMonto.value) || 0,
+      monto: parseInt(elMonto.value.replace(/\D/g, "")) || 0,
       categoria: elCategoria.value,
       concepto: elConcepto.value.trim(),
       responsable: elResponsable.value
