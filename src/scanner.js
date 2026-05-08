@@ -161,7 +161,7 @@ async function startScannerFeed() {
       { facingMode: _facingMode },
       {
         fps: 20,
-        qrbox: { width: 280, height: 120 }, // Rectangular para códigos de barra
+        // Eliminamos qrbox para que TODO el área de la cámara escanee
         formatsToSupport: [
           Html5QrcodeSupportedFormats.QR_CODE,
           Html5QrcodeSupportedFormats.UPC_A,
