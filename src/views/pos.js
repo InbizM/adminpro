@@ -106,8 +106,26 @@ function setupEvents() {
 
   document.getElementById("pos-scan-btn")?.addEventListener("click", () => {
     openScanner({ title: "Escanear", onScan: (code) => {
+      // 1. Poner el código en la casilla de texto
+      elSearch.value = code;
+      elSearch.dispatchEvent(new Event("input"));
+
+      // 2. Buscar y agregar
       const prod = _productos.find(p => p.sku === code || p.id === code);
-      if (prod) { window.posAddToCart(prod.id); showToast(`✅ ${prod.nombre} agregado`, "success"); }
+      if (prod) { 
+        window.posAddToCart(prod.id); 
+        showToast(`✅ ${prod.nombre} agregado`, "success"); 
+        
+        // Limpiar el buscador después de 1.5 segundos para que pueda seguir escaneando cómodamente
+        setTimeout(() => {
+          if (elSearch.value === code) {
+            elSearch.value = "";
+            elSearch.dispatchEvent(new Event("input"));
+          }
+        }, 1500);
+      } else {
+        showToast(`Código ${code} no encontrado en inventario`, "warning");
+      }
     }});
   });
 
