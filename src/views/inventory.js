@@ -323,6 +323,20 @@ window.inventoryView = {
       if (res.success) await loadInventario();
     } catch (err) { showToast("Error: " + err.message, "error"); }
   },
+  openNuevo(isReventa = false) {
+    editingId = null;
+    document.getElementById("inv-form")?.reset();
+    document.getElementById("inv-tipo").value = isReventa ? "Reventa" : "Físico";
+    document.getElementById("inv-existing-img").value = "";
+    document.getElementById("inv-img-preview").innerHTML =
+      `<span class="material-symbols-outlined text-3xl text-on-surface-variant/40">add_photo_alternate</span>`;
+    
+    if (isReventa) {
+      document.getElementById("inv-id").value = "REV-" + Date.now().toString().slice(-6);
+    }
+    
+    openModal(isReventa ? "Nueva Reventa" : "Nuevo Producto");
+  }
 };
 
 async function loadInventario() {
@@ -427,13 +441,9 @@ export function initInventory() {
 
   // FAB and open new modal
   document.getElementById("inv-new-btn")?.addEventListener("click", () => {
-    editingId = null;
-    document.getElementById("inv-form")?.reset();
-    document.getElementById("inv-tipo").value = "Físico";
-    document.getElementById("inv-existing-img").value = "";
-    document.getElementById("inv-img-preview").innerHTML =
-      `<span class="material-symbols-outlined text-3xl text-on-surface-variant/40">add_photo_alternate</span>`;
-    openModal("Nuevo Producto");
+    if (window.inventoryView && window.inventoryView.openNuevo) {
+      window.inventoryView.openNuevo(false);
+    }
   });
 
   // Number formatters

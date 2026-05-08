@@ -2,6 +2,7 @@ import { getInventario, registrarVenta, crearCredito, uploadFoto, uploadSignatur
 import { showToast } from "../toast.js";
 import { openScanner } from "../scanner.js";
 import { openCustomerSelector } from "../customer-selector.js";
+import { navigate } from "../router.js";
 
 let _productos = [];
 let _carrito = [];
@@ -127,6 +128,16 @@ function setupEvents() {
         showToast(`Código ${code} no encontrado en inventario`, "warning");
       }
     }});
+  });
+
+  document.getElementById("pos-reventa-btn")?.addEventListener("click", () => {
+    window.__posReventaMode = true;
+    navigate("inventory");
+    setTimeout(() => {
+      if (window.inventoryView && window.inventoryView.openNuevo) {
+        window.inventoryView.openNuevo(true);
+      }
+    }, 150);
   });
 
   document.getElementById("pos-select-client-btn")?.addEventListener("click", () => {
