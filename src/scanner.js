@@ -14,9 +14,27 @@ import { Html5Qrcode, Html5QrcodeSupportedFormats } from "html5-qrcode";
 let _scanner = null;
 let _isRunning = false;
 let _onScanCallback = null;
+let _facingMode = "environment";
+let _torchOn = false;
 
 // DOM refs (created once)
-let modal, backdrop, closeBtn, readerEl, statusEl, titleEl, manualInput, manualBtn;
+let modal, backdrop, closeBtn, readerEl, statusEl, titleEl, manualInput, manualBtn, torchBtn, switchBtn;
+
+function playBeep() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(800, ctx.currentTime);
+    gain.gain.setValueAtTime(0.5, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.15);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.15);
+  } catch (e) { /* ignore if audio not supported */ }
+}
 
 function ensureDOM() {
   if (document.getElementById("scanner-modal")) return;
@@ -36,8 +54,17 @@ function ensureDOM() {
           </button>
         </div>
         <!-- Camera viewer -->
-        <div class="bg-black">
+        <div class="bg-black relative">
           <div id="scanner-reader" class="w-full" style="min-height: 280px;"></div>
+          <!-- Floating Controls -->
+          <div class="absolute bottom-4 right-4 flex gap-2 z-20">
+            <button id="scanner-torch-btn" class="w-10 h-10 bg-black/50 text-white rounded-full flex items-center justify-center backdrop-blur-md border border-white/20 active:scale-95 transition-transform" title="Linterna">
+              <span class="material-symbols-outlined text-[20px]">flashlight_on</span>
+            </button>
+            <button id="scanner-switch-btn" class="w-10 h-10 bg-black/50 text-white rounded-full flex items-center justify-center backdrop-blur-md border border-white/20 active:scale-95 transition-transform" title="Cambiar cámara">
+              <span class="material-symbols-outlined text-[20px]">cameraswitch</span>
+            </button>
+          </div>
         </div>
         <!-- Status -->
         <div id="scanner-status" class="px-5 py-3 text-center text-sm text-on-surface-variant bg-surface-container-low">
@@ -70,6 +97,8 @@ function ensureDOM() {
   titleEl = document.getElementById("scanner-title");
   manualInput = document.getElementById("scanner-manual-input");
   manualBtn = document.getElementById("scanner-manual-btn");
+  torchBtn = document.getElementById("scanner-torch-btn");
+  switchBtn = document.getElementById("scanner-switch-btn");
 
   // Events
   closeBtn.addEventListener("click", closeScanner);
@@ -78,6 +107,9 @@ function ensureDOM() {
   manualInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") handleManualInput();
   });
+  
+  torchBtn.addEventListener("click", toggleTorch);
+  switchBtn.addEventListener("click", switchCamera);
 }
 
 function handleManualInput() {
@@ -87,42 +119,49 @@ function handleManualInput() {
   closeScanner();
 }
 
-export async function openScanner({ title = "Escanear Código", onScan } = {}) {
-  ensureDOM();
-  _onScanCallback = onScan;
-
-  titleEl.textContent = title;
-  manualInput.value = "";
-  statusEl.textContent = "Iniciando cámara...";
-  statusEl.className = "px-5 py-3 text-center text-sm text-on-surface-variant bg-surface-container-low";
-
-  modal.classList.remove("hidden");
-  modal.classList.add("flex");
-
-  // Small delay to allow modal to render before starting camera
-  await new Promise(r => setTimeout(r, 300));
-
+async function toggleTorch() {
+  if (!_scanner || !_isRunning) return;
+  _torchOn = !_torchOn;
   try {
-    _scanner = new Html5Qrcode("scanner-reader");
-    const cameras = await Html5Qrcode.getCameras();
-
-    if (!cameras || cameras.length === 0) {
-      statusEl.textContent = "⚠️ No se detectaron cámaras. Usa la entrada manual.";
-      statusEl.className = "px-5 py-3 text-center text-sm text-amber-800 bg-amber-50";
-      return;
+    await _scanner.applyVideoConstraints({ advanced: [{ torch: _torchOn }] });
+    torchBtn.innerHTML = `<span class="material-symbols-outlined text-[20px]">${_torchOn ? 'flashlight_off' : 'flashlight_on'}</span>`;
+    if (_torchOn) {
+      torchBtn.classList.replace("bg-black/50", "bg-primary");
+    } else {
+      torchBtn.classList.replace("bg-primary", "bg-black/50");
     }
+  } catch (e) {
+    console.error("Torch not supported", e);
+    _torchOn = false;
+  }
+}
 
-    // Prefer back camera
-    const backCam = cameras.find(c => c.label.toLowerCase().includes("back") || c.label.toLowerCase().includes("rear") || c.label.toLowerCase().includes("trasera"));
-    const camId = backCam ? backCam.id : cameras[cameras.length - 1].id;
+async function switchCamera() {
+  if (!_scanner || !_isRunning) return;
+  _facingMode = _facingMode === "environment" ? "user" : "environment";
+  statusEl.textContent = "Cambiando cámara...";
+  
+  try {
+    await _scanner.stop();
+  } catch (e) {}
+  
+  _torchOn = false;
+  torchBtn.innerHTML = `<span class="material-symbols-outlined text-[20px]">flashlight_on</span>`;
+  torchBtn.classList.remove("bg-primary");
+  torchBtn.classList.add("bg-black/50");
 
+  _isRunning = false;
+  await startScannerFeed();
+}
+
+async function startScannerFeed() {
+  try {
     _isRunning = true;
     await _scanner.start(
-      camId,
+      { facingMode: _facingMode },
       {
-        fps: 10,
-        qrbox: { width: 300, height: 250 }, // Wider box for PDF417
-        aspectRatio: 1.0,
+        fps: 20,
+        qrbox: { width: 280, height: 120 }, // Rectangular para códigos de barra
         formatsToSupport: [
           Html5QrcodeSupportedFormats.QR_CODE,
           Html5QrcodeSupportedFormats.UPC_A,
@@ -131,11 +170,12 @@ export async function openScanner({ title = "Escanear Código", onScan } = {}) {
           Html5QrcodeSupportedFormats.EAN_13,
           Html5QrcodeSupportedFormats.CODE_39,
           Html5QrcodeSupportedFormats.CODE_128,
-          Html5QrcodeSupportedFormats.PDF_417 // Support for Colombian IDs
+          Html5QrcodeSupportedFormats.PDF_417
         ]
       },
       (decodedText) => {
         // Success!
+        playBeep();
         statusEl.textContent = `✅ Detectado: ${decodedText}`;
         statusEl.className = "px-5 py-3 text-center text-sm text-green-800 bg-green-50 font-bold";
         
@@ -155,6 +195,36 @@ export async function openScanner({ title = "Escanear Código", onScan } = {}) {
     statusEl.textContent = "⚠️ No se pudo acceder a la cámara. Usa la entrada manual.";
     statusEl.className = "px-5 py-3 text-center text-sm text-amber-800 bg-amber-50";
   }
+}
+
+export async function openScanner({ title = "Escanear Código", onScan } = {}) {
+  ensureDOM();
+  _onScanCallback = onScan;
+  _facingMode = "environment";
+  _torchOn = false;
+
+  titleEl.textContent = title;
+  manualInput.value = "";
+  statusEl.textContent = "Iniciando cámara...";
+  statusEl.className = "px-5 py-3 text-center text-sm text-on-surface-variant bg-surface-container-low";
+  
+  if (torchBtn) {
+    torchBtn.innerHTML = `<span class="material-symbols-outlined text-[20px]">flashlight_on</span>`;
+    torchBtn.classList.remove("bg-primary");
+    torchBtn.classList.add("bg-black/50");
+  }
+
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+
+  // Small delay to allow modal to render before starting camera
+  await new Promise(r => setTimeout(r, 300));
+
+  if (!_scanner) {
+    _scanner = new Html5Qrcode("scanner-reader");
+  }
+
+  await startScannerFeed();
 }
 
 export async function closeScanner() {
