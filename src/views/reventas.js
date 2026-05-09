@@ -61,6 +61,9 @@ function renderTable(lista) {
     return;
   }
 
+  const user = JSON.parse(localStorage.getItem("adminpro_user") || "{}");
+  const isAdmin = user.rol === "Administrador";
+
   elTable.innerHTML = lista.map(p => {
     const costo = Number(p.costo || 0);
     const precio = Number(p.precio || 0);
@@ -79,9 +82,9 @@ function renderTable(lista) {
         </td>
         <td class="px-4 py-3 font-bold ${utilidad >= 0 ? 'text-green-600' : 'text-error'}">$${fmt(utilidad)}</td>
         <td class="px-4 py-3 text-right">
-          <button onclick="window.pedDelete('${p.id}')" class="p-1.5 text-on-surface-variant hover:text-error rounded-lg">
+          ${isAdmin ? `<button onclick="window.pedDelete('${p.id}')" class="p-1.5 text-on-surface-variant hover:text-error rounded-lg">
             <span class="material-symbols-outlined text-[18px]">delete</span>
-          </button>
+          </button>` : ''}
         </td>
       </tr>
     `;

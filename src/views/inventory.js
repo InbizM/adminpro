@@ -125,9 +125,9 @@ function renderGrid() {
                   <p class="font-black text-primary text-lg leading-none">$${precio}</p>
                 </div>
                 <div class="flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button onclick="event.stopPropagation(); inventoryView.openEdit('${p.id}')" class="p-2 bg-surface border border-surface-variant rounded-xl text-primary hover:bg-primary/10 transition-colors" title="Editar">
+                  ${isAdmin ? `<button onclick="event.stopPropagation(); inventoryView.openEdit('${p.id}')" class="p-2 bg-surface border border-surface-variant rounded-xl text-primary hover:bg-primary/10 transition-colors" title="Editar">
                     <span class="material-symbols-outlined text-[18px]">edit</span>
-                  </button>
+                  </button>` : ''}
                   ${isAdmin ? `<button onclick="event.stopPropagation(); inventoryView.deleteProduct('${p.id}')" class="p-2 bg-surface border border-surface-variant rounded-xl text-error hover:bg-error/10 transition-colors" title="Eliminar">
                     <span class="material-symbols-outlined text-[18px]">delete</span>
                   </button>` : ''}
@@ -167,9 +167,9 @@ function renderGrid() {
               <td class="px-4 py-3 font-bold text-primary">$${precio}</td>
               <td class="px-4 py-3 text-xs text-on-surface-variant">${p.ubicacion || '—'}</td>
               <td class="px-4 py-3 text-right">
-                <button onclick="event.stopPropagation(); inventoryView.openEdit('${p.id}')" class="p-1.5 text-primary hover:bg-primary/10 rounded-lg transition-colors" title="Editar">
+                ${isAdmin ? `<button onclick="event.stopPropagation(); inventoryView.openEdit('${p.id}')" class="p-1.5 text-primary hover:bg-primary/10 rounded-lg transition-colors" title="Editar">
                   <span class="material-symbols-outlined text-[18px]">edit</span>
-                </button>
+                </button>` : ''}
                 ${isAdmin ? `<button onclick="event.stopPropagation(); inventoryView.deleteProduct('${p.id}')" class="p-1.5 text-on-surface-variant hover:text-error hover:bg-error/10 rounded-lg transition-colors" title="Eliminar">
                   <span class="material-symbols-outlined text-[18px]">delete</span>
                 </button>` : ''}

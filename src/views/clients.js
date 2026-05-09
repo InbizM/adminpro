@@ -60,6 +60,9 @@ function renderTable(lista) {
     return;
   }
 
+  const user = JSON.parse(localStorage.getItem("adminpro_user") || "{}");
+  const isAdmin = user.rol === "Administrador";
+
   elTable.innerHTML = lista.map(c => {
     const tipoColor = c.tipo === "VIP" ? "bg-amber-100 text-amber-800" 
                     : c.tipo === "Empresa" ? "bg-blue-100 text-blue-800"
@@ -88,9 +91,9 @@ function renderTable(lista) {
           <button onclick="window.cliEdit('${c.cedula}')" class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-primary/10 rounded-lg transition-colors" title="Editar">
             <span class="material-symbols-outlined text-[18px]">edit</span>
           </button>
-          <button onclick="window.cliDelete('${c.cedula}')" class="p-1.5 text-on-surface-variant hover:text-error hover:bg-error/10 rounded-lg transition-colors" title="Eliminar">
+          ${isAdmin ? `<button onclick="window.cliDelete('${c.cedula}')" class="p-1.5 text-on-surface-variant hover:text-error hover:bg-error/10 rounded-lg transition-colors" title="Eliminar">
             <span class="material-symbols-outlined text-[18px]">delete</span>
-          </button>
+          </button>` : ''}
         </td>
       </tr>
     `;

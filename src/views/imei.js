@@ -71,6 +71,9 @@ function renderTable(lista) {
     return;
   }
 
+  const user = JSON.parse(localStorage.getItem("adminpro_user") || "{}");
+  const isAdmin = user.rol === "Administrador";
+
   elTable.innerHTML = lista.map(e => {
     const isVendido = e.estado === "Vendido";
     const statusColor = e.estado === "Disponible" ? "bg-green-100 text-green-800" 
@@ -101,9 +104,9 @@ function renderTable(lista) {
           <button onclick="window.imeiEdit('${e.imei1}')" class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-primary/10 rounded-lg transition-colors" title="Editar">
             <span class="material-symbols-outlined text-[18px]">edit</span>
           </button>
-          <button onclick="window.imeiDelete('${e.imei1}')" class="p-1.5 text-on-surface-variant hover:text-error hover:bg-error/10 rounded-lg transition-colors" title="Eliminar">
+          ${isAdmin ? `<button onclick="window.imeiDelete('${e.imei1}')" class="p-1.5 text-on-surface-variant hover:text-error hover:bg-error/10 rounded-lg transition-colors" title="Eliminar">
             <span class="material-symbols-outlined text-[18px]">delete</span>
-          </button>
+          </button>` : ''}
         </td>
       </tr>
     `;
