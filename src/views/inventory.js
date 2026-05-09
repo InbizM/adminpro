@@ -93,11 +93,49 @@ function renderGrid() {
   const tableBody = document.getElementById("inv-table-body");
   if (!grid) return;
 
+  const user = JSON.parse(localStorage.getItem("adminpro_user") || "{}");
+  const isAdmin = user.rol === "Administrador";
+
   if (_viewMode === 'grid') {
-    grid.classList.remove('hidden');
     tableWrap.classList.add('hidden');
+    grid.classList.remove('hidden');
     grid.innerHTML = filteredProductos.length
-      ? filteredProductos.map(cardHtml).join("")
+      ? filteredProductos.map(p => {
+          const badge = stockBadge(p.stockActual, p.stockMinimo);
+          const isOut = Number(p.stockActual) === 0;
+          const precio = Number(String(p.precioVenta).replace(/\D/g, "")).toLocaleString("es-CO");
+          return `
+            <div onclick="inventoryView.openDetail('${p.id}')" class="bg-surface-container-lowest border border-surface-variant rounded-2xl p-4 shadow-sm hover:shadow-md transition-all group flex flex-col cursor-pointer ${isOut ? 'opacity-70 grayscale-[0.5]' : ''}">
+              <div class="flex items-start gap-4 mb-4">
+                <div class="w-16 h-16 rounded-xl bg-surface-container flex items-center justify-center overflow-hidden flex-shrink-0">
+                  ${p.imagen ? `<img src="${p.imagen}" class="w-full h-full object-cover">` : `<span class="material-symbols-outlined text-3xl text-on-surface-variant/40">image</span>`}
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex justify-between items-start gap-2 mb-1">
+                    <h3 class="font-bold text-on-surface text-sm truncate" title="${p.nombre}">${p.nombre}</h3>
+                    <span class="px-2 py-0.5 rounded text-[9px] font-bold tracking-wider uppercase border whitespace-nowrap ${badge.cls}">${badge.label}</span>
+                  </div>
+                  <p class="text-[10px] uppercase font-bold text-on-surface-variant mb-1">${p.marca || '-'}</p>
+                  <p class="font-mono text-xs font-bold text-on-surface-variant/70 mb-2 truncate" title="${p.sku || p.id}">${p.sku || p.id}</p>
+                </div>
+              </div>
+              <div class="flex items-end justify-between mt-auto pt-3 border-t border-surface-variant/50">
+                <div>
+                  <p class="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/60 mb-0.5">Precio Venta</p>
+                  <p class="font-black text-primary text-lg leading-none">$${precio}</p>
+                </div>
+                <div class="flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button onclick="event.stopPropagation(); inventoryView.openEdit('${p.id}')" class="p-2 bg-surface border border-surface-variant rounded-xl text-primary hover:bg-primary/10 transition-colors" title="Editar">
+                    <span class="material-symbols-outlined text-[18px]">edit</span>
+                  </button>
+                  ${isAdmin ? `<button onclick="event.stopPropagation(); inventoryView.deleteProduct('${p.id}')" class="p-2 bg-surface border border-surface-variant rounded-xl text-error hover:bg-error/10 transition-colors" title="Eliminar">
+                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                  </button>` : ''}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join("")
       : `<div class="col-span-full text-center py-20 text-on-surface-variant">
            <span class="material-symbols-outlined text-5xl">search_off</span>
            <p class="mt-2 font-semibold">No hay productos que coincidan.</p>
@@ -132,9 +170,9 @@ function renderGrid() {
                 <button onclick="event.stopPropagation(); inventoryView.openEdit('${p.id}')" class="p-1.5 text-primary hover:bg-primary/10 rounded-lg transition-colors" title="Editar">
                   <span class="material-symbols-outlined text-[18px]">edit</span>
                 </button>
-                <button onclick="event.stopPropagation(); inventoryView.deleteProduct('${p.id}')" class="p-1.5 text-on-surface-variant hover:text-error hover:bg-error/10 rounded-lg transition-colors" title="Eliminar">
+                ${isAdmin ? `<button onclick="event.stopPropagation(); inventoryView.deleteProduct('${p.id}')" class="p-1.5 text-on-surface-variant hover:text-error hover:bg-error/10 rounded-lg transition-colors" title="Eliminar">
                   <span class="material-symbols-outlined text-[18px]">delete</span>
-                </button>
+                </button>` : ''}
               </td>
             </tr>
           `;

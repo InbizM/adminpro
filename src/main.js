@@ -121,7 +121,7 @@ const NAV_GROUPS = [
     label: "Organización",
     items: [
       { id: "tasks",         label: "Lista de Tareas",     icon: "check_circle",   roles: ["Administrador", "Vendedor", "Técnico"] },
-      { id: "calendar",      label: "Calendario",          icon: "calendar_month", roles: ["Administrador", "Vendedor", "Técnico"] }
+      { id: "calendar",      label: "Actividad",           icon: "history_toggle_off", roles: ["Administrador", "Vendedor", "Técnico"] }
     ]
   },
   {
