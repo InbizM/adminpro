@@ -63,7 +63,7 @@ export const verifyPin = async (email, pin) => {
 // ── USUARIOS ──
 export const getUsers = async () => (await queryTurso("SELECT * FROM usuarios ORDER BY nombre ASC"))[0] || [];
 export const crearUsuario = (d) => queryTurso({ sql: "INSERT INTO usuarios (email, password, nombre, rol, estado) VALUES (?,?,?,?,?)", args: mapArgs(d) });
-export const actualizarUsuario = (email, d) => queryTurso({ sql: "UPDATE usuarios SET password=?, nombre=?, rol=?, estado=? WHERE email=?", args: [...mapArgs(d), { type: "text", value: email }] });
+export const actualizarUsuario = (oldEmail, newEmail, d) => queryTurso({ sql: "UPDATE usuarios SET email=?, password=?, nombre=?, rol=?, estado=? WHERE email=?", args: [{ type: "text", value: newEmail }, ...mapArgs(d), { type: "text", value: oldEmail }] });
 export const eliminarUsuario = (email) => queryTurso({ sql: "DELETE FROM usuarios WHERE email = ?", args: [{ type: "text", value: email }] });
 
 // ── CLIENTES ──

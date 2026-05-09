@@ -80,12 +80,10 @@ function setupEvents() {
     
     if (!confirm(`¿Eliminar al usuario ${email}?`)) return;
     try {
-      const res = await eliminarUsuario(email);
-      if (res.success) {
-        showToast("Usuario eliminado", "success");
-        await loadUsers();
-        renderTable(_usuarios);
-      }
+      await eliminarUsuario(email);
+      showToast("Usuario eliminado", "success");
+      await loadUsers();
+      renderTable(_usuarios);
     } catch (err) { showToast(err.message, "error"); }
   };
 }
@@ -95,9 +93,6 @@ function openModal(u = null) {
   const form = document.getElementById("user-form");
   form.reset();
   document.getElementById("user-modal-title").textContent = u ? "Editar Usuario" : "Nuevo Usuario";
-  
-  // Bloquear email en edición
-  document.getElementById("user-input-email").disabled = !!u;
 
   if (u) {
     document.getElementById("user-input-name").value = u.nombre;
@@ -128,8 +123,9 @@ async function saveUser(e) {
 
   const getVal = id => document.getElementById(id).value.trim();
 
+  const email = getVal("user-input-email").toLowerCase();
   const datos = [
-    getVal("user-input-email"),
+    email,
     getVal("user-input-password"),
     getVal("user-input-name"),
     getVal("user-input-rol"),
@@ -137,17 +133,17 @@ async function saveUser(e) {
   ];
 
   try {
-    // Si estamos editando, pasamos el email como ID
-    const res = _editingEmail 
-      ? await actualizarUsuario(_editingEmail, [datos[1], datos[2], datos[3], datos[4]]) // Actualizar sin el email
-      : await crearUsuario(datos);
-      
-    if (res.success) {
-      showToast(_editingEmail ? "Actualizado" : "Creado", "success");
-      closeModal();
-      await loadUsers();
-      renderTable(_usuarios);
+    // Si estamos editando, usamos actualizarUsuario (que ahora permite cambiar el email)
+    if (_editingEmail) {
+      await actualizarUsuario(_editingEmail, email, [datos[1], datos[2], datos[3], datos[4]]);
+    } else {
+      await crearUsuario(datos);
     }
+      
+    showToast(_editingEmail ? "Actualizado" : "Creado", "success");
+    closeModal();
+    await loadUsers();
+    renderTable(_usuarios);
   } catch (err) {
     showToast(err.message, "error");
   } finally {
