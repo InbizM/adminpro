@@ -16,8 +16,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="AdminPro" />
   <link rel="apple-touch-icon" href="/adminpro/icon-512.png" />
-  <script type="module" crossorigin src="/adminpro/assets/index-CrklmUoZ.js"></script>
-  <link rel="stylesheet" crossorigin href="/adminpro/assets/index-ic_wVi1f.css">
+  <script type="module" crossorigin src="/adminpro/assets/index-BBmfs18Y.js"></script>
+  <link rel="stylesheet" crossorigin href="/adminpro/assets/index-ClCmhkaa.css">
 </head>
 <body class="bg-background text-on-background antialiased min-h-screen">
 
@@ -1699,16 +1699,23 @@
         </div>
       </section>
 
-      <!-- CALENDAR VIEW (Weekly) -->
-      <section data-view="calendar" class="hidden p-container-padding max-w-6xl mx-auto">
-        <div class="flex justify-between items-center mb-6">
+      <!-- CALENDAR / ACTIVITY TIMELINE VIEW -->
+      <section data-view="calendar" class="hidden p-container-padding max-w-4xl mx-auto pb-24 md:pb-8">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
           <div>
-            <h2 class="text-2xl font-bold text-on-surface">Calendario Semanal</h2>
-            <p class="text-sm text-on-surface-variant mt-0.5">Visualiza tus tareas de la semana.</p>
+            <h2 class="text-2xl font-bold text-on-surface">Actividad Global</h2>
+            <p class="text-sm text-on-surface-variant mt-0.5">Línea de tiempo de todas las operaciones del negocio.</p>
+          </div>
+          <div class="flex gap-2">
+            <button id="cal-btn-prev" class="p-2 border border-surface-variant rounded-xl text-on-surface-variant hover:bg-surface-container"><span class="material-symbols-outlined">chevron_left</span></button>
+            <button id="cal-btn-today" class="px-4 py-2 bg-surface-container rounded-xl text-sm font-bold text-on-surface hover:bg-surface-container-high transition-colors">Hoy</button>
+            <button id="cal-btn-next" class="p-2 border border-surface-variant rounded-xl text-on-surface-variant hover:bg-surface-container"><span class="material-symbols-outlined">chevron_right</span></button>
           </div>
         </div>
-        <div id="calendar-container" class="bg-surface-container-lowest border border-surface-variant rounded-2xl shadow-sm p-4 min-h-[500px]">
-          <!-- Calendar grid injected by JS -->
+        
+        <!-- Timeline Container -->
+        <div id="calendar-container" class="relative pl-6 md:pl-8 border-l-2 border-surface-variant/30 min-h-[500px] flex flex-col gap-6">
+          <!-- Timeline items injected by JS -->
         </div>
       </section>
 
