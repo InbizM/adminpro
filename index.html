@@ -16,8 +16,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="AdminPro" />
   <link rel="apple-touch-icon" href="/adminpro/icon-512.png" />
-  <script type="module" crossorigin src="/adminpro/assets/index-DAWrdAAy.js"></script>
-  <link rel="stylesheet" crossorigin href="/adminpro/assets/index-DVybiA-b.css">
+  <script type="module" crossorigin src="/adminpro/assets/index-s1trKZ1W.js"></script>
+  <link rel="stylesheet" crossorigin href="/adminpro/assets/index-Bz-WYzNU.css">
 </head>
 <body class="bg-background text-on-background antialiased min-h-screen">
 
@@ -934,9 +934,26 @@
             </div>
             
             <div class="p-6 overflow-y-auto flex-1 space-y-6">
-              <!-- Evidencia -->
-              <div>
-                <label class="block text-xs font-semibold text-on-surface-variant mb-2 uppercase tracking-wider">Evidencia (Transferencia / Foto Equipo)</label>
+              <!-- Tipo de Factura -->
+              <div class="bg-surface-container-low p-4 rounded-xl border border-surface-variant">
+                <label class="block text-xs font-semibold text-on-surface-variant mb-3 uppercase tracking-wider text-center">Tipo de Facturación</label>
+                <div class="grid grid-cols-2 gap-3">
+                  <label class="relative flex flex-col items-center gap-2 p-4 bg-surface-container-lowest border-2 border-surface-variant rounded-xl cursor-pointer hover:border-primary transition-all has-[:checked]:border-primary has-[:checked]:bg-primary/5">
+                    <input type="radio" name="pos-billing-type" value="fisica" class="absolute opacity-0" checked>
+                    <span class="material-symbols-outlined text-2xl text-on-surface-variant group-data-[checked]:text-primary">receipt_long</span>
+                    <span class="text-xs font-bold text-on-surface-variant">Factura Física</span>
+                  </label>
+                  <label class="relative flex flex-col items-center gap-2 p-4 bg-surface-container-lowest border-2 border-surface-variant rounded-xl cursor-pointer hover:border-primary transition-all has-[:checked]:border-primary has-[:checked]:bg-primary/5">
+                    <input type="radio" name="pos-billing-type" value="digital" class="absolute opacity-0">
+                    <span class="material-symbols-outlined text-2xl text-on-surface-variant">digital_outposts</span>
+                    <span class="text-xs font-bold text-on-surface-variant">Factura Digital</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Evidencia (Only for Physical) -->
+              <div id="pos-evidencia-container">
+                <label class="block text-xs font-semibold text-on-surface-variant mb-2 uppercase tracking-wider">Evidencia (Imagen de Factura Física)</label>
                 <input id="pos-evidencia-file" type="file" accept="image/*" class="w-full text-sm text-on-surface-variant file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
               </div>
               
