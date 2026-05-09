@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="AdminPro" />
   <link rel="apple-touch-icon" href="/adminpro/icon-512.png" />
-  <script type="module" crossorigin src="/adminpro/assets/index-YjoZmEZv.js"></script>
+  <script type="module" crossorigin src="/adminpro/assets/index-DAWrdAAy.js"></script>
   <link rel="stylesheet" crossorigin href="/adminpro/assets/index-DVybiA-b.css">
 </head>
 <body class="bg-background text-on-background antialiased min-h-screen">
@@ -311,9 +311,9 @@
           </div>
 
           <!-- KPI Cards Row -->
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+          <div id="dash-kpi-row" class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
             <!-- Ventas Hoy -->
-            <div class="bg-surface-container-lowest border border-surface-variant rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
+            <div id="dash-card-ventas" class="bg-surface-container-lowest border border-surface-variant rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
               <div class="flex items-center gap-2 mb-2">
                 <div class="w-9 h-9 rounded-lg bg-green-100 flex items-center justify-center">
                   <span class="material-symbols-outlined text-green-700 text-[18px]" style="font-variation-settings:'FILL' 1">trending_up</span>
@@ -323,7 +323,7 @@
               <p id="dash-ventas-hoy" class="text-2xl font-black text-on-surface">—</p>
             </div>
             <!-- Egresos Hoy -->
-            <div class="bg-surface-container-lowest border border-surface-variant rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
+            <div id="dash-card-egresos" class="bg-surface-container-lowest border border-surface-variant rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
               <div class="flex items-center gap-2 mb-2">
                 <div class="w-9 h-9 rounded-lg bg-red-100 flex items-center justify-center">
                   <span class="material-symbols-outlined text-red-700 text-[18px]" style="font-variation-settings:'FILL' 1">trending_down</span>
@@ -333,7 +333,7 @@
               <p id="dash-egresos-hoy" class="text-2xl font-black text-error">—</p>
             </div>
             <!-- Utilidad -->
-            <div class="bg-surface-container-lowest border border-surface-variant rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
+            <div id="dash-card-utilidad" class="bg-surface-container-lowest border border-surface-variant rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
               <div class="flex items-center gap-2 mb-2">
                 <div class="w-9 h-9 rounded-lg bg-blue-100 flex items-center justify-center">
                   <span class="material-symbols-outlined text-blue-700 text-[18px]" style="font-variation-settings:'FILL' 1">account_balance</span>
@@ -343,7 +343,7 @@
               <p id="dash-utilidad" class="text-2xl font-black text-on-surface">—</p>
             </div>
             <!-- Stock Critico -->
-            <div class="bg-surface-container-lowest border border-error-container rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
+            <div id="dash-card-stock" class="bg-surface-container-lowest border border-error-container rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
               <div class="flex items-center gap-2 mb-2">
                 <div class="w-9 h-9 rounded-lg bg-error-container/60 flex items-center justify-center">
                   <span class="material-symbols-outlined text-error text-[18px]" style="font-variation-settings:'FILL' 1">warning</span>
@@ -355,30 +355,30 @@
           </div>
 
           <!-- Quick Access Module Grid -->
-          <div class="mb-6">
+          <div id="dash-quick-access" class="mb-6">
             <h3 class="text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-3">Acceso Rápido</h3>
-            <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
-              <button data-goto="pos" class="dash-shortcut group flex flex-col items-center gap-2 p-4 bg-surface-container-lowest border border-surface-variant rounded-xl hover:bg-primary hover:border-primary hover:shadow-lg hover:shadow-primary/20 transition-all duration-200">
+            <div id="dash-quick-access-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
+              <button data-goto="pos" id="dash-qa-vender" class="dash-shortcut group flex flex-col items-center gap-2 p-4 bg-surface-container-lowest border border-surface-variant rounded-xl hover:bg-primary hover:border-primary hover:shadow-lg hover:shadow-primary/20 transition-all duration-200">
                 <span class="material-symbols-outlined text-2xl text-on-surface-variant group-hover:text-on-primary transition-colors" style="font-variation-settings:'FILL' 1">point_of_sale</span>
                 <span class="text-[11px] font-bold text-on-surface-variant group-hover:text-on-primary transition-colors">Vender</span>
               </button>
-              <button data-goto="inventory" class="dash-shortcut group flex flex-col items-center gap-2 p-4 bg-surface-container-lowest border border-surface-variant rounded-xl hover:bg-primary hover:border-primary hover:shadow-lg hover:shadow-primary/20 transition-all duration-200">
+              <button data-goto="inventory" id="dash-qa-inventario" class="dash-shortcut group flex flex-col items-center gap-2 p-4 bg-surface-container-lowest border border-surface-variant rounded-xl hover:bg-primary hover:border-primary hover:shadow-lg hover:shadow-primary/20 transition-all duration-200">
                 <span class="material-symbols-outlined text-2xl text-on-surface-variant group-hover:text-on-primary transition-colors" style="font-variation-settings:'FILL' 1">inventory_2</span>
                 <span class="text-[11px] font-bold text-on-surface-variant group-hover:text-on-primary transition-colors">Inventario</span>
               </button>
-              <button data-goto="clients" class="dash-shortcut group flex flex-col items-center gap-2 p-4 bg-surface-container-lowest border border-surface-variant rounded-xl hover:bg-primary hover:border-primary hover:shadow-lg hover:shadow-primary/20 transition-all duration-200">
+              <button data-goto="clients" id="dash-qa-clientes" class="dash-shortcut group flex flex-col items-center gap-2 p-4 bg-surface-container-lowest border border-surface-variant rounded-xl hover:bg-primary hover:border-primary hover:shadow-lg hover:shadow-primary/20 transition-all duration-200">
                 <span class="material-symbols-outlined text-2xl text-on-surface-variant group-hover:text-on-primary transition-colors" style="font-variation-settings:'FILL' 1">people</span>
                 <span class="text-[11px] font-bold text-on-surface-variant group-hover:text-on-primary transition-colors">Clientes</span>
               </button>
-              <button data-goto="credits" class="dash-shortcut group flex flex-col items-center gap-2 p-4 bg-surface-container-lowest border border-surface-variant rounded-xl hover:bg-primary hover:border-primary hover:shadow-lg hover:shadow-primary/20 transition-all duration-200">
+              <button data-goto="credits" id="dash-qa-creditos" class="dash-shortcut group flex flex-col items-center gap-2 p-4 bg-surface-container-lowest border border-surface-variant rounded-xl hover:bg-primary hover:border-primary hover:shadow-lg hover:shadow-primary/20 transition-all duration-200">
                 <span class="material-symbols-outlined text-2xl text-on-surface-variant group-hover:text-on-primary transition-colors" style="font-variation-settings:'FILL' 1">credit_score</span>
                 <span class="text-[11px] font-bold text-on-surface-variant group-hover:text-on-primary transition-colors">Créditos</span>
               </button>
-              <button data-goto="technical" class="dash-shortcut group flex flex-col items-center gap-2 p-4 bg-surface-container-lowest border border-surface-variant rounded-xl hover:bg-primary hover:border-primary hover:shadow-lg hover:shadow-primary/20 transition-all duration-200">
+              <button data-goto="technical" id="dash-qa-tecnico" class="dash-shortcut group flex flex-col items-center gap-2 p-4 bg-surface-container-lowest border border-surface-variant rounded-xl hover:bg-primary hover:border-primary hover:shadow-lg hover:shadow-primary/20 transition-all duration-200">
                 <span class="material-symbols-outlined text-2xl text-on-surface-variant group-hover:text-on-primary transition-colors" style="font-variation-settings:'FILL' 1">build</span>
                 <span class="text-[11px] font-bold text-on-surface-variant group-hover:text-on-primary transition-colors">Técnico</span>
               </button>
-              <button data-goto="expenses" class="dash-shortcut group flex flex-col items-center gap-2 p-4 bg-surface-container-lowest border border-surface-variant rounded-xl hover:bg-primary hover:border-primary hover:shadow-lg hover:shadow-primary/20 transition-all duration-200">
+              <button data-goto="expenses" id="dash-qa-egresos" class="dash-shortcut group flex flex-col items-center gap-2 p-4 bg-surface-container-lowest border border-surface-variant rounded-xl hover:bg-primary hover:border-primary hover:shadow-lg hover:shadow-primary/20 transition-all duration-200">
                 <span class="material-symbols-outlined text-2xl text-on-surface-variant group-hover:text-on-primary transition-colors" style="font-variation-settings:'FILL' 1">payments</span>
                 <span class="text-[11px] font-bold text-on-surface-variant group-hover:text-on-primary transition-colors">Egresos</span>
               </button>
@@ -386,10 +386,10 @@
           </div>
 
           <!-- Main grid: 2 columns -->
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
+          <div id="dash-ventas-section" class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
 
             <!-- LEFT: Ventas Recientes (2/3) -->
-            <div class="lg:col-span-2 bg-surface-container-lowest border border-surface-variant rounded-xl shadow-sm overflow-hidden">
+            <div id="dash-ultimas-ventas" class="lg:col-span-2 bg-surface-container-lowest border border-surface-variant rounded-xl shadow-sm overflow-hidden">
               <div class="flex items-center justify-between px-5 py-4 border-b border-surface-variant">
                 <div class="flex items-center gap-2">
                   <span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings:'FILL' 1">receipt_long</span>
@@ -403,9 +403,9 @@
             </div>
 
             <!-- RIGHT: Top Productos + Stock Bajo (1/3) -->
-            <div class="space-y-5">
+            <div id="dash-right-col" class="space-y-5">
               <!-- Top Productos -->
-              <div class="bg-surface-container-lowest border border-surface-variant rounded-xl shadow-sm overflow-hidden">
+              <div id="dash-top-productos-card" class="bg-surface-container-lowest border border-surface-variant rounded-xl shadow-sm overflow-hidden">
                 <div class="px-5 py-4 border-b border-surface-variant">
                   <div class="flex items-center gap-2">
                     <span class="material-symbols-outlined text-amber-600 text-[20px]" style="font-variation-settings:'FILL' 1">trophy</span>
@@ -417,7 +417,7 @@
                 </ul>
               </div>
               <!-- Stock Bajo -->
-              <div class="bg-surface-container-lowest border border-error-container rounded-xl shadow-sm overflow-hidden">
+              <div id="dash-stock-alertas-card" class="bg-surface-container-lowest border border-error-container rounded-xl shadow-sm overflow-hidden">
                 <div class="px-5 py-4 border-b border-error-container/50">
                   <div class="flex items-center gap-2">
                     <span class="material-symbols-outlined text-error text-[20px]" style="font-variation-settings:'FILL' 1">inventory</span>
@@ -432,7 +432,7 @@
           </div>
 
           <!-- Tasks Row (Prioritized) -->
-          <div class="grid grid-cols-1 gap-5 mb-6">
+          <div id="dash-tasks-section" class="grid grid-cols-1 gap-5 mb-6">
             <!-- Mini To-Do List -->
             <div class="bg-surface-container-lowest border border-surface-variant rounded-xl shadow-sm overflow-hidden">
               <div class="flex items-center justify-between px-5 py-4 border-b border-surface-variant">
@@ -449,9 +449,9 @@
           </div>
 
           <!-- Bottom Row: Chart + Service Queue -->
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <div id="dash-bottom-row" class="grid grid-cols-1 lg:grid-cols-2 gap-5">
             <!-- Bar Chart -->
-            <div class="bg-surface-container-lowest border border-surface-variant rounded-xl shadow-sm overflow-hidden">
+            <div id="dash-chart-card" class="bg-surface-container-lowest border border-surface-variant rounded-xl shadow-sm overflow-hidden">
               <div class="px-5 py-4 border-b border-surface-variant">
                 <div class="flex items-center gap-2">
                   <span class="material-symbols-outlined text-blue-600 text-[20px]" style="font-variation-settings:'FILL' 1">bar_chart</span>
@@ -463,7 +463,7 @@
               </div>
             </div>
             <!-- Servicio Técnico Queue -->
-            <div class="bg-surface-container-lowest border border-surface-variant rounded-xl shadow-sm overflow-hidden">
+            <div id="dash-tec-queue-card" class="bg-surface-container-lowest border border-surface-variant rounded-xl shadow-sm overflow-hidden">
               <div class="flex items-center justify-between px-5 py-4 border-b border-surface-variant">
                 <div class="flex items-center gap-2">
                   <span class="material-symbols-outlined text-purple-600 text-[20px]" style="font-variation-settings:'FILL' 1">build</span>
