@@ -16,8 +16,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="AdminPro" />
   <link rel="apple-touch-icon" href="/adminpro/icon-512.png" />
-  <script type="module" crossorigin src="/adminpro/assets/index-HUg1enSv.js"></script>
-  <link rel="stylesheet" crossorigin href="/adminpro/assets/index-BtbAl_-A.css">
+  <script type="module" crossorigin src="/adminpro/assets/index-CU0YziQT.js"></script>
+  <link rel="stylesheet" crossorigin href="/adminpro/assets/index-BW38nwJ9.css">
 </head>
 <body class="bg-background text-on-background antialiased min-h-screen">
 
@@ -431,6 +431,23 @@
             </div>
           </div>
 
+          <!-- Tasks Row (Prioritized) -->
+          <div class="grid grid-cols-1 gap-5 mb-6">
+            <!-- Mini To-Do List -->
+            <div class="bg-surface-container-lowest border border-surface-variant rounded-xl shadow-sm overflow-hidden">
+              <div class="flex items-center justify-between px-5 py-4 border-b border-surface-variant">
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings:'FILL' 1">check_circle</span>
+                  <h3 class="font-bold text-on-surface text-sm">Tareas Pendientes</h3>
+                </div>
+                <button data-goto="tasks" class="dash-shortcut text-xs font-semibold text-primary hover:underline">Gestionar →</button>
+              </div>
+              <ul id="dash-tasks-list" class="divide-y divide-surface-variant">
+                <li class="p-5 text-sm text-on-surface-variant text-center">Cargando tareas...</li>
+              </ul>
+            </div>
+          </div>
+
           <!-- Bottom Row: Chart + Service Queue -->
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
             <!-- Bar Chart -->
@@ -460,22 +477,6 @@
             </div>
           </div>
 
-          <!-- New Row: Tasks -->
-          <div class="grid grid-cols-1 gap-5 mb-6">
-            <!-- Mini To-Do List -->
-            <div class="bg-surface-container-lowest border border-surface-variant rounded-xl shadow-sm overflow-hidden">
-              <div class="flex items-center justify-between px-5 py-4 border-b border-surface-variant">
-                <div class="flex items-center gap-2">
-                  <span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings:'FILL' 1">check_circle</span>
-                  <h3 class="font-bold text-on-surface text-sm">Tareas Pendientes</h3>
-                </div>
-                <button data-goto="tasks" class="dash-shortcut text-xs font-semibold text-primary hover:underline">Gestionar →</button>
-              </div>
-              <ul id="dash-tasks-list" class="divide-y divide-surface-variant">
-                <li class="p-5 text-sm text-on-surface-variant text-center">Cargando tareas...</li>
-              </ul>
-            </div>
-          </div>
 
         </div>
       </section>
@@ -1464,6 +1465,44 @@
                     <option value="Sin Arreglo">Sin Arreglo</option>
                   </select>
                 </div>
+                
+                <!-- Evidencias Fotográficas -->
+                <div class="col-span-2 pt-2 border-t border-surface-variant">
+                  <h4 class="font-bold text-sm text-on-surface mb-3">Evidencias Fotográficas</h4>
+                  <div class="grid grid-cols-2 gap-4">
+                    <!-- Recepción -->
+                    <div>
+                      <label class="block text-xs font-semibold text-on-surface-variant mb-1">Recepción</label>
+                      <input type="file" id="tech-img-recepcion" accept="image/*" capture="environment" class="hidden" />
+                      <div id="tech-preview-recepcion-btn" class="w-full h-24 border-2 border-dashed border-surface-variant rounded-xl flex flex-col items-center justify-center text-on-surface-variant cursor-pointer hover:border-primary hover:text-primary transition-colors bg-surface-container-lowest">
+                        <span class="material-symbols-outlined text-2xl mb-1">add_a_photo</span>
+                        <span class="text-[10px] font-medium text-center px-2">Subir / Tomar Foto</span>
+                      </div>
+                      <div id="tech-preview-recepcion-wrap" class="hidden relative w-full h-24 rounded-xl overflow-hidden shadow-sm">
+                        <img id="tech-preview-recepcion" src="" class="w-full h-full object-cover" />
+                        <button type="button" id="tech-remove-recepcion" class="absolute top-1 right-1 w-6 h-6 bg-black/60 rounded-full text-white flex items-center justify-center hover:bg-red-600 transition-colors">
+                          <span class="material-symbols-outlined text-[14px]">close</span>
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <!-- Resultado -->
+                    <div>
+                      <label class="block text-xs font-semibold text-on-surface-variant mb-1">Resultado</label>
+                      <input type="file" id="tech-img-resultado" accept="image/*" capture="environment" class="hidden" />
+                      <div id="tech-preview-resultado-btn" class="w-full h-24 border-2 border-dashed border-surface-variant rounded-xl flex flex-col items-center justify-center text-on-surface-variant cursor-pointer hover:border-primary hover:text-primary transition-colors bg-surface-container-lowest">
+                        <span class="material-symbols-outlined text-2xl mb-1">add_a_photo</span>
+                        <span class="text-[10px] font-medium text-center px-2">Subir / Tomar Foto</span>
+                      </div>
+                      <div id="tech-preview-resultado-wrap" class="hidden relative w-full h-24 rounded-xl overflow-hidden shadow-sm">
+                        <img id="tech-preview-resultado" src="" class="w-full h-full object-cover" />
+                        <button type="button" id="tech-remove-resultado" class="absolute top-1 right-1 w-6 h-6 bg-black/60 rounded-full text-white flex items-center justify-center hover:bg-red-600 transition-colors">
+                          <span class="material-symbols-outlined text-[14px]">close</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </form>
             <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-surface-variant bg-surface-container-low rounded-b-2xl">
@@ -1783,7 +1822,7 @@
                     <select id="user-input-rol" class="field-input">
                       <option value="Vendedor">Vendedor</option>
                       <option value="Administrador">Administrador</option>
-                      <option value="Técnico">Técnico</option>
+                      <option value="Técnico de reparación">Técnico de reparación</option>
                     </select>
                   </div>
                   <div>
