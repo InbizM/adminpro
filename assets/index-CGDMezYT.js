@@ -303,12 +303,17 @@
     <html>
       <head>
         <style>
-          @page { margin: 0; }
-          body { 
-            font-family: 'Courier New', Courier, monospace; 
+          @page { size: 48mm auto; margin: 0; }
+          html, body { 
             width: 48mm; 
             margin: 0; 
-            padding: 5px; 
+            padding: 0; 
+            background: #fff;
+            -webkit-print-color-adjust: exact;
+          }
+          body { 
+            font-family: 'Courier New', Courier, monospace; 
+            padding: 4mm; 
             font-size: 10px; 
             color: #000;
           }
@@ -468,8 +473,15 @@
     <html>
       <head>
         <style>
-          @page { margin: 0; }
-          body { font-family: 'Courier New', Courier, monospace; width: 48mm; margin: 0; padding: 5px; font-size: 10px; color: #000; line-height: 1.2; }
+          @page { size: 48mm auto; margin: 0; }
+          html, body { 
+            width: 48mm; 
+            margin: 0; 
+            padding: 0; 
+            background: #fff;
+            -webkit-print-color-adjust: exact;
+          }
+          body { font-family: 'Courier New', Courier, monospace; padding: 4mm; font-size: 10px; color: #000; line-height: 1.2; }
           .center { text-align: center; }
           .bold { font-weight: bold; }
           .border-b { border-bottom: 1px dashed #000; margin: 5px 0; }
