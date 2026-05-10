@@ -16,8 +16,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="AdminPro" />
   <link rel="apple-touch-icon" href="/adminpro/icon-512.png" />
-  <script type="module" crossorigin src="/adminpro/assets/index-D4ElAHsT.js"></script>
-  <link rel="stylesheet" crossorigin href="/adminpro/assets/index-5fvwxVCP.css">
+  <script type="module" crossorigin src="/adminpro/assets/index-ixTG_an-.js"></script>
+  <link rel="stylesheet" crossorigin href="/adminpro/assets/index-DqQnl3gM.css">
 </head>
 <body class="bg-background text-on-background antialiased min-h-screen">
 
@@ -945,10 +945,9 @@
                   </label>
                   <label class="relative flex flex-col items-center gap-2 p-4 bg-surface-container-lowest border-2 border-surface-variant rounded-xl cursor-pointer hover:border-primary transition-all has-[:checked]:border-primary has-[:checked]:bg-primary/5">
                     <input type="radio" name="pos-billing-type" value="digital" class="absolute opacity-0">
-                    <span class="material-symbols-outlined text-2xl text-on-surface-variant">digital_outposts</span>
+                    <span class="material-symbols-outlined text-2xl text-on-surface-variant">history_edu</span>
                     <span class="text-xs font-bold text-on-surface-variant">Factura Digital</span>
-                  </label>
-                </div>
+                  </label>                </div>
               </div>
 
               <!-- Datos Adicionales (Only for Digital) -->
@@ -1009,6 +1008,30 @@
               <button id="pos-checkout-cancel" class="px-5 py-2.5 text-sm font-semibold text-on-surface-variant hover:bg-surface-container rounded-lg">Atrás</button>
               <button id="pos-checkout-confirm" class="px-6 py-2.5 bg-primary text-on-primary font-bold rounded-lg shadow-md hover:scale-[1.02] transition-transform">Confirmar y Facturar</button>
             </div>
+          </div>
+        </div>
+
+        <!-- POS FULLSCREEN SIGNATURE MODAL -->
+        <div id="pos-signature-modal" class="hidden fixed inset-0 z-[70] flex flex-col bg-white">
+          <div class="flex items-center justify-between px-6 py-4 border-b border-surface-variant bg-surface-container-lowest">
+            <h3 id="pos-sig-modal-title" class="font-bold text-lg text-on-surface text-center flex-1">Firma Digital</h3>
+            <button id="pos-sig-modal-close" class="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </div>
+          <div class="flex-1 bg-slate-50 relative overflow-hidden flex items-center justify-center p-4">
+             <div class="w-full h-full max-w-4xl max-h-[500px] bg-white border-2 border-dashed border-slate-300 rounded-3xl relative shadow-inner overflow-hidden">
+                <canvas id="pos-canvas-fullscreen" class="w-full h-full cursor-crosshair"></canvas>
+                <div class="absolute top-4 left-4 bg-slate-100/80 backdrop-blur px-3 py-1 rounded-full text-[10px] font-black text-slate-500 uppercase tracking-widest pointer-events-none">
+                  Firma Aquí dentro
+                </div>
+             </div>
+          </div>
+          <div class="p-6 border-t border-surface-variant bg-white flex justify-center gap-4">
+             <button id="pos-sig-modal-clear" class="flex-1 max-w-[150px] py-4 bg-surface-container border border-surface-variant rounded-2xl font-bold text-on-surface-variant active:scale-95 transition-all">Limpiar</button>
+             <button id="pos-sig-modal-save" class="flex-1 max-w-[300px] py-4 bg-primary text-on-primary rounded-2xl font-bold shadow-xl shadow-primary/30 active:scale-95 transition-all flex items-center justify-center gap-2">
+               <span class="material-symbols-outlined text-[20px]">check_circle</span> Guardar Firma
+             </button>
           </div>
         </div>
       </section>
