@@ -16,8 +16,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="AdminPro" />
   <link rel="apple-touch-icon" href="/adminpro/icon-512.png" />
-  <script type="module" crossorigin src="/adminpro/assets/index-CGDMezYT.js"></script>
-  <link rel="stylesheet" crossorigin href="/adminpro/assets/index-vvSVlRwK.css">
+  <script type="module" crossorigin src="/adminpro/assets/index-BsddnVoG.js"></script>
+  <link rel="stylesheet" crossorigin href="/adminpro/assets/index-Dm94kR1B.css">
 </head>
 <body class="bg-background text-on-background antialiased min-h-screen">
 
@@ -1004,9 +1004,15 @@
                 </div>
               </div>
             </div>
-            <div class="p-4 border-t border-surface-variant bg-surface-container-low flex justify-end gap-3">
-              <button id="pos-checkout-cancel" class="px-5 py-2.5 text-sm font-semibold text-on-surface-variant hover:bg-surface-container rounded-lg">Atrás</button>
-              <button id="pos-checkout-confirm" class="px-6 py-2.5 bg-primary text-on-primary font-bold rounded-lg shadow-md hover:scale-[1.02] transition-transform">Confirmar y Facturar</button>
+            <div class="p-4 border-t border-surface-variant bg-surface-container-low flex items-center justify-between gap-3">
+              <button id="pos-print-bt-btn" class="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white font-bold rounded-lg shadow-md hover:bg-blue-700 transition-all scale-95 md:scale-100">
+                <span class="material-symbols-outlined text-[20px]">bluetooth</span>
+                <span class="text-xs">BT Print</span>
+              </button>
+              <div class="flex gap-3">
+                <button id="pos-checkout-cancel" class="px-5 py-2.5 text-sm font-semibold text-on-surface-variant hover:bg-surface-container rounded-lg">Atrás</button>
+                <button id="pos-checkout-confirm" class="px-6 py-2.5 bg-primary text-on-primary font-bold rounded-lg shadow-md hover:scale-[1.02] transition-transform">Confirmar y Facturar</button>
+              </div>
             </div>
           </div>
         </div>
@@ -1739,13 +1745,18 @@
           <div id="sale-detail-content" class="p-6 max-h-[70vh] overflow-y-auto bg-slate-50/30">
             <!-- JS dynamic content -->
           </div>
-          <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
-            <button id="sale-detail-print-btn" class="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-slate-100 transition-all">
-              <span class="material-symbols-outlined text-[18px]">print</span> Imprimir Ticket (48mm)
+          <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-between items-center">
+            <button id="sale-detail-print-bt" class="px-4 py-2 bg-blue-600 text-white rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-blue-700 transition-all">
+              <span class="material-symbols-outlined text-[18px]">bluetooth</span> Imprimir BT
             </button>
-            <button onclick="document.getElementById('sale-detail-close').click()" class="px-6 py-2 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-slate-800 transition-all">
-              Cerrar
-            </button>
+            <div class="flex gap-3">
+              <button id="sale-detail-print-btn" class="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-slate-100 transition-all">
+                <span class="material-symbols-outlined text-[18px]">print</span> Imprimir Ticket (48mm)
+              </button>
+              <button onclick="document.getElementById('sale-detail-close').click()" class="px-6 py-2 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-slate-800 transition-all">
+                Cerrar
+              </button>
+            </div>
           </div>
         </div>
       </div>
