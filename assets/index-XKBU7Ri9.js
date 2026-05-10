@@ -298,7 +298,7 @@
           <input type="text" placeholder="IMEI principal" data-id="${e.id}" class="pos-imei-input w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 text-xs outline-none focus:border-primary">
         </div>
       </div>
-    `).join(``)):(tr.classList.add(`hidden`),nr.innerHTML=``)}function _r(){[P,F].forEach(e=>{if(e&&e.offsetWidth>0){e.width=e.offsetWidth,e.height=e.offsetHeight;let t=e.getContext(`2d`);t.lineWidth=2,t.lineCap=`round`}})}function vr(e,t){let n=e.getContext(`2d`);t(n);let r=t=>{let n=e.getBoundingClientRect(),r=(t.touches?t.touches[0].clientX:t.clientX)-n.left,i=(t.touches?t.touches[0].clientY:t.clientY)-n.top;return{x:r*(e.width/n.width),y:i*(e.height/n.height)}},i=!1,a=e=>{i=!0,n.beginPath();let{x:t,y:a}=r(e);n.moveTo(t,a),e.preventDefault()},o=e=>{if(!i)return;let{x:t,y:a}=r(e);n.lineTo(t,a),n.stroke(),e.preventDefault()};e.addEventListener(`mousedown`,a),e.addEventListener(`mousemove`,o),e.addEventListener(`mouseup`,()=>i=!1),e.addEventListener(`touchstart`,a,{passive:!1}),e.addEventListener(`touchmove`,o,{passive:!1}),e.addEventListener(`touchend`,()=>i=!1),e.nextElementSibling.addEventListener(`click`,t=>{t.stopPropagation(),n.clearRect(0,0,e.width,e.height)})}function yr(){Kn.classList.remove(`hidden`),Kn.classList.add(`flex`),[P,F].forEach(e=>{e.width=e.offsetWidth,e.height=e.offsetHeight;let t=e.getContext(`2d`);t.lineWidth=2,t.lineCap=`round`,t.clearRect(0,0,e.width,e.height)}),Xn.value=``,Zn.value=``,Qn.value=``,document.querySelector(`input[name="pos-billing-type"][value="fisica"]`).checked=!0,document.getElementById(`pos-evidencia-container`).classList.remove(`hidden`),$n.classList.add(`hidden`),er.classList.add(`hidden`),tr.classList.add(`hidden`)}function br(){Kn.classList.add(`hidden`),Kn.classList.remove(`flex`)}async function xr(){if(Ln)return;Ln=!0;let e=document.querySelector(`input[name="pos-billing-type"]:checked`).value;N.textContent=`Procesando...`,N.disabled=!0;try{let t=``,n=``,r=``;if(e===`digital`){let e=document.createElement(`canvas`);if(e.width=P.width,e.height=P.height,P.toDataURL()!==e.toDataURL()){let e=await re(P.toDataURL(`image/png`),`FirmaCliente_${Date.now()}.png`);t=typeof e==`string`?e:e?.url||``}if(F.toDataURL()!==e.toDataURL()){let e=await re(F.toDataURL(`image/png`),`FirmaVendedor_${Date.now()}.png`);n=typeof e==`string`?e:e?.url||``}}if(e===`fisica`)if(Yn.files[0]){N.textContent=`Subiendo evidencia...`;let e=Yn.files[0],t=await ie(await new Promise(t=>{let n=new FileReader;n.onload=e=>t(e.target.result),n.readAsDataURL(e)}),e.name,e.type);r=typeof t==`string`?t:t?.url||``}else{h(`Por favor sube la foto de la factura física`,`warning`),Ln=!1,N.textContent=`Confirmar y Facturar`,N.disabled=!1;return}let i=document.querySelectorAll(`.pos-imei-input`),a={};i.forEach(e=>{let t=e.dataset.id;e.value.trim()&&(a[t]||(a[t]=[]),a[t].push(e.value.trim()))}),N.textContent=`Registrando venta...`;let o=Number(Vn.textContent.replace(/\D/g,``)),s=Number(Un.textContent.replace(/\D/g,``)),c=JSON.parse(localStorage.getItem(`adminpro_user`)||`{}`),l={cedula:Wn.value.trim(),cliente:Gn.value.trim(),direccion:Xn.value.trim(),ciudad:Zn.value.trim(),telefono:Qn.value.trim(),productoNombre:j.map(e=>`${e.nombre} (x${e.qty})`).join(`, `),productoId:j[0]?.id,items:j.map(e=>({id:e.id,qty:e.qty})),subtotal:o,descuento:Number(Hn.value)||0,total:s,metodo:document.getElementById(`pos-metodo-pago`).value,vendedor:c.nombre||`Vendedor`,firmaComprador:t,firmaVendedor:n,evidencia:r,tipoFactura:e,imeis:JSON.stringify(a),emisor:{nombre:`CLAROCELL.COM`,propietario:`Yeison Rangel Rangel`,nit:`1193400777-2`,direccion:`Calle 12 No. 10 - 108, Maicao - La Guajira`,contacto:`3016807310`,correo:`yeison0021@hotmail.com`}},u=await we(l);u.success?(Rn!==`venta`&&await Ee({cliente:l.cliente,telefono:l.cedula,idFactura:u.idFactura,total:s,detalle:l.productoNombre,tipo:Rn===`separe`?`Plan Separe`:`Crédito`}),h(`Venta Exitosa`,`success`),e===`digital`&&Sr({...l,idFactura:u.idFactura},P.toDataURL(),F.toDataURL()),j=[],R(),Wn.value=``,Gn.value=``,br(),dr().then(()=>fr(A))):h(`Error al guardar`,`error`)}catch(e){h(e.message,`error`)}finally{Ln=!1,N.textContent=`Confirmar y Facturar`,N.disabled=!1}}function Sr(e,t,n){let r=window.open(``,`_blank`,`width=300,height=600`),i=new Date,a=`${i.getDate()}/${i.getMonth()+1}/${i.getFullYear()} ${i.getHours()}:${i.getMinutes()}`,o=JSON.parse(e.imeis||`{}`),s=Object.values(o).flat().join(`, `),c=j.map(e=>`
+    `).join(``)):(tr.classList.add(`hidden`),nr.innerHTML=``)}function _r(){[P,F].forEach(e=>{if(e&&e.offsetWidth>0){e.width=e.offsetWidth,e.height=e.offsetHeight;let t=e.getContext(`2d`);t.lineWidth=2,t.lineCap=`round`}})}function vr(e,t){let n=e.getContext(`2d`);t(n);let r=t=>{let n=e.getBoundingClientRect(),r=(t.touches?t.touches[0].clientX:t.clientX)-n.left,i=(t.touches?t.touches[0].clientY:t.clientY)-n.top;return{x:r*(e.width/n.width),y:i*(e.height/n.height)}},i=!1,a=e=>{i=!0,n.beginPath();let{x:t,y:a}=r(e);n.moveTo(t,a),e.preventDefault()},o=e=>{if(!i)return;let{x:t,y:a}=r(e);n.lineTo(t,a),n.stroke(),e.preventDefault()};e.addEventListener(`mousedown`,a),e.addEventListener(`mousemove`,o),e.addEventListener(`mouseup`,()=>i=!1),e.addEventListener(`touchstart`,a,{passive:!1}),e.addEventListener(`touchmove`,o,{passive:!1}),e.addEventListener(`touchend`,()=>i=!1),e.nextElementSibling.addEventListener(`click`,t=>{t.stopPropagation(),n.clearRect(0,0,e.width,e.height)})}function yr(){Kn.classList.remove(`hidden`),Kn.classList.add(`flex`),[P,F].forEach(e=>{e.width=e.offsetWidth,e.height=e.offsetHeight;let t=e.getContext(`2d`);t.lineWidth=2,t.lineCap=`round`,t.clearRect(0,0,e.width,e.height)}),Xn.value=``,Zn.value=``,Qn.value=``,document.querySelector(`input[name="pos-billing-type"][value="fisica"]`).checked=!0,document.getElementById(`pos-evidencia-container`).classList.remove(`hidden`),$n.classList.add(`hidden`),er.classList.add(`hidden`),tr.classList.add(`hidden`)}function br(){Kn.classList.add(`hidden`),Kn.classList.remove(`flex`)}async function xr(){if(Ln)return;Ln=!0;let e=document.querySelector(`input[name="pos-billing-type"]:checked`).value;N.textContent=`Procesando...`,N.disabled=!0;try{let t=``,n=``,r=``;if(e===`digital`){let e=document.createElement(`canvas`);if(e.width=P.width,e.height=P.height,P.toDataURL()!==e.toDataURL()){let e=await re(P.toDataURL(`image/png`),`FirmaCliente_${Date.now()}.png`);t=typeof e==`string`?e:e?.url||``}if(F.toDataURL()!==e.toDataURL()){let e=await re(F.toDataURL(`image/png`),`FirmaVendedor_${Date.now()}.png`);n=typeof e==`string`?e:e?.url||``}}if(e===`fisica`)if(Yn.files[0]){N.textContent=`Subiendo evidencia...`;let e=Yn.files[0],t=await ie(await new Promise(t=>{let n=new FileReader;n.onload=e=>t(e.target.result),n.readAsDataURL(e)}),e.name,e.type);r=typeof t==`string`?t:t?.url||``}else{h(`Por favor sube la foto de la factura física`,`warning`),Ln=!1,N.textContent=`Confirmar y Facturar`,N.disabled=!1;return}let i=document.querySelectorAll(`.pos-imei-input`),a={};i.forEach(e=>{let t=e.dataset.id;e.value.trim()&&(a[t]||(a[t]=[]),a[t].push(e.value.trim()))}),N.textContent=`Registrando venta...`;let o=Number(Vn.textContent.replace(/\D/g,``)),s=Number(Un.textContent.replace(/\D/g,``)),c=JSON.parse(localStorage.getItem(`adminpro_user`)||`{}`),l={cedula:Wn.value.trim(),cliente:Gn.value.trim(),direccion:Xn.value.trim(),ciudad:Zn.value.trim(),telefono:Qn.value.trim(),productoNombre:j.map(e=>`${e.nombre} (x${e.qty})`).join(`, `),productoId:j[0]?.id,items:j.map(e=>({id:e.id,qty:e.qty})),subtotal:o,descuento:Number(Hn.value)||0,total:s,metodo:document.getElementById(`pos-metodo-pago`).value,vendedor:c.nombre||`Vendedor`,firmaComprador:t,firmaVendedor:n,evidencia:r,tipoFactura:e,imeis:JSON.stringify(a),emisor:{nombre:`CLAROCELL.COM`,propietario:`Yeison Rangel Rangel`,nit:`1193400777-2`,direccion:`Calle 12 No. 10 - 108, Maicao - La Guajira`,contacto:`3016807310`,correo:`yeison0021@hotmail.com`}},u=await we(l);u.success?(Rn!==`venta`&&await Ee({cliente:l.cliente,telefono:l.cedula,idFactura:u.idFactura,total:s,detalle:l.productoNombre,tipo:Rn===`separe`?`Plan Separe`:`Crédito`}),h(`Venta Exitosa`,`success`),e===`digital`&&Sr({...l,idFactura:u.idFactura},P.toDataURL(),F.toDataURL()),j=[],R(),Wn.value=``,Gn.value=``,br(),dr().then(()=>fr(A))):h(`Error al guardar`,`error`)}catch(e){h(e.message,`error`)}finally{Ln=!1,N.textContent=`Confirmar y Facturar`,N.disabled=!1}}function Sr(e,t,n){let r=window.open(``,`_blank`,`width=300,height=600`),i=new Date,a=`${i.getDate()}/${i.getMonth()+1}/${i.getFullYear()} ${i.getHours()}:${i.getMinutes()}`,o=JSON.parse(e.imeis||`{}`),s=Object.values(o).flat().join(`, `);j.map(e=>`
     <tr>
       <td style="padding: 3px 0; border-bottom: 1px solid #eee;">
         <div style="font-weight: 800;">${e.nombre.substring(0,25)}</div>
@@ -308,7 +308,7 @@
         $${new Intl.NumberFormat(`es-CO`).format((e.precioManual||0)*e.qty)}
       </td>
     </tr>
-  `).join(``);r.document.write(`
+  `).join(``),r.document.write(`
     <!DOCTYPE html>
     <html>
       <head>
@@ -325,82 +325,150 @@
           }
           body { 
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
-            padding: 3mm; 
-            font-size: 9px; 
-            color: #000;
+            padding: 2mm; 
+            font-size: 10px; 
+            color: #1e293b; /* slate-800 */
             line-height: 1.3;
           }
-          .center { text-align: center; }
           .bold { font-weight: 900; }
-          .border-b { border-bottom: 1px dashed #000; margin: 6px 0; }
-          .border-b-solid { border-bottom: 2px solid #000; margin: 6px 0; }
-          table { width: 100%; border-collapse: collapse; margin-bottom: 6px; }
-          .legal { font-size: 7px; text-align: justify; margin-top: 8px; color: #333; }
-          .header-title { font-size: 14px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 2px; }
-          .info-grid { display: grid; grid-template-columns: 35px 1fr; gap: 2px; margin-bottom: 2px; }
-          .info-label { font-weight: bold; color: #555; }
-          .totals-grid { display: grid; grid-template-columns: 1fr auto; gap: 4px; margin-top: 4px; }
-          .totals-grid .tot-label { text-align: right; font-weight: bold; color: #555; }
-          .totals-grid .tot-val { text-align: right; font-weight: 900; }
-          .totals-grid .grand-tot { font-size: 13px; color: #000; }
+          .text-xs { font-size: 8px; }
+          .text-sm { font-size: 11px; }
+          .text-lg { font-size: 14px; }
+          .text-xl { font-size: 18px; }
+          .text-slate-500 { color: #64748b; }
+          .text-slate-400 { color: #94a3b8; }
+          .text-primary { color: #020617; } /* using dark slate for primary on print */
+          
+          .card { 
+            border: 1px solid #e2e8f0; 
+            border-radius: 6px; 
+            padding: 4px; 
+            margin-bottom: 6px; 
+            background: #f8fafc;
+          }
+          .flex-between { display: flex; justify-content: space-between; align-items: flex-start; }
+          .badge { 
+            background: #dcfce7; color: #166534; 
+            padding: 2px 4px; border-radius: 8px; 
+            font-size: 8px; font-weight: 900; text-transform: uppercase;
+          }
+          
+          .section-title {
+            font-size: 7px;
+            font-weight: 900;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+            margin-top: 4px;
+          }
+
+          .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+          
+          .product-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            padding: 4px;
+            margin-bottom: 4px;
+          }
+          
+          .summary-card {
+            background: #0f172a;
+            color: white;
+            border-radius: 6px;
+            padding: 6px;
+            margin-top: 6px;
+          }
+          
+          .legal { font-size: 7px; text-align: justify; margin-top: 8px; color: #64748b; }
+          .center { text-align: center; }
         </style>
       </head>
       <body>
-        <div class="center header-title">CLAROCELL.COM</div>
-        <div class="center" style="font-size: 8px; color:#444;">${e.emisor.propietario}</div>
-        <div class="center bold">NIT: ${e.emisor.nit}</div>
-        <div class="center" style="font-size: 8px;">${e.emisor.direccion}</div>
-        <div class="center bold" style="font-size: 8px;">Tel: ${e.emisor.contacto}</div>
-        
-        <div class="border-b-solid"></div>
-        
-        <div class="info-grid">
-          <div class="info-label">FACT:</div><div>${e.idFactura}</div>
-          <div class="info-label">FECHA:</div><div>${a}</div>
-        </div>
-        
-        <div class="border-b"></div>
-        
-        <div class="info-grid">
-          <div class="info-label">CLI:</div><div class="bold">${e.cliente}</div>
-          <div class="info-label">CC:</div><div>${e.cedula}</div>
-          <div class="info-label">DIR:</div><div style="font-size: 8px;">${e.direccion}, ${e.ciudad}</div>
-          <div class="info-label">TEL:</div><div>${e.telefono}</div>
-        </div>
-        
-        <div class="border-b-solid"></div>
-        
-        <table>
-          <tbody>${c}</tbody>
-        </table>
-        
-        <div class="totals-grid">
-          <div class="tot-label">SUBTOTAL:</div><div class="tot-val">$${new Intl.NumberFormat(`es-CO`).format(e.subtotal)}</div>
-          <div class="tot-label">DESC:</div><div class="tot-val">-$${new Intl.NumberFormat(`es-CO`).format(e.descuento)}</div>
-          <div class="tot-label grand-tot" style="margin-top: 4px;">TOTAL:</div><div class="tot-val grand-tot" style="margin-top: 4px;">$${new Intl.NumberFormat(`es-CO`).format(e.total)}</div>
-        </div>
-        
-        ${s?`<div class="border-b"></div><div style="font-size: 8px;"><b style="color:#555;">IMEIs:</b> ${s}</div>`:``}
-        
-        <div class="border-b-solid"></div>
-        <div class="center bold" style="margin-bottom: 6px;">FIRMAS LEGALES</div>
-        <div style="display: flex; gap: 8px; margin-top: 5px;">
-          <div style="flex: 1; text-align: center; display: flex; flex-col; justify-content: flex-end;">
-            <img src="${n}" style="width: 100%; height: 35px; object-fit: contain; margin-bottom: 2px;">
-            <div style="font-size: 7px; border-top: 1px solid #000; padding-top: 2px; font-weight: bold;">VENDEDOR</div>
+        <!-- Header / Comprobante -->
+        <div class="card">
+          <div class="text-xs text-primary bold" style="color: #dc2626; text-transform: uppercase;">COMPROBANTE DE VENTA</div>
+          <div class="flex-between" style="margin-top: 2px;">
+            <div class="text-lg bold" style="line-height: 1;">${e.idFactura||e.id_factura}</div>
+            <div class="badge">PAGADO</div>
           </div>
-          <div style="flex: 1; text-align: center; display: flex; flex-col; justify-content: flex-end;">
-            <img src="${t}" style="width: 100%; height: 35px; object-fit: contain; margin-bottom: 2px;">
-            <div style="font-size: 7px; border-top: 1px solid #000; padding-top: 2px; font-weight: bold;">COMPRADOR</div>
+          <div class="flex-between" style="margin-top: 2px;">
+            <div class="text-xs text-slate-500">${a}</div>
+            <div class="text-xs bold">${e.metodo||`Efectivo`}</div>
           </div>
         </div>
         
+        <!-- Info Cliente & Vendedor -->
+        <div class="grid-2">
+          <div>
+            <div class="section-title">INFORMACIÓN DEL CLIENTE</div>
+            <div class="bold text-sm">${e.cliente}</div>
+            <div class="text-xs text-slate-500">ID: ${e.cedula}</div>
+            <div class="text-xs text-slate-500"><span class="text-slate-400 bold">Tel:</span> ${e.telefono}</div>
+            <div class="text-xs text-slate-500"><span class="text-slate-400 bold">Ubicación:</span> ${e.direccion}, ${e.ciudad}</div>
+          </div>
+          <div>
+            <div class="section-title">ATENDIDO POR</div>
+            <div class="bold text-sm">${e.vendedor||`Vendedor`}</div>
+            <div class="text-xs text-slate-400" style="font-style: italic;">Vendedor Autorizado</div>
+            <div class="text-xs bold" style="color: #dc2626; background: #fef2f2; display: inline-block; padding: 1px 4px; border-radius: 4px; margin-top: 2px;">DIGITAL</div>
+          </div>
+        </div>
+        
+        <div style="border-top: 1px solid #f1f5f9; margin: 6px 0;"></div>
+        
+        <!-- Detalle Productos -->
+        <div class="section-title">DETALLE DE PRODUCTOS</div>
+        ${j.map(e=>`
+          <div class="product-card">
+            <div class="flex-between">
+              <div class="bold text-sm" style="width: 80%;">${e.nombre}</div>
+              <div class="bold text-sm">x${e.qty}</div>
+            </div>
+          </div>
+        `).join(``)}
+        ${s&&s!==`{}`?`<div class="text-xs bold" style="color:#dc2626; margin-top: -2px; margin-bottom: 4px; margin-left: 4px;">IMEI/SERIE: ${s}</div>`:``}
+
+        <!-- Resumen Financiero -->
+        <div class="summary-card">
+          <div class="flex-between" style="align-items: flex-end;">
+            <div>
+              <div class="section-title" style="color: #94a3b8; margin-top: 0;">RESUMEN FINANCIERO</div>
+              <div class="text-xs" style="color: #cbd5e1;">Subtotal: $${new Intl.NumberFormat(`es-CO`).format(e.subtotal)}</div>
+              <div class="text-xs bold" style="color: #f87171;">Descuento: -$${new Intl.NumberFormat(`es-CO`).format(e.descuento)}</div>
+            </div>
+            <div style="text-align: right;">
+              <div class="section-title" style="color: #94a3b8; margin-top: 0; margin-bottom: 0;">TOTAL COBRADO</div>
+              <div class="text-xl bold text-white" style="line-height: 1;">$${new Intl.NumberFormat(`es-CO`).format(e.total)}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Firmas -->
+        <div class="grid-2" style="margin-top: 8px;">
+           <div class="center">
+             <div class="text-xs bold text-slate-400">FIRMA VEND.</div>
+             <div style="border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc; height: 30px; margin-top: 2px; display: flex; justify-content: center; align-items: center;">
+               ${n?`<img src="${n}" style="height: 26px; max-width: 100%; object-fit: contain;">`:``}
+             </div>
+           </div>
+           <div class="center">
+             <div class="text-xs bold text-slate-400">FIRMA CLI.</div>
+             <div style="border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc; height: 30px; margin-top: 2px; display: flex; justify-content: center; align-items: center;">
+               ${t?`<img src="${t}" style="height: 26px; max-width: 100%; object-fit: contain;">`:``}
+             </div>
+           </div>
+        </div>
+        
+        <!-- Footer Legal -->
+        <div class="center text-xs bold" style="margin-top: 10px;">${e.emisor.nombre}</div>
+        <div class="center text-xs text-slate-500">NIT: ${e.emisor.nit}</div>
         <div class="legal">
-          <b>GARANTIA:</b> Equipos probados y encendidos. Sin garantía en displays/táctiles o equipos apagados.
-          Este doc. se asimila a letra de cambio (Art. 774 C.Comercio).
+          GARANTIA: Equipos probados y encendidos. Sin garantía en displays/táctiles o equipos apagados.
+          Doc. asimilado a letra de cambio (Art. 774 C.Comercio).
         </div>
-        
-        <div class="center bold" style="margin-top: 12px; font-size: 11px;">¡GRACIAS POR SU COMPRA!</div>
+        <div class="center bold" style="margin-top: 8px; font-size: 11px;">¡GRACIAS POR SU COMPRA!</div>
       </body>
     </html>
   `),r.document.close(),setTimeout(()=>{r.print(),r.close()},500)}var z=[],Cr=!1,wr=!1,Tr,Er,Dr,Or,kr,Ar,jr,Mr,B,V,Nr,H,Pr,Fr,U,W,Ir,Lr;function Rr(){return async()=>{zr(),Cr||=(await Br(),Hr(),!0),Vr(z)}}function zr(){Tr=document.getElementById(`imei-table-body`),Er=document.getElementById(`imei-search`),Dr=document.getElementById(`imei-filter-status`),Or=document.getElementById(`imei-new-btn`),kr=document.getElementById(`imei-modal`),Ar=document.getElementById(`imei-modal-close`),jr=document.getElementById(`imei-modal-backdrop`),Mr=document.getElementById(`imei-form`),B=document.getElementById(`imei-save-btn`),V=document.getElementById(`imei-1`),Nr=document.getElementById(`imei-2`),H=document.getElementById(`imei-nombre`),Pr=document.getElementById(`imei-marca`),Fr=document.getElementById(`imei-proveedor`),U=document.getElementById(`imei-costo`),W=document.getElementById(`imei-venta`),Ir=document.getElementById(`imei-estado`),Lr=document.getElementById(`imei-original`)}async function Br(){try{Tr.innerHTML=`<tr><td colspan="6" class="p-4 text-center text-on-surface-variant">Cargando equipos...</td></tr>`,z=await ye();let e=await he();H.innerHTML=`<option value="">Seleccione un equipo...</option>`+e.map(e=>`<option value="${e.nombre}" data-marca="${e.marca}" data-costo="${e.costo}" data-precio="${e.precioVenta}" data-prov="${e.proveedor||``}" data-id="${e.id}">${e.nombre}${e.marca?` (`+e.marca+`)`:``}</option>`).join(``)}catch(e){h(`Error cargando equipos: `+e.message,`error`),z=[]}}function Vr(e){if(e.length===0){Tr.innerHTML=`<tr><td colspan="6" class="p-4 text-center text-on-surface-variant">No se encontraron equipos</td></tr>`;return}let t=JSON.parse(localStorage.getItem(`adminpro_user`)||`{}`).rol===`Administrador`;Tr.innerHTML=e.map(e=>{e.estado;let n=e.estado===`Disponible`?`bg-green-100 text-green-800`:e.estado===`Vendido`?`bg-red-100 text-red-800`:`bg-yellow-100 text-yellow-800`;return`
@@ -512,92 +580,148 @@
           }
           body { 
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
-            padding: 3mm; 
-            font-size: 9px; 
-            color: #000;
+            padding: 2mm; 
+            font-size: 10px; 
+            color: #1e293b; /* slate-800 */
             line-height: 1.3;
           }
-          .center { text-align: center; }
           .bold { font-weight: 900; }
-          .border-b { border-bottom: 1px dashed #000; margin: 6px 0; }
-          .border-b-solid { border-bottom: 2px solid #000; margin: 6px 0; }
-          table { width: 100%; border-collapse: collapse; margin-bottom: 6px; }
-          .legal { font-size: 7px; text-align: justify; margin-top: 8px; color: #333; }
-          .header-title { font-size: 14px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 2px; }
-          .info-grid { display: grid; grid-template-columns: 35px 1fr; gap: 2px; margin-bottom: 2px; }
-          .info-label { font-weight: bold; color: #555; }
-          .totals-grid { display: grid; grid-template-columns: 1fr auto; gap: 4px; margin-top: 4px; }
-          .totals-grid .tot-label { text-align: right; font-weight: bold; color: #555; }
-          .totals-grid .tot-val { text-align: right; font-weight: 900; }
-          .totals-grid .grand-tot { font-size: 13px; color: #000; }
+          .text-xs { font-size: 8px; }
+          .text-sm { font-size: 11px; }
+          .text-lg { font-size: 14px; }
+          .text-xl { font-size: 18px; }
+          .text-slate-500 { color: #64748b; }
+          .text-slate-400 { color: #94a3b8; }
+          .text-primary { color: #020617; } /* using dark slate for primary on print */
+          
+          .card { 
+            border: 1px solid #e2e8f0; 
+            border-radius: 6px; 
+            padding: 4px; 
+            margin-bottom: 6px; 
+            background: #f8fafc;
+          }
+          .flex-between { display: flex; justify-content: space-between; align-items: flex-start; }
+          .badge { 
+            background: #dcfce7; color: #166534; 
+            padding: 2px 4px; border-radius: 8px; 
+            font-size: 8px; font-weight: 900; text-transform: uppercase;
+          }
+          
+          .section-title {
+            font-size: 7px;
+            font-weight: 900;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+            margin-top: 4px;
+          }
+
+          .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+          
+          .product-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            padding: 4px;
+            margin-bottom: 4px;
+          }
+          
+          .summary-card {
+            background: #0f172a;
+            color: white;
+            border-radius: 6px;
+            padding: 6px;
+            margin-top: 6px;
+          }
+          
+          .legal { font-size: 7px; text-align: justify; margin-top: 8px; color: #64748b; }
+          .center { text-align: center; }
         </style>
       </head>
       <body>
-        <div class="center header-title">${a.nombre}</div>
-        <div class="center" style="font-size: 8px; color:#444;">${a.propietario}</div>
-        <div class="center bold">NIT: ${a.nit}</div>
-        <div class="center" style="font-size: 8px;">${a.direccion}</div>
-        <div class="center bold" style="font-size: 8px;">Tel: ${a.contacto}</div>
-        
-        <div class="border-b-solid"></div>
-        
-        <div class="info-grid">
-          <div class="info-label">FACT:</div><div>${e.id_factura}</div>
-          <div class="info-label">FECHA:</div><div>${r}</div>
-        </div>
-        
-        <div class="border-b"></div>
-        
-        <div class="info-grid">
-          <div class="info-label">CLI:</div><div class="bold">${e.cliente}</div>
-          <div class="info-label">CC:</div><div>${e.cedula}</div>
-          <div class="info-label">DIR:</div><div style="font-size: 8px;">${e.direccion||`—`}, ${e.ciudad||`—`}</div>
-          <div class="info-label">TEL:</div><div>${e.telefono_cliente||`—`}</div>
-        </div>
-        
-        <div class="border-b-solid"></div>
-        
-        <table>
-          <tbody>
-            <tr>
-              <td style="padding: 3px 0; border-bottom: 1px solid #eee;">
-                <div style="font-weight: 800;">${e.productos.substring(0,25)}</div>
-                <div style="color: #555;">${e.cantidad||1} x $${new Intl.NumberFormat(`es-CO`).format(e.total/(e.cantidad||1))}</div>
-              </td>
-              <td style="text-align: right; vertical-align: bottom; padding: 3px 0; border-bottom: 1px solid #eee; font-weight: 800;">
-                $${new Intl.NumberFormat(`es-CO`).format(e.total)}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        
-        <div class="totals-grid">
-          <div class="tot-label">SUBTOTAL:</div><div class="tot-val">$${new Intl.NumberFormat(`es-CO`).format(e.subtotal||e.total)}</div>
-          <div class="tot-label">DESC:</div><div class="tot-val">-$${new Intl.NumberFormat(`es-CO`).format(e.descuento||0)}</div>
-          <div class="tot-label grand-tot" style="margin-top: 4px;">TOTAL:</div><div class="tot-val grand-tot" style="margin-top: 4px;">$${new Intl.NumberFormat(`es-CO`).format(e.total)}</div>
-        </div>
-        
-        ${i&&i!==`N/A`?`<div class="border-b"></div><div style="font-size: 8px;"><b style="color:#555;">IMEIs:</b> ${i}</div>`:``}
-        
-        <div class="border-b-solid"></div>
-        <div class="center bold" style="margin-bottom: 6px;">FIRMAS LEGALES</div>
-        <div style="display: flex; gap: 8px; margin-top: 5px;">
-          <div style="flex: 1; text-align: center; display: flex; flex-col; justify-content: flex-end;">
-            ${e.id_firma_vendedor?`<img src="${e.id_firma_vendedor}" style="width: 100%; height: 35px; object-fit: contain; margin-bottom: 2px;">`:`<div style="height:35px;"></div>`}
-            <div style="font-size: 7px; border-top: 1px solid #000; padding-top: 2px; font-weight: bold;">VENDEDOR</div>
+        <!-- Header / Comprobante -->
+        <div class="card">
+          <div class="text-xs text-primary bold" style="color: #dc2626; text-transform: uppercase;">COMPROBANTE DE VENTA</div>
+          <div class="flex-between" style="margin-top: 2px;">
+            <div class="text-lg bold" style="line-height: 1;">${e.id_factura}</div>
+            <div class="badge">PAGADO</div>
           </div>
-          <div style="flex: 1; text-align: center; display: flex; flex-col; justify-content: flex-end;">
-            ${e.id_firma_comprador?`<img src="${e.id_firma_comprador}" style="width: 100%; height: 35px; object-fit: contain; margin-bottom: 2px;">`:`<div style="height:35px;"></div>`}
-            <div style="font-size: 7px; border-top: 1px solid #000; padding-top: 2px; font-weight: bold;">COMPRADOR</div>
+          <div class="flex-between" style="margin-top: 2px;">
+            <div class="text-xs text-slate-500">${r}</div>
+            <div class="text-xs bold">${e.metodo||`Efectivo`}</div>
           </div>
         </div>
         
+        <!-- Info Cliente & Vendedor -->
+        <div class="grid-2">
+          <div>
+            <div class="section-title">INFORMACIÓN DEL CLIENTE</div>
+            <div class="bold text-sm">${e.cliente}</div>
+            <div class="text-xs text-slate-500">ID: ${e.cedula}</div>
+            <div class="text-xs text-slate-500"><span class="text-slate-400 bold">Tel:</span> ${e.telefono_cliente||`N/A`}</div>
+            <div class="text-xs text-slate-500"><span class="text-slate-400 bold">Ubicación:</span> ${e.direccion||`—`}, ${e.ciudad||`—`}</div>
+          </div>
+          <div>
+            <div class="section-title">ATENDIDO POR</div>
+            <div class="bold text-sm">${e.vendedor||`Vendedor`}</div>
+            <div class="text-xs text-slate-400" style="font-style: italic;">Vendedor Autorizado</div>
+            <div class="text-xs bold" style="color: #dc2626; background: #fef2f2; display: inline-block; padding: 1px 4px; border-radius: 4px; margin-top: 2px;">DIGITAL</div>
+          </div>
+        </div>
+        
+        <div style="border-top: 1px solid #f1f5f9; margin: 6px 0;"></div>
+        
+        <!-- Detalle Productos -->
+        <div class="section-title">DETALLE DE PRODUCTOS</div>
+        <div class="product-card">
+          <div class="flex-between">
+            <div class="bold text-sm" style="width: 80%;">${e.productos}</div>
+            <div class="bold text-sm">x${e.cantidad||1}</div>
+          </div>
+        </div>
+        ${i&&i!==`N/A`?`<div class="text-xs bold" style="color:#dc2626; margin-top: -2px; margin-bottom: 4px; margin-left: 4px;">IMEI/SERIE: ${i}</div>`:``}
+
+        <!-- Resumen Financiero -->
+        <div class="summary-card">
+          <div class="flex-between" style="align-items: flex-end;">
+            <div>
+              <div class="section-title" style="color: #94a3b8; margin-top: 0;">RESUMEN FINANCIERO</div>
+              <div class="text-xs" style="color: #cbd5e1;">Subtotal: $${new Intl.NumberFormat(`es-CO`).format(e.subtotal||e.total)}</div>
+              <div class="text-xs bold" style="color: #f87171;">Descuento: -$${new Intl.NumberFormat(`es-CO`).format(e.descuento||0)}</div>
+            </div>
+            <div style="text-align: right;">
+              <div class="section-title" style="color: #94a3b8; margin-top: 0; margin-bottom: 0;">TOTAL COBRADO</div>
+              <div class="text-xl bold text-white" style="line-height: 1;">$${new Intl.NumberFormat(`es-CO`).format(e.total)}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Firmas -->
+        <div class="grid-2" style="margin-top: 8px;">
+           <div class="center">
+             <div class="text-xs bold text-slate-400">FIRMA VEND.</div>
+             <div style="border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc; height: 30px; margin-top: 2px; display: flex; justify-content: center; align-items: center;">
+               ${e.id_firma_vendedor?`<img src="${e.id_firma_vendedor}" style="height: 26px; max-width: 100%; object-fit: contain;">`:``}
+             </div>
+           </div>
+           <div class="center">
+             <div class="text-xs bold text-slate-400">FIRMA CLI.</div>
+             <div style="border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc; height: 30px; margin-top: 2px; display: flex; justify-content: center; align-items: center;">
+               ${e.id_firma_comprador?`<img src="${e.id_firma_comprador}" style="height: 26px; max-width: 100%; object-fit: contain;">`:``}
+             </div>
+           </div>
+        </div>
+        
+        <!-- Footer Legal -->
+        <div class="center text-xs bold" style="margin-top: 10px;">${a.nombre}</div>
+        <div class="center text-xs text-slate-500">NIT: ${a.nit}</div>
         <div class="legal">
-          <b>GARANTIA:</b> Equipos probados y encendidos. Sin garantía en displays/táctiles o equipos apagados.
-          Este doc. se asimila a letra de cambio (Art. 774 C.Comercio).
+          GARANTIA: Equipos probados y encendidos. Sin garantía en displays/táctiles o equipos apagados.
+          Doc. asimilado a letra de cambio (Art. 774 C.Comercio).
         </div>
-        
-        <div class="center bold" style="margin-top: 12px; font-size: 11px;">¡GRACIAS POR SU COMPRA!</div>
+        <div class="center bold" style="margin-top: 8px; font-size: 11px;">¡GRACIAS POR SU COMPRA!</div>
       </body>
     </html>
   `),t.document.close(),setTimeout(()=>{t.print(),t.close()},500)}async function Ai(){let e=document.getElementById(`sales-history-list`);if(e)try{e.innerHTML=`<tr><td colspan="7" class="p-8 text-center text-on-surface-variant italic text-sm">Cargando todas las ventas...</td></tr>`,Ei=await Ce(),Di=[...Ei],ji()}catch(t){e.innerHTML=`<tr><td colspan="7" class="p-8 text-center text-error italic text-sm">Error: ${t.message}</td></tr>`}}function ji(){let e=document.getElementById(`sales-history-list`);if(e){if(Di.length===0){e.innerHTML=`<tr><td colspan="7" class="p-8 text-center text-on-surface-variant italic text-sm">No se encontraron ventas</td></tr>`;return}e.innerHTML=Di.map((e,t)=>{let n=new Date(e.fecha).toLocaleDateString(`es-CO`,{day:`2-digit`,month:`short`}),r=new Intl.NumberFormat(`es-CO`).format(e.total||0);return`
